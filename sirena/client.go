@@ -24,7 +24,8 @@ import (
 // Client is a sirena client
 type Client struct {
 	net.Conn
-	Key []byte
+	Key    []byte
+	Config *config.Config
 }
 
 type NewClientOptions struct {
@@ -39,8 +40,9 @@ func NewClient(options ...NewClientOptions) *Client {
 		log.Fatal(err)
 	}
 	client := &Client{
-		Conn: conn,
-		Key:  nil,
+		Conn:   conn,
+		Key:    nil,
+		Config: config,
 	}
 	if len(options) == 0 || !options[0].Test {
 		// Create symmetric key
