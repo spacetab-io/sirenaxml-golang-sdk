@@ -8,11 +8,12 @@ import (
 	"log"
 	"net"
 	"sirena-agent-go/config"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
 	"sirena-agent-go/logger"
 	"sirena-agent-go/random"
 	"time"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
 
 	"github.com/davecgh/go-spew/spew"
 )
