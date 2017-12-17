@@ -1,0 +1,96 @@
+package config
+
+import (
+	"io/ioutil"
+	"log"
+	"os"
+	"path"
+	"path/filepath"
+	"runtime"
+	"sync"
+
+	"github.com/jinzhu/configor"
+)
+
+// Config is a config :)
+type Config struct {
+	LogLevel                 string `json:"log_level" env:"LOG_LEVEL" default:"debug"` // log everything by default
+	SirenaClientID           string `json:"sirena_client_id" env:"SIRENA_CLIENT_ID" required:"true"`
+	SirenaHost               string `json:"sirena_host" env:"SIRENA_HOST" required:"true"`
+	SirenaPort               string `json:"sirena_port" env:"SIRENA_PORT" required:"true"`
+	ClientPublicKey          string `json:"client_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
+	ClientPrivateKey         string `json:"client_private_key" env:"CLIENT_PRIVATE_KEY" required:"true"`
+	ClientPrivateKeyPassword string `json:"client_private_key_password" env:"CLIENT_PRIVATE_KEY_PASSWORD"`
+	ServerPublicKey          string `json:"server_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
+}
+
+var config = &Config{}
+
+// Singleton guard
+var once sync.Once
+
+// Get reads config from environment or JSON
+func Get() *Config {
+	once.Do(func() {
+		// Get path to this package
+		_, filename, _, ok := runtime.Caller(0)
+		if !ok {
+			log.Fatal("No caller information")
+		}
+		if err := configor.New(&configor.Config{Debug: true}).Load(config, path.Dir(filename)+"/config.json"); err != nil {
+			log.Fatal(err)
+		}
+	})
+	return config
+}
+
+// GetSirenaAddr return sirena address to connect client to
+func (config *Config) GetSirenaAddr() string {
+	if config == nil {
+		return ""
+	}
+	if config.SirenaPort == "" {
+		return config.SirenaHost
+	}
+	return config.SirenaHost + ":" + config.SirenaPort
+}
+
+// GetKeyFile returns contents of key file
+func (config *Config) GetKeyFile(keyFile string) ([]byte, error) {
+	keyDirs := []string{
+		os.Getenv("GOPATH") + "/src/github.com/tmconsulting/sirenaxml-golang-sdk/keys",
+		binaryDir() + "/keys",
+	}
+	for _, keyDir := range keyDirs {
+		exists, err := pathExists(keyDir + "/" + keyFile)
+		if err != nil {
+			log.Print(err)
+		}
+		if !exists {
+			continue
+		}
+		return ioutil.ReadFile(keyDir + "/" + keyFile)
+	}
+	return nil, nil
+}
+
+// binaryDir returns path where binary was run from
+func binaryDir() string {
+	ex, err := os.Executable()
+	if err != nil {
+		return ""
+	}
+	return filepath.Dir(ex)
+}
+
+// pathExists checks if file or dir exist
+func pathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, err
+}

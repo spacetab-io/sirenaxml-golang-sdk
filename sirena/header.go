@@ -3,10 +3,12 @@ package sirena
 import (
 	"encoding/binary"
 	"math/rand"
-	"sirena-agent-go/config"
-	"sirena-agent-go/logger"
-	"sirena-agent-go/utils"
 	"time"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/utils"
 )
 
 const (

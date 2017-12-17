@@ -7,10 +7,13 @@ import (
 	"io"
 	"log"
 	"net"
-	"sirena-agent-go/config"
-	"sirena-agent-go/logger"
-	"sirena-agent-go/random"
 	"time"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/des"

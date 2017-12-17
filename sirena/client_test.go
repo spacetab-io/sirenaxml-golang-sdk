@@ -2,9 +2,11 @@ package sirena
 
 import (
 	"encoding/xml"
-	"sirena-agent-go/config"
-	"sirena-agent-go/random"
 	"testing"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
 

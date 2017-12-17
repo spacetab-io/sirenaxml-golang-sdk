@@ -2,9 +2,10 @@ package des_test
 
 import (
 	"fmt"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
-	"sirena-agent-go/random"
 	"testing"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 )
 
 func TestDesEncrypt(t *testing.T) {
