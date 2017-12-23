@@ -1,6 +1,8 @@
 package config
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -22,6 +24,7 @@ type Config struct {
 	ClientPrivateKey         string `json:"client_private_key" env:"CLIENT_PRIVATE_KEY" required:"true"`
 	ClientPrivateKeyPassword string `json:"client_private_key_password" env:"CLIENT_PRIVATE_KEY_PASSWORD"`
 	ServerPublicKey          string `json:"server_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
+	EnvType                  string
 }
 
 var config = &Config{}
@@ -37,8 +40,18 @@ func Get() *Config {
 		if !ok {
 			log.Fatal("No caller information")
 		}
-		if err := configor.New(&configor.Config{Debug: true}).Load(config, path.Dir(filename)+"/config.json"); err != nil {
+		// Get environment type
+		envType := os.Getenv("SIRENA_ENV")
+		if envType == "" {
+			envType = "dev"
+		}
+		if err := configor.New(&configor.Config{Environment: envType}).Load(config, path.Dir(filename)+"/config.json"); err != nil {
 			log.Fatal(err)
+		}
+		config.EnvType = envType
+		configB, err := json.MarshalIndent(config, "", "  ")
+		if err == nil {
+			fmt.Println("Configuration:", string(configB))
 		}
 	})
 	return config
@@ -58,7 +71,7 @@ func (config *Config) GetSirenaAddr() string {
 // GetKeyFile returns contents of key file
 func (config *Config) GetKeyFile(keyFile string) ([]byte, error) {
 	keyDirs := []string{
-		os.Getenv("GOPATH") + "/src/github.com/tmconsulting/sirenaxml-golang-sdk/keys",
+		os.Getenv("GOPATH"),
 		binaryDir() + "/keys",
 	}
 	for _, keyDir := range keyDirs {
