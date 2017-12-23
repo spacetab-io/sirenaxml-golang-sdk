@@ -4,12 +4,11 @@ import "encoding/xml"
 
 type AirlinesResponse struct {
 	Answer  AirlinesAnswer `xml:"answer"`
-	XMLName xml.Name       `xml:"sirena"`
+	XMLName xml.Name       `xml:"sirena" json:"-"`
 }
 
 type AirlinesAnswer struct {
 	Airlines AirlinesAnswerDetails `xml:"describe"`
-	Data     string                `xml:"data,attr"`
 }
 
 type AirlinesAnswerDetails struct {

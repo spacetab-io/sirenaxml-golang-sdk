@@ -11,7 +11,7 @@ const (
 
 type BookingResponse struct {
 	Answer  BookingAnswer `xml:"answer"`
-	XMLName xml.Name      `xml:"sirena"`
+	XMLName xml.Name      `xml:"sirena" json:"-"`
 }
 
 type BookingAnswer struct {
