@@ -10,6 +10,7 @@ import (
 	"errors"
 )
 
+// EncryptDataWithServerPubKey encrypts provided byte slice with provided server public key
 func EncryptDataWithServerPubKey(data, key []byte) ([]byte, error) {
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "PUBLIC KEY" {
@@ -30,6 +31,7 @@ func EncryptDataWithServerPubKey(data, key []byte) ([]byte, error) {
 	return encryptedData, nil
 }
 
+// DecryptDataWithClientPrivateKey decrypts provided byte slice with provided client private key
 func DecryptDataWithClientPrivateKey(data, key []byte, keyPassword string) ([]byte, error) {
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
@@ -59,6 +61,7 @@ func DecryptDataWithClientPrivateKey(data, key []byte, keyPassword string) ([]by
 	return encryptedData, nil
 }
 
+// GeneratePrivateKeySignature creates private key signature
 func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, error) {
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "RSA PRIVATE KEY" {

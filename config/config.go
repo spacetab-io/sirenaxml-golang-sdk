@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -84,7 +85,7 @@ func (config *Config) GetKeyFile(keyFile string) ([]byte, error) {
 		}
 		return ioutil.ReadFile(keyDir + "/" + keyFile)
 	}
-	return nil, nil
+	return nil, errors.New("No key files found")
 }
 
 // binaryDir returns path where binary was run from
