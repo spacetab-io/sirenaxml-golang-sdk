@@ -2,11 +2,13 @@ package sirena
 
 import "encoding/xml"
 
+// OrderResponse is a Sirena response to <order> request
 type OrderResponse struct {
 	Answer  OrderAnswer `xml:"answer"`
 	XMLName xml.Name    `xml:"sirena" json:"-"`
 }
 
+// OrderAnswer is an <answer> section in Sirena order response
 type OrderAnswer struct {
 	Pult     string           `xml:"pult,attr,omitempty"`
 	MsgID    int              `xml:"msgid,attr"`
@@ -15,19 +17,21 @@ type OrderAnswer struct {
 	Order    OrderAnswerQuery `xml:"order"`
 }
 
+// OrderAnswerQuery is an <order> section in Sirena order response
 type OrderAnswerQuery struct {
 	Regnum   string              `xml:"regnum,attr"`
 	Agency   string              `xml:"agency,attr"`
 	PNR      BookingAnswerPNR    `xml:"pnr"`
 	Tickinfo OrderAnswerTickinfo `xml:"tickinfo"`
+	Error    *SirenaError        `xml:"error"`
 }
 
-// OrderAnswerPNR is a <PNR> section in <order> answer
+// OrderAnswerPNR is a <pnr> section in Sirena order response
 type OrderAnswerPNR struct {
-	Bdate              string                      `xml:"bdate, attr"`
-	Fop                string                      `xml:"fop, attr"`
-	Curr               string                      `xml:"curr, attr"`
-	Sum                float64                     `xml:"sum, attr"`
+	Bdate              string                      `xml:"bdate,attr"`
+	Fop                string                      `xml:"fop,attr"`
+	Curr               string                      `xml:"curr,attr"`
+	Sum                float64                     `xml:"sum,attr"`
 	RegNum             string                      `xml:"regnum"`
 	UTCTimeLimit       string                      `xml:"utc_timelimit"`
 	TimeLimit          string                      `xml:"timelimit"`
@@ -41,10 +45,12 @@ type OrderAnswerPNR struct {
 	PossibleActionList PNRPossibleActionList       `xml:"possible_action_list"`
 }
 
+// PNRPossibleActionList is a <possible_action_list> entry in <pnr> section
 type PNRPossibleActionList struct {
 	Action string `xml:"action"`
 }
 
+// OrderAnswerTickinfo is a <tickinfo> entry in <order> section
 type OrderAnswerTickinfo struct {
 	Ticknum string `xml:"ticknum,attr"`
 	SegID   int    `xml:"seg_id,attr"`

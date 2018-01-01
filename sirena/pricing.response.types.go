@@ -12,7 +12,7 @@ type PricingAnswer struct {
 type PricingAnswerPricing struct {
 	Variants []PricingAnswerVariant `xml:"variant"`
 	Flights  []*PricingAnswerFlight `xml:"flight"`
-	Error    *PricingError          `xml:"error"`
+	Error    *SirenaError           `xml:"error"`
 }
 
 type PricingAnswerFlight struct {
@@ -27,11 +27,6 @@ type PricingAnswerFlight struct {
 	DeptTime    string                `xml:"depttime"`
 	ArrvTime    string                `xml:"arrvtime"`
 	Airplane    string                `xml:"airplane"`
-}
-
-type PricingError struct {
-	Code    int    `xml:"code,attr"`
-	Message string `xml:",chardata"`
 }
 
 type PricingAnswerVariant struct {
