@@ -2,17 +2,18 @@ package sirena
 
 import "encoding/xml"
 
-// BookingRequest is a <booking> request
+// BookingRequest is a Sirena booking request
 type BookingRequest struct {
 	Query   BookingRequestQuery `xml:"query"`
 	XMLName xml.Name            `xml:"sirena"`
 }
 
-// BookingRequestQuery is a <query> section in <booking> request
+// BookingRequestQuery is a <query> section in Sirena booking request
 type BookingRequestQuery struct {
 	Booking Booking `xml:"booking"`
 }
 
+// Booking is a <booking> section in Sirena booking request
 type Booking struct {
 	Segments        []BookingRequestSegment        `xml:"segment"`
 	LandSegments    []BookingRequestLandSegment    `xml:"land_segment"`
@@ -26,6 +27,7 @@ type Booking struct {
 	RequestParams   BookingRequestParams           `xml:"request_params,omitempty"`
 }
 
+// BookingRequestParams is a <request_params> section in Sirena booking request
 type BookingRequestParams struct {
 	TickSer       string                `xml:"tick_ser"`
 	ParcelAgency  string                `xml:"parcel_agency"`
@@ -34,11 +36,13 @@ type BookingRequestParams struct {
 	Brand         string                `xml:"brand"`
 }
 
+// BookingRequestFormpay is a <formpay> entry in <request_params>
 type BookingRequestFormpay struct {
 	Type  string `xml:"type,attr,omitempty"`
 	Value string `xml:",chardata"`
 }
 
+// BookingAnswerParams is an <answer_params> entry in Sirena booking request
 type BookingAnswerParams struct {
 	ShowUptRec      bool `xml:"show_upt_rec,omitempty"`
 	AddRemarks      bool `xml:"add_remarks,omitempty"`
@@ -47,16 +51,19 @@ type BookingAnswerParams struct {
 	ShowComission   bool `xml:"show_comission,omitempty"`
 }
 
+// BookingRequestAgentComission is an <agent_comission> in Sirena booking request
 type BookingRequestAgentComission struct {
 	Type  string  `xml:"type,attr"`
 	Curr  string  `xml:"type,attr,omitempty"`
 	Value float64 `xml:",chardata"`
 }
 
+// BookingRequestRemarks is a <remarks> section in Sirena booking request
 type BookingRequestRemarks struct {
 	Remark []string `xml:"remark,omitempty"`
 }
 
+// BookingRequestSpecialServices is a <special_services> section in Sirena booking request
 type BookingRequestSpecialServices struct {
 	Ssrs []Ssr `xml:"ssr"`
 }

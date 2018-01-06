@@ -131,6 +131,7 @@ func ParseHeader(data []byte) Header {
 	return h
 }
 
+// MakeSubHeader returns sub header holding length of data passed
 func MakeSubHeader(data []byte) []byte {
 	subHeader := make([]byte, 4)
 	binary.BigEndian.PutUint32(subHeader[0:], uint32(len(data)))
