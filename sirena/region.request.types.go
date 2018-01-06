@@ -13,6 +13,7 @@ type RegionsRequestQuery struct {
 	Regions Regions `xml:"describe"`
 }
 
+// Regions is a <describe> section in all regions request
 type Regions struct {
 	Data string `xml:"data"`
 	Code string `xml:"code,omitempty"`

@@ -1,6 +1,8 @@
 package sirena
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 const (
 	Time     = "15:04"
@@ -30,7 +32,7 @@ type BookingAnswerQuery struct {
 	Agency   string                `xml:"agency,attr"`
 	PNR      BookingAnswerPNR      `xml:"pnr"`
 	Contacts BookingAnswerContacts `xml:"contacts"`
-	Error    *SirenaError          `xml:"error"`
+	Error    *Error                `xml:"error"`
 }
 
 // BookingAnswerPNR is a <pnr> section in Sirena booking response

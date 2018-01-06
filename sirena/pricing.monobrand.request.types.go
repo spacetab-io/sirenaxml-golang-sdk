@@ -15,6 +15,7 @@ type PricingMonobrandRequestQuery struct {
 	PricingMonobrand PricingMonobrand `xml:"pricing_mono_brand"`
 }
 
+// PricingMonobrand is a <pricing_mono_brand> entry in <pricing_mono_brand> response
 type PricingMonobrand struct {
 	Segments      []PricingRequestSegment   `xml:"segment"`
 	Passenger     []PricingRequestPassenger `xml:"passenger"`

@@ -28,8 +28,10 @@ type Client struct {
 	Config *config.Config
 }
 
+// NewClientOptions holds named options for NewClient function
 type NewClientOptions struct {
-	Test bool // skip creating and signing symmetric key
+	// Test makes creating and signing symmetric key skipped
+	Test bool
 }
 
 // NewClient connects to Sirena (if not yet) and returns sirena client singleton

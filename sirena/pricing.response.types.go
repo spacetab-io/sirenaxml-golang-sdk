@@ -12,7 +12,7 @@ type PricingAnswer struct {
 type PricingAnswerPricing struct {
 	Variants []PricingAnswerVariant `xml:"variant"`
 	Flights  []*PricingAnswerFlight `xml:"flight"`
-	Error    *SirenaError           `xml:"error"`
+	Error    *Error                 `xml:"error"`
 }
 
 type PricingAnswerFlight struct {
