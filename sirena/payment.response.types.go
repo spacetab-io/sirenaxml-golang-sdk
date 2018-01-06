@@ -21,5 +21,9 @@ type PaymentAnswerQuery struct {
 		Value    float64 `xml:",chardata"`
 	} `xml:"cost"`
 	Timeout int    `xml:"timeout"`
+	Regnum  string `xml:"regnum,omitempty"`
+	NSeats  int    `xml:"nseats,omitempty"`
+	Agn     string `xml:"agn,omitempty"`
+	PPR     string `xml:"ppr,omitempty"`
 	Error   *Error `xml:"error"`
 }

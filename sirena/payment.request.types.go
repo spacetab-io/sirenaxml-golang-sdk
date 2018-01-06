@@ -19,14 +19,23 @@ type PaymentRequestBody struct {
 	Surname string `xml:"surname"`
 	Action  string `xml:"action"`
 	Paydoc  struct {
-		Formpay string `xml:"formpay"`
-		Type    string `xml:"type"`
+		Formpay  string `xml:"formpay"`
+		Type     string `xml:"type"`
+		Num      string `xml:"num,omitempty"`
+		ExpDate  string `xml:"exp_date,omitempty"`
+		Holder   string `xml:"holder,omitempty"`
+		AuthCode string `xml:"auth_code,omitempty"`
 	} `xml:"paydoc"`
+	Cost *struct {
+		Curr  string  `xml:"curr,attr"`
+		Value float64 `xml:",chardata"`
+	} `xml:"cost,omitempty"`
 	RequestParams PaymentRequestParams `xml:"request_params"`
 }
 
 // PaymentRequestParams is a <request_params> section in <payment-ext-auth> request
 type PaymentRequestParams struct {
-	TickSer        string `xml:"tick_ser"`
-	PaymentTimeout int    `xml:"payment_timeout"`
+	TickSer        string `xml:"tick_ser,omitempty"`
+	PaymentTimeout int    `xml:"payment_timeout,omitempty"`
+	ReturnReceipt  bool   `xml:"return_receipt,omitempty"`
 }
