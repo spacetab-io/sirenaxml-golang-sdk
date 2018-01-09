@@ -14,11 +14,11 @@ type OrderAnswer struct {
 	MsgID    int              `xml:"msgid,attr"`
 	Time     string           `xml:"time,attr"`
 	Instance string           `xml:"instance,attr"`
-	Order    OrderAnswerQuery `xml:"order"`
+	Order    OrderAnswerOrder `xml:"order"`
 }
 
-// OrderAnswerQuery is an <order> section in Sirena order response
-type OrderAnswerQuery struct {
+// OrderAnswerOrder is an <order> section in Sirena <order> response
+type OrderAnswerOrder struct {
 	Regnum   string              `xml:"regnum,attr"`
 	Agency   string              `xml:"agency,attr"`
 	PNR      BookingAnswerPNR    `xml:"pnr"`

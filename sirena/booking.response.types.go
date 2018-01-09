@@ -19,15 +19,15 @@ type BookingResponse struct {
 
 // BookingAnswer is an <answer> section in Sirena booking response
 type BookingAnswer struct {
-	Pult     string             `xml:"pult,attr,omitempty"`
-	MsgID    int                `xml:"msgid,attr"`
-	Time     string             `xml:"time,attr"`
-	Instance string             `xml:"instance,attr"`
-	Booking  BookingAnswerQuery `xml:"booking"`
+	Pult     string               `xml:"pult,attr,omitempty"`
+	MsgID    int                  `xml:"msgid,attr"`
+	Time     string               `xml:"time,attr"`
+	Instance string               `xml:"instance,attr"`
+	Booking  BookingAnswerBooking `xml:"booking"`
 }
 
-// BookingAnswerQuery is a <booking> section in Sirena booking response
-type BookingAnswerQuery struct {
+// BookingAnswerBooking is a <booking> section in Sirena booking response
+type BookingAnswerBooking struct {
 	Regnum   string                `xml:"regnum,attr"`
 	Agency   string                `xml:"agency,attr"`
 	PNR      BookingAnswerPNR      `xml:"pnr"`
