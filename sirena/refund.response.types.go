@@ -2,24 +2,24 @@ package sirena
 
 import "encoding/xml"
 
-// PaymentRefundResponse is a Sirena response to <payment-ext-auth:refund> request
-type PaymentRefundResponse struct {
-	Answer  PaymentRefundAnswer `xml:"answer"`
-	XMLName xml.Name            `xml:"sirena" json:"-"`
+// RefundResponse is a Sirena response to <payment-ext-auth:refund> request
+type RefundResponse struct {
+	Answer  RefundAnswer `xml:"answer"`
+	XMLName xml.Name     `xml:"sirena" json:"-"`
 }
 
-// PaymentRefundAnswer is an <answer> section in Sirena <payment-ext-auth:refund> response
-type PaymentRefundAnswer struct {
-	Pult          string                      `xml:"pult,attr,omitempty"`
-	PaymentRefund PaymentRefundAnswerResponse `xml:"payment-ext-auth"`
+// RefundAnswer is an <answer> section in Sirena <payment-ext-auth:refund> response
+type RefundAnswer struct {
+	Pult   string               `xml:"pult,attr,omitempty"`
+	Refund RefundAnswerResponse `xml:"payment-ext-auth"`
 }
 
-// PaymentRefundAnswerResponse is an <payment-ext-auth> section in Sirena <payment-ext-auth:refund> response
-type PaymentRefundAnswerResponse struct {
-	PNR    PaymentRefundAnswerPNR `xml:"pnr"`
-	Regnum string                 `xml:"regnum,attr,omitempty"`
-	Action string                 `xml:"action,attr,omitempty"`
-	Mode   string                 `xml:"mode,attr,omitempty"`
+// RefundAnswerResponse is an <payment-ext-auth> section in Sirena <payment-ext-auth:refund> response
+type RefundAnswerResponse struct {
+	PNR    RefundAnswerPNR `xml:"pnr"`
+	Regnum string          `xml:"regnum,attr,omitempty"`
+	Action string          `xml:"action,attr,omitempty"`
+	Mode   string          `xml:"mode,attr,omitempty"`
 	Cost   struct {
 		Currency string  `xml:"curr,attr"`
 		Value    float64 `xml:",chardata"`
@@ -27,13 +27,13 @@ type PaymentRefundAnswerResponse struct {
 	Error *Error `xml:"error"`
 }
 
-// PaymentRefundAnswerPNR is a <pnr> section in Sirena <payment-ext-auth:refund> response
-type PaymentRefundAnswerPNR struct {
-	Prices []PaymentRefundAnswerPNRPrice `xml:"prices>price"`
+// RefundAnswerPNR is a <pnr> section in Sirena <payment-ext-auth:refund> response
+type RefundAnswerPNR struct {
+	Prices []RefundAnswerPNRPrice `xml:"prices>price"`
 }
 
-// PaymentRefundAnswerPNRPrice is a <price> subsection in Sirena <payment-ext-auth:refund> response
-type PaymentRefundAnswerPNRPrice struct {
+// RefundAnswerPNRPrice is a <price> subsection in Sirena <payment-ext-auth:refund> response
+type RefundAnswerPNRPrice struct {
 	SegmentID   int                      `xml:"segment-id,attr,omitempty"`
 	PassengerID int                      `xml:"passenger-id,attr,omitempty"`
 	Fare        PayRefAnswerPNRPriceFare `xml:"fare"`
