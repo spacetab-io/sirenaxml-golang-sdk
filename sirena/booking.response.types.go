@@ -5,10 +5,14 @@ import (
 )
 
 const (
-	Time     = "15:04"
-	Date     = "02:01:2006"
-	TimeDate = "15:04 02:01:2006"
-	DateTime = "02:01:2006 15:04"
+	// Date and time formats
+	Time        = "15:04"
+	TimeSec     = "15:04:05"
+	Date        = "02.01.2006"
+	TimeDate    = "15:04 02.01.2006"
+	DateTime    = "02.01.2006 15:04"
+	TimeSecDate = "15:04:05 02.01.2006"
+	DateTimeSec = "02.01.2006 15:04:05"
 )
 
 // BookingResponse is a Sirena response to <booking> request
