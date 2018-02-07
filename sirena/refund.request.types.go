@@ -19,8 +19,16 @@ type RefundRequestBody struct {
 	Surname       string                    `xml:"surname"`
 	Action        string                    `xml:"action"`
 	Mode          string                    `xml:"mode,omitempty"`
+	Passenger     *RefundPassenger          `xml:"passenger,omitempty"`
+	Cost          *Cost                     `xml:"cost,omitempty"`
 	RequestParams RefundRequestParams       `xml:"request_params,omitempty"`
 	AnswerParams  RefundRequestAnswerParams `xml:"answer_params,omitempty"`
+}
+
+// RefundPassenger is a <passenger> section in <payment-ext-auth:refund> request
+type RefundPassenger struct {
+	Name    string `xml:"name,omitempty"`
+	Surname string `xml:"surname,omitempty"`
 }
 
 // RefundRequestParams is a <request_params> section in <payment-ext-auth:refund> request
