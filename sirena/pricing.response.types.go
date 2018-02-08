@@ -69,6 +69,7 @@ type PricingAnswerPrice struct {
 	// Count             int                     `xml:"count,attr"`
 	// Currency          string                  `xml:"currency,attr"`
 	// Ticket            string                  `xml:"ticket,attr"`
+	Baggage string `xml:"baggage,attr"`
 	// FC                string                  `xml:"fc,attr"`
 	// DocID             string                  `xml:"doc_id,attr"`
 	// ACCode            string                  `xml:"accode,attr"`
