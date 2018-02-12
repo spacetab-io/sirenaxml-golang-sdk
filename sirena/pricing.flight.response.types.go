@@ -7,5 +7,5 @@ type PricingFlightResponse struct {
 
 // PricingFlightAnswer is an <answer> entry in <pricing_flight> response
 type PricingFlightAnswer struct {
-	Pricing PricingAnswerPricing `xml:"pricing_flight"`
+	Pricing *PricingAnswerPricing `xml:"pricing_flight"`
 }
