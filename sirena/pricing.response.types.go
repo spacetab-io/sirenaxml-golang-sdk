@@ -27,6 +27,7 @@ type PricingAnswerFlight struct {
 	DeptTime    string                `xml:"depttime"`
 	ArrvTime    string                `xml:"arrvtime"`
 	Airplane    string                `xml:"airplane"`
+	FlightTime  string                `xml:"flightTime"`
 }
 
 type PricingAnswerVariant struct {
