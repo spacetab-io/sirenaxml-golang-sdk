@@ -46,11 +46,12 @@ type PricingAnswerVariantFlightGroup struct {
 }
 
 type PricingAnswerVariantFlight struct {
-	ID        int    `xml:"id,attr"`
-	Num       int    `xml:"num,attr"`
-	SubClass  string `xml:"subclass,attr"`
-	BaseClass string `xml:"baseclass,attr"`
-	Available int    `xml:"available,attr"`
+	ID         int    `xml:"id,attr"`
+	Num        int    `xml:"num,attr"`
+	SubClass   string `xml:"subclass,attr"`
+	BaseClass  string `xml:"baseclass,attr"`
+	Available  int    `xml:"available,attr"`
+	SegmentNum string `xml:"iSegmentNum,attr"`
 }
 
 type PricingAnswerVariantDirection struct {
