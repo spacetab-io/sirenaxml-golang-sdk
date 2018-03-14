@@ -17,14 +17,14 @@ import (
 
 // Config is a config :)
 type Config struct {
-	LogLevel                 string `json:"log_level" env:"LOG_LEVEL" default:"debug"` // log everything by default
-	SirenaClientID           string `json:"sirena_client_id" env:"SIRENA_CLIENT_ID" required:"true"`
-	SirenaHost               string `json:"sirena_host" env:"SIRENA_HOST" required:"true"`
-	SirenaPort               string `json:"sirena_port" env:"SIRENA_PORT" required:"true"`
-	ClientPublicKey          string `json:"client_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
-	ClientPrivateKey         string `json:"client_private_key" env:"CLIENT_PRIVATE_KEY" required:"true"`
-	ClientPrivateKeyPassword string `json:"client_private_key_password" env:"CLIENT_PRIVATE_KEY_PASSWORD"`
-	ServerPublicKey          string `json:"server_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
+	LogLevel                 string `yaml:"log_level" env:"LOG_LEVEL" default:"debug"` // log everything by default
+	SirenaClientID           string `yaml:"sirena_client_id" env:"SIRENA_CLIENT_ID" required:"true"`
+	SirenaHost               string `yaml:"sirena_host" env:"SIRENA_HOST" required:"true"`
+	SirenaPort               string `yaml:"sirena_port" env:"SIRENA_PORT" required:"true"`
+	ClientPublicKey          string `yaml:"client_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
+	ClientPrivateKey         string `yaml:"client_private_key" env:"CLIENT_PRIVATE_KEY" required:"true"`
+	ClientPrivateKeyPassword string `yaml:"client_private_key_password" env:"CLIENT_PRIVATE_KEY_PASSWORD"`
+	ServerPublicKey          string `yaml:"server_public_key" env:"CLIENT_PUBLIC_KEY" required:"true"`
 	EnvType                  string
 }
 
@@ -33,7 +33,7 @@ var config = &Config{}
 // Singleton guard
 var once sync.Once
 
-// Get reads config from environment or JSON
+// Get reads config from environment or yaml
 func Get() *Config {
 	once.Do(func() {
 		// Get path to this package
@@ -46,7 +46,7 @@ func Get() *Config {
 		if envType == "" {
 			envType = "dev"
 		}
-		if err := configor.New(&configor.Config{Environment: envType}).Load(config, path.Dir(filename)+"/config.json"); err != nil {
+		if err := configor.New(&configor.Config{Environment: envType}).Load(config, path.Dir(filename)+"/config.yaml"); err != nil {
 			log.Fatal(err)
 		}
 		config.EnvType = envType
