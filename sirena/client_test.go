@@ -6,7 +6,7 @@ import (
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
+	"github.com/tmconsulting/sirena-config"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
 

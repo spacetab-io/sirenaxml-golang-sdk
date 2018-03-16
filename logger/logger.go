@@ -4,7 +4,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
+	"github.com/tmconsulting/sirena-config"
 
 	logging "github.com/op/go-logging"
 )
