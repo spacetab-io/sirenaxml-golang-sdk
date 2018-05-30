@@ -29,11 +29,11 @@ type Booking struct {
 
 // BookingRequestParams is a <request_params> section in Sirena booking request
 type BookingRequestParams struct {
-	TickSer       string                `xml:"tick_ser"`
-	ParcelAgency  string                `xml:"parcel_agency"`
-	Formpay       BookingRequestFormpay `xml:"formpay"`
-	AllowWaitlist bool                  `xml:"allow_waitlist"`
-	Brand         string                `xml:"brand"`
+	TickSer       string                `xml:"tick_ser,omitempty"`
+	ParcelAgency  string                `xml:"parcel_agency,omitempty"`
+	Formpay       BookingRequestFormpay `xml:"formpay,omitempty"`
+	AllowWaitlist bool                  `xml:"allow_waitlist,omitempty"`
+	Brand         string                `xml:"brand,omitempty"`
 }
 
 // BookingRequestFormpay is a <formpay> entry in <request_params>
