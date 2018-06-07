@@ -16,6 +16,9 @@ type GetItinReceiptsDataAnswer struct {
 
 // GetItinReceiptsDataAnswerReceipts is a <receipts> element in Sirena <get_itin_receipts_data> response
 type GetItinReceiptsDataAnswerReceipts struct {
-	DocOfPassenger string `xml:"ticket_form>doc_of_passenger"`
-	Error          *Error `xml:"error,omitempty"`
+	TicketForm struct {
+		CRTime         string `xml:"cr_time,attr"`
+		DocOfPassenger string `xml:"doc_of_passenger"`
+	} `xml:"ticket_form"`
+	Error *Error `xml:"error,omitempty"`
 }
