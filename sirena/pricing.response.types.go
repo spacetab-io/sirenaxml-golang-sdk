@@ -78,6 +78,7 @@ type PricingAnswerPrice struct {
 	// ValidatingCompany string                  `xml:"validating_company,attr"`
 	// FOP               string                  `xml:"fop,attr"`
 	OrigCode string `xml:"orig_code,attr"`
+	Brand    string `xml:"brand,attr"`
 	// OrigID            int                     `xml:"orig_id,attr"`
 	Fare  *PricingAnswerPriceFare `xml:"fare"`
 	Taxes []PricingAnswerPriceTax `xml:"tax"`
