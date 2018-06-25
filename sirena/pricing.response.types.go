@@ -75,7 +75,7 @@ type PricingAnswerPrice struct {
 	// FC                string                  `xml:"fc,attr"`
 	// DocID             string                  `xml:"doc_id,attr"`
 	// ACCode            string                  `xml:"accode,attr"`
-	// ValidatingCompany string                  `xml:"validating_company,attr"`
+	ValidatingCompany string `xml:"validating_company,attr"`
 	// FOP               string                  `xml:"fop,attr"`
 	OrigCode string `xml:"orig_code,attr"`
 	Brand    string `xml:"brand,attr"`
