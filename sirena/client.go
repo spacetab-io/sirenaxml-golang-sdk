@@ -56,6 +56,7 @@ func (client *Client) handleResponseQueue() {
 			logger.Fatal(err)
 		}
 		responseHeader := ParseHeader(responseHeaderBytes)
+		logger.Debugf("[handleResponseQueue][Message ID = %d] Got Sirena response header", responseHeader.MessageID)
 		if responseHeader.MessageLength == 0 {
 			logger.Fatalf("Sirena response header doesn't include messahe length: %s", spew.Sdump(responseHeader))
 		}
@@ -63,8 +64,11 @@ func (client *Client) handleResponseQueue() {
 		if _, err := io.ReadFull(connReader, responseMessageBytes); err != nil {
 			logger.Fatal(err)
 		}
+		logger.Debugf("[handleResponseQueue][Message ID = %d] Got Sirena response data", responseHeader.MessageID)
 		// Find proper channel in the queue
+		client.ResponseQueue.Mutex.RLock()
 		responseChannel, exists := client.ResponseQueue.Data[responseHeader.MessageID]
+		client.ResponseQueue.Mutex.RUnlock()
 		if !exists {
 			logger.Fatalf("No response channel found for message ID %d", responseHeader.MessageID)
 		}
@@ -223,6 +227,7 @@ func (client *Client) SendAsync(request *Request) (chan *Response, error) {
 		logger.Error(err)
 		return nil, err
 	}
+	logger.Debugf("[SendAsync][Message ID = %d] Sent Sirena request", request.Header.MessageID)
 	return responseChannel, nil
 }
 

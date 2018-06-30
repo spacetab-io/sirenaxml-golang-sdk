@@ -3,6 +3,7 @@ package sirena
 import (
 	"encoding/xml"
 	"testing"
+	"time"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 
@@ -57,6 +58,74 @@ func TestKeyInfo(t *testing.T) {
 	}
 	if keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPubliKey == "" {
 		t.Fatalf("No Sirena Public key found in response: %s", response.Message)
+	}
+	t.Logf("Got Sirena public key: \n%s", keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPubliKey)
+}
+
+func TestKeyInfoAsync(t *testing.T) {
+	client := NewClient(NewClientOptions{Test: true})
+	request1 := &Request{
+		Message: []byte(keyInfoXML),
+		Header: NewHeader(NewHeaderParams{
+			Message: []byte(keyInfoXML),
+		}),
+	}
+	request2 := &Request{
+		Message: []byte(keyInfoXML),
+		Header: NewHeader(NewHeaderParams{
+			Message: []byte(keyInfoXML),
+		}),
+	}
+	responseChannel1, err := client.SendAsync(request1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	responseChannel2, err := client.SendAsync(request2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var response1, response2 *Response
+	select {
+	case response1 = <-responseChannel1:
+	case <-time.After(10 * time.Second):
+		t.Fatal("Response1 timeout")
+	}
+	select {
+	case response2 = <-responseChannel2:
+	case <-time.After(10 * time.Second):
+		t.Fatal("Response1 timeout")
+	}
+
+	// Validate response 1 header
+	if request1.Header.ClientID != response1.Header.ClientID {
+		t.Fatalf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request1.Header.ClientID, response1.Header.ClientID)
+	}
+	if request1.Header.CreatedAt != response1.Header.CreatedAt {
+		t.Fatalf("request.Header.CreatedAt (%d) != response.Header.CreatedAt (%d)", request1.Header.CreatedAt, response1.Header.CreatedAt)
+	}
+
+	// Validate response 2 header
+	if request2.Header.ClientID != response2.Header.ClientID {
+		t.Fatalf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request2.Header.ClientID, response2.Header.ClientID)
+	}
+	if request2.Header.CreatedAt != response2.Header.CreatedAt {
+		t.Fatalf("request.Header.CreatedAt (%d) != response.Header.CreatedAt (%d)", request2.Header.CreatedAt, response2.Header.CreatedAt)
+	}
+	// Decode XML and make sure Sirena Public Key is returned
+	var keyInfoResponse = struct {
+		Answer struct {
+			KeyInfo struct {
+				KeyManager struct {
+					ServerPubliKey string `xml:"server_public_key"`
+				} `xml:"key_manager"`
+			} `xml:"key_info"`
+		} `xml:"answer"`
+	}{}
+	if err := xml.Unmarshal(response2.Message, &keyInfoResponse); err != nil {
+		t.Fatal(err)
+	}
+	if keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPubliKey == "" {
+		t.Fatalf("No Sirena Public key found in response: %s", response2.Message)
 	}
 	t.Logf("Got Sirena public key: \n%s", keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPubliKey)
 }
