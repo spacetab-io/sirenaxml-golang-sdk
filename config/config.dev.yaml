@@ -1,7 +1,0 @@
-sirena_client_id: 2285
-sirena_host: 194.84.25.50
-sirena_port: 34323
-client_public_key: src/github.com/tmconsulting/sirenaxml-golang-sdk/keys/Client.Public.key.pem
-client_private_key: src/github.com/tmconsulting/sirenaxml-golang-sdk/keys/Client.Private.key.pem
-client_private_key_password: 
-server_public_key: src/github.com/tmconsulting/sirenaxml-golang-sdk/keys/Server.Public.key.pem

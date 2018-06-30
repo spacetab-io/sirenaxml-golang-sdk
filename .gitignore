@@ -1,1 +1,5 @@
-/keys/*
+# Sirena keys
+keys/*
+
+# Sirena config
+config/defaults

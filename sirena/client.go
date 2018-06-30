@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"sync"
 	"time"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
@@ -21,17 +22,57 @@ import (
 	"github.com/davecgh/go-spew/spew"
 )
 
+// ResponseQueue is a set of all asyncroniously sent and waiting Sirena requests (by request message ID)
+type ResponseQueue struct {
+	Data  map[uint32](chan *Response)
+	Mutex sync.RWMutex
+}
+
 // Client is a sirena client
 type Client struct {
-	net.Conn
-	Key    []byte
-	Config *config.Config
+	Conn          net.Conn
+	ResponseQueue *ResponseQueue
+	ConnReader    io.Reader
+	Key           []byte
+	Config        *config.Config
 }
 
 // NewClientOptions holds named options for NewClient function
 type NewClientOptions struct {
 	// Test makes creating and signing symmetric key skipped
 	Test bool
+}
+
+// handleResponseQueue
+func (client *Client) handleResponseQueue() {
+	if client.ResponseQueue == nil {
+		return
+	}
+	logger := logger.Get()
+	connReader := bufio.NewReader(client.Conn)
+	responseHeaderBytes := make([]byte, 100)
+	for {
+		if _, err := connReader.Read(responseHeaderBytes); err != nil {
+			logger.Fatal(err)
+		}
+		responseHeader := ParseHeader(responseHeaderBytes)
+		if responseHeader.MessageLength == 0 {
+			logger.Fatalf("Sirena response header doesn't include messahe length: %s", spew.Sdump(responseHeader))
+		}
+		responseMessageBytes := make([]byte, responseHeader.MessageLength)
+		if _, err := io.ReadFull(connReader, responseMessageBytes); err != nil {
+			logger.Fatal(err)
+		}
+		// Find proper channel in the queue
+		responseChannel, exists := client.ResponseQueue.Data[responseHeader.MessageID]
+		if !exists {
+			logger.Fatalf("No response channel found for message ID %d", responseHeader.MessageID)
+		}
+		responseChannel <- &Response{
+			Header:  &responseHeader,
+			Message: responseMessageBytes,
+		}
+	}
 }
 
 // NewClient connects to Sirena (if not yet) and returns sirena client singleton
@@ -42,7 +83,10 @@ func NewClient(options ...NewClientOptions) *Client {
 		log.Fatal(err)
 	}
 	client := &Client{
-		Conn:   conn,
+		Conn: conn,
+		ResponseQueue: &ResponseQueue{
+			Data: map[uint32](chan *Response){},
+		},
 		Key:    nil,
 		Config: config,
 	}
@@ -60,6 +104,9 @@ func NewClient(options ...NewClientOptions) *Client {
 			}
 		}()
 	}
+	// Handle Sirena responses
+	go client.handleResponseQueue()
+
 	return client
 }
 
@@ -144,42 +191,49 @@ func (client *Client) CreateAndSignKey() error {
 	return nil
 }
 
-// Send sends request to Sirena and returns response
-func (client *Client) Send(request *Request) (*Response, error) {
+// Send asyncroniously sends request to Sirena and returns response channel to wait on
+func (client *Client) SendAsync(request *Request) (chan *Response, error) {
 	logger := logger.Get()
+	if request.Header == nil {
+		return nil, errors.New("Request doesn't have header defined")
+	}
+	if request.Header.MessageID == 0 {
+		return nil, errors.New("Request doesn't have header.messageID defined")
+	}
 
+	// Prepare message to send to Sirena
 	var data []byte
+	// Add message header
 	data = append(data, request.Header.ToBytes()...)
 	if len(request.SubHeader) > 0 {
 		data = append(data, request.SubHeader...)
 	}
+	// Add message data
 	data = append(data, request.Message...)
 	if len(request.MessageSignature) > 0 {
 		data = append(data, request.MessageSignature...)
 	}
+	// Prepare channel where Sirena response will be sent to
+	responseChannel := make(chan *Response)
+	client.ResponseQueue.Mutex.Lock()
+	client.ResponseQueue.Data[request.Header.MessageID] = responseChannel
+	client.ResponseQueue.Mutex.Unlock()
+	// Send message
 	if _, err := client.Conn.Write(data); err != nil {
 		logger.Error(err)
 		return nil, err
 	}
-	connReader := bufio.NewReader(client.Conn)
-	responseHeaderBytes := make([]byte, 100)
-	if _, err := connReader.Read(responseHeaderBytes); err != nil {
-		logger.Error(err)
+	return responseChannel, nil
+}
+
+// Send sends request to Sirena and returns response
+func (client *Client) Send(request *Request) (*Response, error) {
+	responseChannel, err := client.SendAsync(request)
+	if err != nil {
 		return nil, err
 	}
-	responseHeader := ParseHeader(responseHeaderBytes)
-	if responseHeader.MessageLength == 0 {
-		logger.Errorf("Sirena response header doesn't include messahe length: %s", spew.Sdump(responseHeader))
-	}
-	responseMessageBytes := make([]byte, responseHeader.MessageLength)
-	if _, err := io.ReadFull(connReader, responseMessageBytes); err != nil {
-		logger.Error(err)
-		return nil, err
-	}
-	return &Response{
-		Header:  &responseHeader,
-		Message: responseMessageBytes,
-	}, nil
+	response := <-responseChannel
+	return response, nil
 }
 
 // SendXMLRequest send XML request to Sirena and expects XML response

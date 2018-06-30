@@ -3,6 +3,7 @@ package sirena
 import (
 	"encoding/binary"
 	"math/rand"
+	"sync/atomic"
 	"time"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
@@ -23,6 +24,9 @@ const (
 	// EncryptPublic is a flag saying message is encrypted by public key (RSA)
 	EncryptPublic byte = 0x40
 )
+
+// MessageID is a global counter for Sirena request message IDs
+var MessageID uint32
 
 // HeaderOffsets holds information about header offset lengths
 var HeaderOffsets = map[int]int{
@@ -94,12 +98,15 @@ func NewHeader(params NewHeaderParams) *Header {
 		return nil
 	}
 
+	// Increment message ID
+	atomic.AddUint32(&MessageID, 1)
+
 	return &Header{
 		MessageLength: msgLength,
 		CreatedAt:     uint32(time.Now().Unix()),
 		ClientID:      sirenaClientID,
 		KeyID:         params.KeyID,
-		MessageID:     uint32(params.MessageID),
+		MessageID:     MessageID,
 		Flags:         flags,
 	}
 }
