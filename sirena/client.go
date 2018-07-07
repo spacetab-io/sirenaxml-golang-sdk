@@ -233,12 +233,19 @@ func (client *Client) SendAsync(request *Request) (chan *Response, error) {
 
 // Send sends request to Sirena and returns response
 func (client *Client) Send(request *Request) (*Response, error) {
+	logger := logger.Get()
 	responseChannel, err := client.SendAsync(request)
 	if err != nil {
 		return nil, err
 	}
-	response := <-responseChannel
-	return response, nil
+	select {
+	case response := <-responseChannel:
+		return response, nil
+	case <-time.After(time.Second * 5):
+		errMsg := "[Send] No reply from Sirena. Timeout 5 secs"
+		logger.Errorf(errMsg)
+		return nil, errors.New(errMsg)
+	}
 }
 
 // SendXMLRequest send XML request to Sirena and expects XML response
