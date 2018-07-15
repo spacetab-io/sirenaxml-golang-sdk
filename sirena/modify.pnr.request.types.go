@@ -15,9 +15,40 @@ type ModifyPNRQuery struct {
 
 // ModifyPNR is a body of <modify_pnr> request
 type ModifyPNR struct {
-	Regnum    string             `xml:"regnum"`
+	Regnum    ModifyPNRRegnum    `xml:"regnum"`
 	Surname   string             `xml:"surname"`
-	AddParams ModifyPNRAddParams `xml:"add"`
+	Modify    ModifyPNRModify    `xml:"modify,omitempty"`
+	AddParams ModifyPNRAddParams `xml:"add,omitempty"`
+}
+
+// ModifyPNRRegnum is a <regnum> element of <modify_pnr> request
+type ModifyPNRRegnum struct {
+	Version string `xml:"version,attr"`
+	Value   string `xml:",chardata"`
+}
+
+// ModifyPNRRegnum is a <regnum> element of <modify_pnr> request
+type ModifyPNRModify struct {
+	Passenger ModifyPNRModifyPassenger `xml:"passenger,omitempty"`
+	Contacts  BookingAnswerContacts    `xml:"contacts,omitempty"`
+}
+
+type ModifyPNRModifyPassenger struct {
+	PassID string `xml:"pass_id,attr,omitempty"`
+	// LeadPass    bool                 `xml:"lead_pass,attr,omitempty"`
+	Name      string `xml:"name,omitempty"`
+	Surname   string `xml:"surname"`
+	Category  string `xml:"category",omitempty`
+	Sex       string `xml:"sex",omitempty`
+	Birthdate string `xml:"birthdate",omitempty`
+	// Age         int                  `xml:"age",omitempty`
+	DocCode     string `xml:"doccode",omitempty`
+	Doc         string `xml:"doc",omitempty`
+	PspExpire   string `xml:"pspexpire",omitempty`
+	DocCountry  string `xml:"doc_country",omitempty`
+	Nationality string `xml:"nationality",omitempty`
+	Residence   string `xml:"residence",omitempty`
+	// Contacts    []Contact            `xml:"contacts>contact",omitempty`
 }
 
 // ModifyPNRAddParams is a <add> section in <modify_pnr> request
