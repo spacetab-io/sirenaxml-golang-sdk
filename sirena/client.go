@@ -147,7 +147,11 @@ func (client *Client) CreateAndSignKey() error {
 // Send sends request to Sirena and returns response
 func (client *Client) Send(request *Request) (*Response, error) {
 	logger := logger.Get()
-
+	logError := func(err error) error {
+		errPrefix := fmt.Sprintf("[SirenaHost:%s SirenaPort:%s SirenaClientID:%s]", client.Config.SirenaHost, client.Config.SirenaPort, client.Config.SirenaClientID)
+		logger.Error(errPrefix + " " + err.Error())
+		return err
+	}
 	var data []byte
 	data = append(data, request.Header.ToBytes()...)
 	if len(request.SubHeader) > 0 {
@@ -158,14 +162,12 @@ func (client *Client) Send(request *Request) (*Response, error) {
 		data = append(data, request.MessageSignature...)
 	}
 	if _, err := client.Conn.Write(data); err != nil {
-		logger.Error(err)
-		return nil, err
+		return nil, logError(err)
 	}
 	connReader := bufio.NewReader(client.Conn)
 	responseHeaderBytes := make([]byte, 100)
 	if _, err := connReader.Read(responseHeaderBytes); err != nil {
-		logger.Error(err)
-		return nil, err
+		return nil, logError(err)
 	}
 	responseHeader := ParseHeader(responseHeaderBytes)
 	if responseHeader.MessageLength == 0 {
@@ -173,8 +175,7 @@ func (client *Client) Send(request *Request) (*Response, error) {
 	}
 	responseMessageBytes := make([]byte, responseHeader.MessageLength)
 	if _, err := io.ReadFull(connReader, responseMessageBytes); err != nil {
-		logger.Error(err)
-		return nil, err
+		return nil, logError(err)
 	}
 	return &Response{
 		Header:  &responseHeader,
