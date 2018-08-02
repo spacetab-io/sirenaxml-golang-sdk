@@ -9,11 +9,10 @@ import (
 	"net"
 	"time"
 
+	"github.com/tmconsulting/sirena-config"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
-
-	"github.com/tmconsulting/sirena-config"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
@@ -183,11 +182,16 @@ func (client *Client) Send(request *Request) (*Response, error) {
 	}, nil
 }
 
+// SendXMLRequestMaxAttempts defines max attempts to re-dial Sirena API
+const MaxReDialAttempts int = 3
+
 // SendXMLRequest send XML request to Sirena and expects XML response
 func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 	if len(client.Key) == 0 {
 		return nil, errors.New("Client doesn't have symmetric key defined")
 	}
+
+	logger := logger.Get()
 
 	// Kepp key copy in case it's refreshed
 	requestKey := make([]byte, len(client.Key))
@@ -208,12 +212,27 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 		UseSymmetric: true,
 	})
 
-	// Send request to Sirena
-	response, err := client.Send(request)
-	if err != nil {
-		return nil, err
-	}
+	var (
+		response      *Response
+		redialAttempt int = 0
+	)
 
+	for {
+		redialAttempt++
+		if redialAttempt >= MaxReDialAttempts {
+			logger.Debugf("Sirena did't respond after 3 request attempts.")
+			break
+		}
+		response, err = client.Send(request)
+		if err != nil {
+			logger.Error(err)
+			if err := client.ReDial(); err != nil {
+				log.Fatal(err)
+			}
+			continue
+		}
+		break
+	}
 	// Validate response header
 	if request.Header.ClientID != response.Header.ClientID {
 		return nil, fmt.Errorf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request.Header.ClientID, response.Header.ClientID)
@@ -228,4 +247,15 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 	}
 
 	return xmlResponse, nil
+}
+
+// ReDial re-connects to Sirena
+func (client *Client) ReDial() error {
+	config := config.Get()
+	conn, err := net.Dial("tcp", config.GetSirenaAddr())
+	if err != nil {
+		return err
+	}
+	client.Conn = conn
+	return nil
 }
