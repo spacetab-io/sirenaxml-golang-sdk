@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"crypto/des"
 	"errors"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
 )
 
 // PKCS5Padding implements PKCS padding
@@ -43,6 +45,7 @@ func Encrypt(src, key []byte) ([]byte, error) {
 
 // Decrypt implements DES decryption in ECB mode with PKCS padding
 func Decrypt(src, key []byte) ([]byte, error) {
+	logger := logger.Get()
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -50,6 +53,9 @@ func Decrypt(src, key []byte) ([]byte, error) {
 	out := make([]byte, len(src))
 	dst := out
 	bs := block.BlockSize()
+	logger.Debugf("[Decrypt] encrypted data len = %d", len(src))
+	logger.Debugf("[Decrypt] key: %s", key)
+	logger.Debugf("[Decrypt] block size: %d", bs)
 	if len(src)%bs != 0 {
 		return nil, errors.New("crypto/cipher: input not full blocks")
 	}
