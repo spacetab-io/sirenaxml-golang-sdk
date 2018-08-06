@@ -72,7 +72,7 @@ type BookingAnswerPNRSegment struct {
 
 // PNRSegmentLeg is a <leg> entry in <segment> section
 type PNRSegmentLeg struct {
-	Airplane int                 `xml:"airplane,attr"`
+	Airplane string              `xml:"airplane,attr"`
 	Dep      PNRSegmentLegDepArr `xml:"dep"`
 	Arr      PNRSegmentLegDepArr `xml:"arr"`
 }
