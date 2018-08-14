@@ -35,20 +35,20 @@ type Pricing struct {
 
 // PricingRequestSegment is a <segment> section in <pricing> request
 type PricingRequestSegment struct {
-	ID          int    `xml:"id,omitempty"`
-	JointID     int    `xml:"joint_id,omitempty"`
-	Departure   string `xml:"departure"`
-	Arrival     string `xml:"arrival"`
-	Date        string `xml:"date"`
-	Company     string `xml:"company,omitempty"`
-	Flight      string `xml:"flight,omitempty"`
-	Num         int    `xml:"num,omitempty"`
-	Subclass    string `xml:"subclass,omitempty"`
-	Class       string `xml:"class,omitempty"`
-	Direct      bool   `xml:"direct"`
-	Connections string `xml:"connections,omitempty"`
-	TimeFrom    int    `xml:"time_from,omitempty"`
-	TimeTill    int    `xml:"time_till,omitempty"`
+	ID          int      `xml:"id,omitempty"`
+	JointID     int      `xml:"joint_id,omitempty"`
+	Departure   string   `xml:"departure"`
+	Arrival     string   `xml:"arrival"`
+	Date        string   `xml:"date"`
+	Company     string   `xml:"company,omitempty"`
+	Flight      string   `xml:"flight,omitempty"`
+	Num         int      `xml:"num,omitempty"`
+	Subclass    string   `xml:"subclass,omitempty"`
+	Class       []string `xml:"class,omitempty"`
+	Direct      bool     `xml:"direct"`
+	Connections string   `xml:"connections,omitempty"`
+	TimeFrom    int      `xml:"time_from,omitempty"`
+	TimeTill    int      `xml:"time_till,omitempty"`
 }
 
 // PricingRequestPassenger is a <passenger> section in <pricing> request
