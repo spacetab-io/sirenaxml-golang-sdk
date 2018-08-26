@@ -83,6 +83,7 @@ type PricingAnswerPrice struct {
 	Fare  *PricingAnswerPriceFare `xml:"fare"`
 	Taxes []PricingAnswerPriceTax `xml:"tax"`
 	// Total             float64                 `xml:"total"`
+	Upt PriceUpt `xml:"upt"`
 }
 
 type PricingAnswerPriceFare struct {
@@ -97,4 +98,32 @@ type PricingAnswerPriceTax struct {
 	Code  string  `xml:"code,attr"`
 	Owner string  `xml:"owner,attr"`
 	Total float64 `xml:",chardata"`
+}
+
+type PriceUpt struct {
+	Idar1     string `xml:"idar1"`
+	AddonIda  string `xml:"addon_ida"`
+	Ntrip     string `xml:"ntrip"`
+	Nvr       string `xml:"nvr"`
+	Ftnt      string `xml:"ftnt"`
+	CodeUpt   string `xml:"code_upt"`
+	Tariff    string `xml:"tariff"`
+	MainAwk   string `xml:"main_awk"`
+	Cat       string `xml:"cat"`
+	Vcat      string `xml:"vcat"`
+	City1     string `xml:"city1"`
+	City2     string `xml:"city2"`
+	Dport     string `xml:"dport"`
+	Aport     string `xml:"aport"`
+	BaseFare  string `xml:"base_fare"`
+	Iit       string `xml:"iit"`
+	Owrt      string `xml:"owrt"`
+	Ddate     string `xml:"ddate"`
+	Fdate     string `xml:"fdate"`
+	DelivType string `xml:"deliv_type"`
+	F0        string `xml:"f0"`
+	F1        string `xml:"f1"`
+	F2        string `xml:"f2"`
+	F3        string `xml:"f3"`
+	FlAwk     string `xml:"fl_awk"`
 }
