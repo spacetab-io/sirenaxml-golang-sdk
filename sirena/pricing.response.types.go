@@ -18,7 +18,7 @@ type PricingAnswerPricing struct {
 type PricingAnswerFlight struct {
 	ID          int                   `xml:"id,attr"`
 	Company     string                `xml:"company"`
-	Num         int                   `xml:"num"`
+	Num         string                `xml:"num"`
 	Flight      string                `xml:"flight"`
 	Origin      PricingAnswerLocation `xml:"origin"`
 	Destination PricingAnswerLocation `xml:"destination"`

@@ -42,7 +42,7 @@ type PricingRequestSegment struct {
 	Date        string   `xml:"date"`
 	Company     string   `xml:"company,omitempty"`
 	Flight      string   `xml:"flight,omitempty"`
-	Num         int      `xml:"num,omitempty"`
+	Num         string   `xml:"num,omitempty"`
 	Subclass    string   `xml:"subclass,omitempty"`
 	Class       []string `xml:"class,omitempty"`
 	Direct      bool     `xml:"direct"`
