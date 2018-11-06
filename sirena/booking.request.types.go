@@ -81,6 +81,7 @@ type BookingRequestContacts struct {
 }
 
 type BookingRequestPassenger struct {
+	ID          int       `xml:"-"`
 	Lastname    string    `xml:"lastname"`
 	Firstname   string    `xml:"firstname"`
 	Category    string    `xml:"category"`
