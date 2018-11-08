@@ -32,5 +32,5 @@ type PaymentAnswerQuery struct {
 // PaymentAnswerTicket holds ticket details in payment confirm response
 type PaymentAnswerTicket struct {
 	TickNum string `xml:"ticknum,attr"`
-	PassID  int    `xml:"pass_id,attr"`
+	PassID  string `xml:"pass_id,attr"`
 }
