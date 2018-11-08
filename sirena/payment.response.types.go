@@ -20,10 +20,17 @@ type PaymentAnswerQuery struct {
 		Currency string  `xml:"curr,attr"`
 		Value    float64 `xml:",chardata"`
 	} `xml:"cost"`
-	Timeout int    `xml:"timeout"`
-	Regnum  string `xml:"regnum,omitempty"`
-	NSeats  int    `xml:"nseats,omitempty"`
-	Agn     string `xml:"agn,omitempty"`
-	PPR     string `xml:"ppr,omitempty"`
-	Error   *Error `xml:"error"`
+	Timeout int                   `xml:"timeout"`
+	Regnum  string                `xml:"regnum,omitempty"`
+	NSeats  int                   `xml:"nseats,omitempty"`
+	Agn     string                `xml:"agn,omitempty"`
+	PPR     string                `xml:"ppr,omitempty"`
+	Tickets []PaymentAnswerTicket `xml:"tickinfo"`
+	Error   *Error                `xml:"error"`
+}
+
+// PaymentAnswerTicket holds ticket details in payment confirm response
+type PaymentAnswerTicket struct {
+	TickNum string `xml:"ticknum,attr"`
+	PassID  int    `xml:"pass_id,attr"`
 }
