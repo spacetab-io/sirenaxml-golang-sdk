@@ -33,7 +33,8 @@ type RefundPassenger struct {
 
 // RefundRequestParams is a <request_params> section in <payment-ext-auth:refund> request
 type RefundRequestParams struct {
-	Pretend bool `xml:"pretend,omitempty"`
+	Pretend      bool `xml:"pretend,omitempty"`
+	CheckForCash bool `xml:"check_for_cash"`
 }
 
 // RefundRequestAnswerParams is a <answer_params> section in <payment-ext-auth:refund> request

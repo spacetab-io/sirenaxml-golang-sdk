@@ -36,7 +36,10 @@ type RefundAnswerPNR struct {
 type RefundAnswerPNRPrice struct {
 	SegmentID   int                      `xml:"segment-id,attr,omitempty"`
 	PassengerID int                      `xml:"passenger-id,attr,omitempty"`
+	Currency    string                   `xml:"currency,attr,omitempty"`
+	Ticket      string                   `xml:"ticket,attr"`
 	Fare        PayRefAnswerPNRPriceFare `xml:"fare"`
+	Total       float64                  `xml:"total"`
 }
 
 // PayRefAnswerPNRPriceFare is a <fare> subsection in Sirena <payment-ext-auth:refund> response
