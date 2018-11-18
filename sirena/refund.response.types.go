@@ -24,7 +24,8 @@ type RefundAnswerResponse struct {
 		Currency string  `xml:"curr,attr"`
 		Value    float64 `xml:",chardata"`
 	} `xml:"cost"`
-	Error *Error `xml:"error"`
+	Ok    *struct{} `xml:"ok,omitempty"`
+	Error *Error    `xml:"error"`
 }
 
 // RefundAnswerPNR is a <pnr> section in Sirena <payment-ext-auth:refund> response
@@ -38,6 +39,7 @@ type RefundAnswerPNRPrice struct {
 	PassengerID int                      `xml:"passenger-id,attr,omitempty"`
 	Currency    string                   `xml:"currency,attr,omitempty"`
 	Ticket      string                   `xml:"ticket,attr"`
+	AcCode      string                   `xml:"accode,attr"`
 	Fare        PayRefAnswerPNRPriceFare `xml:"fare"`
 	Total       float64                  `xml:"total"`
 }
