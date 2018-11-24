@@ -193,28 +193,11 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 
 	logger := logger.Get()
 
-	// Kepp key copy in case it's refreshed
-	requestKey := make([]byte, len(client.Key))
-	copy(requestKey, client.Key)
-
-	xmlCrypted, err := des.Encrypt([]byte(xmlRequest), requestKey)
-	if err != nil {
-		return nil, err
-	}
-
-	// Create Sirena request
-	request := &Request{
-		Message: xmlCrypted,
-	}
-	// Set request header
-	request.Header = NewHeader(NewHeaderParams{
-		Message:      xmlCrypted,
-		UseSymmetric: true,
-	})
-
 	var (
-		response      *Response
-		redialAttempt int = 0
+		response                       *Response
+		xmlRequestCrypted, xmlResponse []byte
+		redialAttempt                  int = 0
+		err                            error
 	)
 
 	for {
@@ -223,6 +206,26 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 			logger.Debugf("Sirena did't respond after 3 request attempts.")
 			break
 		}
+
+		// Kepp key copy in case it's refreshed
+		requestKey := make([]byte, len(client.Key))
+		copy(requestKey, client.Key)
+
+		xmlRequestCrypted, err = des.Encrypt([]byte(xmlRequest), requestKey)
+		if err != nil {
+			return nil, err
+		}
+
+		// Create Sirena request
+		request := &Request{
+			Message: xmlRequestCrypted,
+		}
+		// Set request header
+		request.Header = NewHeader(NewHeaderParams{
+			Message:      xmlRequestCrypted,
+			UseSymmetric: true,
+		})
+
 		response, err = client.Send(request)
 		if err != nil {
 			logger.Error(err)
@@ -231,17 +234,24 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 			}
 			continue
 		}
+		// Validate response header
+		if request.Header.ClientID != response.Header.ClientID {
+			return nil, fmt.Errorf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request.Header.ClientID, response.Header.ClientID)
+		}
+		if request.Header.CreatedAt != response.Header.CreatedAt {
+			return nil, fmt.Errorf("request.Header.CreatedAt (%d) != response.Header.CreatedAt (%d)", request.Header.CreatedAt, response.Header.CreatedAt)
+		}
+		// Decrypt Sirena response
+		xmlResponse, err = des.Decrypt(response.Message, requestKey)
+		if err != nil {
+			logger.Error(err)
+			if err = client.ReDial(); err != nil {
+				log.Fatal(err)
+			}
+			continue
+		}
 		break
 	}
-	// Validate response header
-	if request.Header.ClientID != response.Header.ClientID {
-		return nil, fmt.Errorf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request.Header.ClientID, response.Header.ClientID)
-	}
-	if request.Header.CreatedAt != response.Header.CreatedAt {
-		return nil, fmt.Errorf("request.Header.CreatedAt (%d) != response.Header.CreatedAt (%d)", request.Header.CreatedAt, response.Header.CreatedAt)
-	}
-	// Decrypt Sirena response
-	xmlResponse, err := des.Decrypt(response.Message, requestKey)
 	if err != nil {
 		return nil, err
 	}
@@ -252,10 +262,15 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 // ReDial re-connects to Sirena
 func (client *Client) ReDial() error {
 	config := config.Get()
+	logger := logger.Get()
+	logger.Debugf("Reconnecting to Sirena")
 	conn, err := net.Dial("tcp", config.GetSirenaAddr())
 	if err != nil {
 		return err
 	}
 	client.Conn = conn
+	if err := client.CreateAndSignKey(); err != nil {
+		return err
+	}
 	return nil
 }
