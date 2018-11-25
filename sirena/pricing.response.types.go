@@ -82,8 +82,8 @@ type PricingAnswerPrice struct {
 	// OrigID            int                     `xml:"orig_id,attr"`
 	Fare  *PricingAnswerPriceFare `xml:"fare"`
 	Taxes []PricingAnswerPriceTax `xml:"tax"`
-	// Total             float64                 `xml:"total"`
-	Upt PriceUpt `xml:"upt"`
+	Total float64                 `xml:"total"`
+	Upt   PriceUpt                `xml:"upt"`
 }
 
 type PricingAnswerPriceFare struct {
