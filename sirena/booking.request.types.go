@@ -44,11 +44,12 @@ type BookingRequestFormpay struct {
 
 // BookingAnswerParams is an <answer_params> entry in Sirena booking request
 type BookingAnswerParams struct {
-	ShowUptRec      bool `xml:"show_upt_rec,omitempty"`
-	AddRemarks      bool `xml:"add_remarks,omitempty"`
-	AddSsr          bool `xml:"add_ssr,omitempty"`
-	AddRemoteRecloc bool `xml:"add_remote_recloc,omitempty"`
-	ShowComission   bool `xml:"show_comission,omitempty"`
+	ShowUptRec      bool   `xml:"show_upt_rec,omitempty"`
+	AddRemarks      bool   `xml:"add_remarks,omitempty"`
+	AddSsr          bool   `xml:"add_ssr,omitempty"`
+	AddRemoteRecloc bool   `xml:"add_remote_recloc,omitempty"`
+	ShowComission   bool   `xml:"show_comission,omitempty"`
+	Lang            string `xml:"lang,omitempty"`
 }
 
 // BookingRequestAgentComission is an <agent_comission> in Sirena booking request

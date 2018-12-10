@@ -88,7 +88,7 @@ type PNRSegmentLegDepArr struct {
 // PNRSegmentDepartureArrival is <departure> and <arrival> entries in <segment> section
 type PNRSegmentDepartureArrival struct {
 	City     string `xml:"city"`
-	Aitport  string `xml:"airport"`
+	Airport  string `xml:"airport"`
 	Date     string `xml:"date"`
 	Time     string `xml:"time"`
 	Terminal string `xml:"terminal"`
@@ -102,7 +102,7 @@ type PNRSegmentStatus struct {
 
 // BookingAnswerPNRPassenger is a <passenger> section in Sirena booking response
 type BookingAnswerPNRPassenger struct {
-	ID          int                  `xml:"id,attr,omitempty"`
+	ID          string               `xml:"id,attr,omitempty"`
 	LeadPass    bool                 `xml:"lead_pass,attr"`
 	Name        string               `xml:"name"`
 	Surname     string               `xml:"surname"`
