@@ -33,4 +33,5 @@ type PaymentAnswerQuery struct {
 type PaymentAnswerTicket struct {
 	TickNum int    `xml:"ticknum,attr"`
 	PassID  string `xml:"pass_id,attr"`
+	SegID   string `xml:"seg_id,attr"`
 }
