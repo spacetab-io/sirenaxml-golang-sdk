@@ -20,13 +20,14 @@ type PaymentAnswerQuery struct {
 		Currency string  `xml:"curr,attr"`
 		Value    float64 `xml:",chardata"`
 	} `xml:"cost"`
-	Timeout int                   `xml:"timeout"`
-	Regnum  string                `xml:"regnum,omitempty"`
-	NSeats  int                   `xml:"nseats,omitempty"`
-	Agn     string                `xml:"agn,omitempty"`
-	PPR     string                `xml:"ppr,omitempty"`
-	Tickets []PaymentAnswerTicket `xml:"tickinfo"`
-	Error   *Error                `xml:"error"`
+	Timeout          int                   `xml:"timeout"`
+	Regnum           string                `xml:"regnum,omitempty"`
+	NSeats           int                   `xml:"nseats,omitempty"`
+	Agn              string                `xml:"agn,omitempty"`
+	PPR              string                `xml:"ppr,omitempty"`
+	Tickets          []PaymentAnswerTicket `xml:"tickinfo"`
+	VoidTimeLimitUTC string                `xml:"void_timelimit_utc,omitempty"` // TimeDate format
+	Error            *Error                `xml:"error"`
 }
 
 // PaymentAnswerTicket holds ticket details in payment confirm response
