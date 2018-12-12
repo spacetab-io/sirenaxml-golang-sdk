@@ -21,6 +21,7 @@ type GetItinReceiptsDataAnswerReceipts struct {
 		PassengerID     string `xml:"pass_id,attr"`
 		NameOfPassenger string `xml:"name_of_passenger"`
 		DocOfPassenger  string `xml:"doc_of_passenger"`
+		Total           string `xml:"total"`
 	} `xml:"ticket_form"`
 	Error *Error `xml:"error,omitempty"`
 }
