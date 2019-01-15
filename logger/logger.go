@@ -4,7 +4,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/tmconsulting/sirena-config"
+	"gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/config"
 
 	logging "github.com/op/go-logging"
 )

@@ -9,7 +9,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/tmconsulting/sirena-config"
+	"gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/config"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
