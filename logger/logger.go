@@ -4,9 +4,8 @@ import (
 	"os"
 	"sync"
 
-	"gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/config"
-
 	logging "github.com/op/go-logging"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
 )
 
 // Logger is a server logger

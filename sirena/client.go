@@ -9,13 +9,11 @@ import (
 	"net"
 	"time"
 
-	"gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/config"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
-
-	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
-
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 
 	"github.com/davecgh/go-spew/spew"
 )
@@ -229,7 +227,7 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 		response, err = client.Send(request)
 		if err != nil {
 			logger.Error(err)
-			if err := client.ReDial(); err != nil {
+			if err = client.ReDial(); err != nil {
 				log.Fatal(err)
 			}
 			continue

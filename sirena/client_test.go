@@ -4,13 +4,10 @@ import (
 	"encoding/xml"
 	"testing"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
-
-	"gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/config"
-
-	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
-
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 )
 
 // SignedKey is a signed symmetric key to sigin in TestKeyCreate and use in TestAvailability

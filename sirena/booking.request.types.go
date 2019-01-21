@@ -55,7 +55,7 @@ type BookingAnswerParams struct {
 // BookingRequestAgentComission is an <agent_comission> in Sirena booking request
 type BookingRequestAgentComission struct {
 	Type  string  `xml:"type,attr"`
-	Curr  string  `xml:"type,attr,omitempty"`
+	Curr  string  `xml:"curr,attr,omitempty"`
 	Value float64 `xml:",chardata"`
 }
 

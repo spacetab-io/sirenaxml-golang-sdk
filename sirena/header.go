@@ -5,9 +5,8 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
-
-	"gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/config"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/utils"
 )
 
