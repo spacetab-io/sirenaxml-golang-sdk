@@ -62,8 +62,8 @@ type PricingRouteRequestParams struct {
 	AsynchronousFares bool                        `xml:"asynchronous_fares,omitempty"`
 	Timeout           int                         `xml:"timeout,omitempty"`
 	EtIfPossible      bool                        `xml:"et_if_possible,omitempty"`
-	ShowVariantTotal  bool                        `xml:"show_varianttotal,omitempty"`
 	Formpay           *PricingRouteRequestFormpay `xml:"formpay,omitempty"`
+	// ShowVariantTotal  bool                        `xml:"show_varianttotal,omitempty"`
 }
 
 // PricingRouteAnswerParams is a <answer_params> section in <pricing_route> request
