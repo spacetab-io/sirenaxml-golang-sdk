@@ -52,6 +52,7 @@ type PricingAnswerVariantFlight struct {
 	BaseClass  string `xml:"baseclass,attr"`
 	Available  int    `xml:"available,attr"`
 	SegmentNum string `xml:"iSegmentNum,attr"`
+	Cabin      string `xml:"cabin,attr"`
 }
 
 type PricingAnswerVariantDirection struct {
