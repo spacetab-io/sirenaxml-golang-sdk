@@ -21,7 +21,7 @@ type OrderAnswer struct {
 type OrderAnswerOrder struct {
 	Regnum   string              `xml:"regnum,attr"`
 	Agency   string              `xml:"agency,attr"`
-	PNR      BookingAnswerPNR    `xml:"pnr"`
+	PNR      OrderAnswerPNR      `xml:"pnr"`
 	Tickinfo OrderAnswerTickinfo `xml:"tickinfo"`
 	Error    *Error              `xml:"error"`
 }
@@ -32,7 +32,7 @@ type OrderAnswerPNR struct {
 	Fop                string                      `xml:"fop,attr"`
 	Curr               string                      `xml:"curr,attr"`
 	Sum                float64                     `xml:"sum,attr"`
-	RegNum             string                      `xml:"regnum"`
+	Regnum             string                      `xml:"regnum"`
 	UTCTimeLimit       string                      `xml:"utc_timelimit"`
 	TimeLimit          string                      `xml:"timelimit"`
 	LatinRegistration  bool                        `xml:"latin_registration"`
