@@ -15,9 +15,9 @@ type SetAgentDiscountQuery struct {
 
 // SetAgentDiscount is a body of set_agent_discount request
 type SetAgentDiscount struct {
-	Regnum        *SetAgentDiscountRegnum       `xml:"regnum"`
-	Unit          []*SetAgentDiscountUnit       `xml:"unit"`
-	RequestParams SetAgentDiscountRequestParams `xml:"request_params,omitempty"`
+	Regnum        *SetAgentDiscountRegnum        `xml:"regnum"`
+	Unit          []*SetAgentDiscountUnit        `xml:"unit"`
+	RequestParams *SetAgentDiscountRequestParams `xml:"request_params,omitempty"`
 }
 
 // SetAgentDiscountRegnum is a Regnum (PNR number and version) in set_agent_discount request
@@ -28,6 +28,9 @@ type SetAgentDiscountRegnum struct {
 
 // SetAgentDiscountUnit is a <unit> element of the set_agent_discount request
 type SetAgentDiscountUnit struct {
+	PassengerID          int                   `xml:"passenger-id,attr"`
+	SegmentID            int                   `xml:"segment-id,attr"`
+	FC                   string                `xml:"fc,attr"`
 	SetAgentDiscountFare *SetAgentDiscountFare `xml:"fare"`
 }
 
