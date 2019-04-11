@@ -33,9 +33,9 @@ type SetAgentDiscountUnit struct {
 
 // SetAgentDiscountFare is a fare element in set_agent_discount request
 type SetAgentDiscountFare struct {
-	Discount int    `xml:"discount,attr"`
-	Brand    string `xml:"brand,attr"`
-	Value    string `xml:",chardata"`
+	Discount float64 `xml:"discount,attr"`
+	Brand    string  `xml:"brand,attr"`
+	Value    string  `xml:",chardata"`
 }
 
 // SetAgentDiscountRequestParams is a <request_params> section in set_agent_discount request
