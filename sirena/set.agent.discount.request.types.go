@@ -18,6 +18,7 @@ type SetAgentDiscount struct {
 	Regnum        *SetAgentDiscountRegnum        `xml:"regnum"`
 	Unit          []*SetAgentDiscountUnit        `xml:"unit"`
 	RequestParams *SetAgentDiscountRequestParams `xml:"request_params,omitempty"`
+	AnswerParams  *BookingAnswerParams           `xml:"answer_params,omitempty"`
 }
 
 // SetAgentDiscountRegnum is a Regnum (PNR number and version) in set_agent_discount request
