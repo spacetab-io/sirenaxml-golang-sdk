@@ -2,11 +2,12 @@ package sirena
 
 import (
 	"encoding/binary"
+	"errors"
 	"math/rand"
 	"time"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
+	"github.com/tmconsulting/sirena-config"
+
 	"github.com/tmconsulting/sirenaxml-golang-sdk/utils"
 )
 
@@ -58,12 +59,10 @@ type NewHeaderParams struct {
 }
 
 // NewHeader creates new header for provided message
-func NewHeader(params NewHeaderParams) *Header {
+func NewHeader(config *sirenaConfig.SirenaConfig, params NewHeaderParams) (*Header, error) {
 	if len(params.Message) == 0 {
-		return nil
+		return nil, errors.New("empty message")
 	}
-
-	config := config.Get()
 
 	msgLength := uint32(len(params.Message))
 	rand.Seed(time.Now().Unix())
@@ -85,12 +84,9 @@ func NewHeader(params NewHeaderParams) *Header {
 		flags = EncryptSymmetric
 	}
 
-	logger := logger.Get()
-
-	sirenaClientID, err := utils.String2Uint16(config.SirenaClientID)
+	sirenaClientID, err := utils.String2Uint16(config.ClientID)
 	if err != nil {
-		logger.Error(err)
-		return nil
+		return nil, err
 	}
 
 	return &Header{
@@ -100,7 +96,7 @@ func NewHeader(params NewHeaderParams) *Header {
 		KeyID:         params.KeyID,
 		MessageID:     uint32(params.MessageID),
 		Flags:         flags,
-	}
+	}, nil
 }
 
 // ToBytes converts header into bytes

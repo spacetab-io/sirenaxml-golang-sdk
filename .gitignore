@@ -1,1 +1,3 @@
-/keys/*
+.env
+vendor
+.idea

@@ -4,8 +4,7 @@ import (
 	"os"
 	"sync"
 
-	logging "github.com/op/go-logging"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/config"
+	"github.com/op/go-logging"
 )
 
 // Logger is a server logger
@@ -42,17 +41,15 @@ var (
 var once sync.Once
 
 // Get returns the logger
-func Get() Logger {
+func Get(level string) Logger {
 	once.Do(func() {
 		// Prepare logger
 		logConsoleBackend := logging.NewLogBackend(os.Stderr, "", 0)
 		logConsolePrettyBackend := logging.NewBackendFormatter(logConsoleBackend, logConsoleFormat)
 		logging.SetBackend(logConsolePrettyBackend)
 
-		conf := config.Get()
-
 		// Set proper log level based on config
-		switch conf.LogLevel {
+		switch level {
 		case "debug":
 			logging.SetLevel(logging.DEBUG, LoggerID)
 		case "info":

@@ -8,8 +8,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-
-	"github.com/tmconsulting/sirenaxml-golang-sdk/logger"
 )
 
 // EncryptDataWithServerPubKey encrypts provided byte slice with provided server public key
@@ -65,7 +63,6 @@ func DecryptDataWithClientPrivateKey(data, key []byte, keyPassword string) ([]by
 
 // GeneratePrivateKeySignature creates private key signature
 func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, error) {
-	logger := logger.Get()
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
 		return nil, errors.New("Failed to decode PEM block containing private key")
@@ -74,19 +71,16 @@ func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, 
 	if keyPassword != "" {
 		key, err := x509.DecryptPEMBlock(block, []byte(keyPassword))
 		if err != nil {
-			logger.Error(err)
 			return nil, err
 		}
 		privateKey, err = x509.ParsePKCS1PrivateKey(key)
 		if err != nil {
-			logger.Error(err)
 			return nil, err
 		}
 	} else {
 		var err error
 		privateKey, err = x509.ParsePKCS1PrivateKey(block.Bytes)
 		if err != nil {
-			logger.Error(err)
 			return nil, err
 		}
 	}
@@ -95,7 +89,6 @@ func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, 
 	digest := h.Sum(nil)
 	s, err := rsa.SignPKCS1v15(crand.Reader, privateKey, crypto.SHA1, digest)
 	if err != nil {
-		logger.Error(err)
 		return nil, err
 	}
 	return s, nil
