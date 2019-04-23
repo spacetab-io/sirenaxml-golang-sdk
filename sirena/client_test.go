@@ -47,7 +47,7 @@ func tearUp() {
 	}
 	lc = &logs.Config{
 		Level:  "info",
-		Format: "text",
+		Format: "json",
 	}
 }
 
