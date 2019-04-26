@@ -2,14 +2,13 @@ package sirena
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"time"
 
 	l "github.com/microparts/logs-go"
+	"github.com/pkg/errors"
 	"github.com/tmconsulting/sirena-config"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
@@ -44,14 +43,14 @@ type NewClientOptions struct {
 }
 
 // NewClient connects to Sirena (if not yet) and returns sirena client singleton
-func NewClient(sc *sirenaConfig.SirenaConfig, lc *l.Config, options ...NewClientOptions) *Client {
+func NewClient(sc *sirenaConfig.SirenaConfig, lc *l.Config, options ...NewClientOptions) (*Client, error) {
 	err := logs.Init(lc)
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.Wrap(err, "sirena client loggin init error")
 	}
 	conn, err := net.Dial("tcp", sc.GetSirenaAddr())
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.Wrap(err, "dial sirena addr error")
 	}
 	client := &Client{
 		Conn:   conn,
@@ -61,18 +60,18 @@ func NewClient(sc *sirenaConfig.SirenaConfig, lc *l.Config, options ...NewClient
 	if len(options) == 0 || !options[0].Test {
 		// Create symmetric key
 		if err := client.CreateAndSignKey(); err != nil {
-			log.Fatal(err)
+			return nil, errors.Wrap(err, "creating and signing key error")
 		}
 		// Update key every 1 hour
 		go func() {
 			for range time.Tick(time.Hour) {
 				if err := client.CreateAndSignKey(); err != nil {
-					log.Fatal(err)
+					return
 				}
 			}
 		}()
 	}
-	return client
+	return client, nil
 }
 
 // Request is a Sirena request
@@ -92,69 +91,76 @@ type Response struct {
 // CreateAndSignKey creates new DES key and signs it with Sirena
 func (client *Client) CreateAndSignKey() error {
 	logs.Log.Debug("CreateAndSignKey")
+
 	// Create key as a random string of 8 characters
 	var key = []byte(random.String(8))
+
 	logs.Log.Debugf("Trying to sign DES key %s with Sirena", key)
 	// Get server public key
 	serverPublicKey, err := client.config.GetKeyFile(client.config.ServerPublicKey)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "getting server publicKey error")
 	}
+
 	// Encrypt symmetric key with server public key
 	encryptedKey, err := crypt.EncryptDataWithServerPubKey(key, serverPublicKey)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "encrypting data with server pubKey error")
 	}
+
 	// Create Sirena request
 	request := &Request{
 		Message: encryptedKey,
 	}
+
 	// Set request header
 	request.Header, err = NewHeader(client.config, NewHeaderParams{
 		Message:    encryptedKey,
 		UseEncrypt: true,
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "creating header error")
 	}
+
 	// Set request subheader
 	request.SubHeader = MakeSubHeader(encryptedKey)
 	clientPrivateKey, err := client.config.GetKeyFile(client.config.ClientPrivateKey)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "getting client privateKey error")
 	}
-	encryptedKeySignature, err := crypt.GeneratePrivateKeySignature(encryptedKey, clientPrivateKey, client.config.ClientPrivateKeyPassword)
-	if err != nil {
-		logs.Log.Error(err)
-		return err
-	}
+
 	// Set request signature
-	request.MessageSignature = encryptedKeySignature
+	request.MessageSignature, err = crypt.GeneratePrivateKeySignature(encryptedKey, clientPrivateKey, client.config.ClientPrivateKeyPassword)
+	if err != nil {
+		return errors.Wrap(err, "generating private key signature error")
+	}
+
 	// Send request to Sirena
 	response, err := client.Send(request)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "rending request error")
 	}
+
 	// Validate response header
 	if request.Header.ClientID != response.Header.ClientID {
-		return fmt.Errorf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request.Header.ClientID, response.Header.ClientID)
+		return errors.Errorf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request.Header.ClientID, response.Header.ClientID)
 	}
 	if request.Header.CreatedAt != response.Header.CreatedAt {
-		return fmt.Errorf("request.Header.CreatedAt (%d) != response.Header.CreatedAt (%d)", request.Header.CreatedAt, response.Header.CreatedAt)
+		return errors.Errorf("request.Header.CreatedAt (%d) != response.Header.CreatedAt (%d)", request.Header.CreatedAt, response.Header.CreatedAt)
 	}
+
 	// Decrypt response
-	responseKey, err := crypt.DecryptDataWithClientPrivateKey(response.Message[4:132], clientPrivateKey, client.config.ClientPrivateKeyPassword)
+	client.Key, err = crypt.DecryptDataWithClientPrivateKey(response.Message[4:132], clientPrivateKey, client.config.ClientPrivateKeyPassword)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "decrypting data with client private key error")
 	}
+
 	// Make sure request symmetric key = response symmatric key
-	if string(key) != string(responseKey) {
-		return fmt.Errorf("Request symmetric key (%s) != response symmetric key(%s)", key, responseKey)
+	if string(key) != string(client.Key) {
+		return errors.Errorf("Request symmetric key (%s) != response symmetric key(%s)", key, client.Key)
 	}
-	logs.Log.Debugf("DES key %s signed", responseKey)
 
-	client.Key = responseKey
-
+	logs.Log.Debugf("DES key %s signed", client.Key)
 	return nil
 }
 
@@ -247,7 +253,7 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 		if err != nil {
 			logs.Log.Error(err)
 			if err = client.ReDial(); err != nil {
-				log.Fatal(err)
+				return nil, err
 			}
 			continue
 		}
@@ -263,7 +269,7 @@ func (client *Client) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 		if err != nil {
 			logs.Log.Error(err)
 			if err = client.ReDial(); err != nil {
-				log.Fatal(err)
+				return nil, err
 			}
 			continue
 		}

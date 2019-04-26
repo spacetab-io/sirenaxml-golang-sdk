@@ -8,6 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/microparts/logs-go"
+	"github.com/stretchr/testify/assert"
 	"github.com/tmconsulting/sirena-config"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
@@ -58,23 +59,26 @@ func TestMain(m *testing.M) {
 }
 
 func TestKeyInfo(t *testing.T) {
-	client := NewClient(sc, lc, NewClientOptions{Test: true})
+	client, err := NewClient(sc, lc, NewClientOptions{Test: true})
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
 
 	request := &Request{
 		Message: []byte(keyInfoXML),
 	}
-	var err error
 	request.Header, err = NewHeader(client.config, NewHeaderParams{
 		Message: request.Message,
 	})
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 
 	response, err := client.Send(request)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
+
 	// Validate response header
 	if request.Header.ClientID != response.Header.ClientID {
 		t.Fatalf("request.Header.ClientID (%d) != response.Header.ClientID (%d)", request.Header.ClientID, response.Header.ClientID)
@@ -102,19 +106,22 @@ func TestKeyInfo(t *testing.T) {
 }
 
 func TestKeyCreate(t *testing.T) {
-	client := NewClient(sc, lc, NewClientOptions{Test: true})
+	client, err := NewClient(sc, lc, NewClientOptions{Test: true})
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
 	// Create symmetric key
 	var key = []byte(random.String(8))
 	t.Logf("Trying to sign DES key %s with Sirena", key)
 	// Get server public key
 	serverPublicKey, err := sc.GetKeyFile(sc.ServerPublicKey)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Encrypt symmetric key with server public key
 	encryptedKey, err := crypt.EncryptDataWithServerPubKey(key, serverPublicKey)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Create Sirena request
 	request := &Request{
@@ -125,25 +132,25 @@ func TestKeyCreate(t *testing.T) {
 		Message:    encryptedKey,
 		UseEncrypt: true,
 	})
-	if err != nil {
-		log.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Set request subheader
 	request.SubHeader = MakeSubHeader(encryptedKey)
 	clientPrivateKey, err := sc.GetKeyFile(sc.ClientPrivateKey)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	encryptedKeySignature, err := crypt.GeneratePrivateKeySignature(encryptedKey, clientPrivateKey, sc.ClientPrivateKeyPassword)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Set request signature
 	request.MessageSignature = encryptedKeySignature
 	// Send request to Sirena
 	response, err := client.Send(request)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Validate response header
 	if request.Header.ClientID != response.Header.ClientID {
@@ -154,8 +161,8 @@ func TestKeyCreate(t *testing.T) {
 	}
 	// Decrypt response
 	responseKey, err := crypt.DecryptDataWithClientPrivateKey(response.Message[4:132], clientPrivateKey, sc.ClientPrivateKeyPassword)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Make sure request symmetric key = response symmatric key
 	if string(key) != string(responseKey) {
@@ -180,15 +187,18 @@ const AvailabilityXML = `<?xml version="1.0" encoding="UTF-8"?>
 </sirena>`
 
 func TestAvailability(t *testing.T) {
-	client := NewClient(sc, lc, NewClientOptions{Test: true})
+	client, err := NewClient(sc, lc, NewClientOptions{Test: true})
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
 
 	if len(SignedKey) == 0 {
 		t.Fatal("No signed key found")
 	}
 
 	xmlCrypted, err := des.Encrypt([]byte(AvailabilityXML), SignedKey)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 
 	// Create Sirena request
@@ -200,14 +210,14 @@ func TestAvailability(t *testing.T) {
 		Message:      xmlCrypted,
 		UseSymmetric: true,
 	})
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 
 	// Send request to Sirena
 	response, err := client.Send(request)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Validate response header
 	if request.Header.ClientID != response.Header.ClientID {
@@ -218,8 +228,8 @@ func TestAvailability(t *testing.T) {
 	}
 	// Decrypt Sirena response
 	xmlResponse, err := des.Decrypt(response.Message, SignedKey)
-	if err != nil {
-		t.Fatal(err)
+	if !assert.NoError(t, err) {
+		t.FailNow()
 	}
 	// Decode XML and make sure availability returned
 	var availabilityResponse = struct {
