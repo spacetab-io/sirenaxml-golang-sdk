@@ -3,7 +3,8 @@ package des
 import (
 	"bytes"
 	"crypto/des"
-	"errors"
+
+	"github.com/pkg/errors"
 )
 
 // PKCS5Padding implements PKCS padding

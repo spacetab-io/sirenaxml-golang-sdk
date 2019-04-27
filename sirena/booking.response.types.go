@@ -36,7 +36,7 @@ type BookingAnswerBooking struct {
 	Agency   string                `xml:"agency,attr"`
 	PNR      BookingAnswerPNR      `xml:"pnr"`
 	Contacts BookingAnswerContacts `xml:"contacts"`
-	Error    *Error                `xml:"error"`
+	Error    *ErrorResponse        `xml:"error"`
 }
 
 // BookingAnswerPNR is a <pnr> section in Sirena booking response

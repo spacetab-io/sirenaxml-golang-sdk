@@ -27,7 +27,7 @@ type PaymentAnswerQuery struct {
 	PPR              string                `xml:"ppr,omitempty"`
 	Tickets          []PaymentAnswerTicket `xml:"tickinfo"`
 	VoidTimeLimitUTC string                `xml:"void_timelimit_utc,omitempty"` // TimeDate format
-	Error            *Error                `xml:"error"`
+	Error            *ErrorResponse        `xml:"error"`
 }
 
 // PaymentAnswerTicket holds ticket details in payment confirm response

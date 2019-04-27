@@ -16,7 +16,7 @@ type FareRemarkAnswer struct {
 
 // FareRemarkAnswerFareRemark is a <fareremark> section in Sirena <fareremark> response
 type FareRemarkAnswerFareRemark struct {
-	NewFare bool   `xml:"new_fare,omitempty"`
-	Remark  string `xml:"remark"`
-	Error   *Error `xml:"error,omitempty"`
+	NewFare bool           `xml:"new_fare,omitempty"`
+	Remark  string         `xml:"remark"`
+	Error   *ErrorResponse `xml:"error,omitempty"`
 }

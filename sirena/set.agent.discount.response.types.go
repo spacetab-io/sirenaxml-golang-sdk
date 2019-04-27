@@ -17,7 +17,7 @@ type SetAgentDiscountAnswer struct {
 type SetAgentDiscountAnswerBody struct {
 	Regnum string                     `xml:"regnum,attr"`
 	PNR    *SetAgentDiscountAnswerPNR `xml:"pnr"`
-	Error  *Error                     `xml:"error"`
+	Error  *ErrorResponse             `xml:"error"`
 }
 
 // SetAgentDiscountAnswerPNR is a <pnr> section in Sirena set_agent_discount response

@@ -1,0 +1,13 @@
+defaults:
+  sirena:
+    client_id: ""
+    host: ""
+    port: ""
+    key_path: "keys"
+    client_public_key: Client.Public.key.pem
+    client_private_key: Client.Private.key.pem
+    server_public_key: Server.Public.key.pem
+    client_private_key_password: ""
+    use_symmetric_key_crypt: true
+    zip_requests: true
+    zip_responses: true

@@ -11,46 +11,47 @@ package main
 import (
 	"log"
 	"os"
-
+	
 	"github.com/microparts/logs-go"
-	"github.com/tmconsulting/sirena-config"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/sirena"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/utils"
 )
 
-const keyInfoXML = `<?xml version="1.0" encoding="UTF-8"?>
-<sirena>
-  <query>
-    <key_info/>
-  </query>
-</sirena>`
-
 func main() {
-	sc := &sirenaConfig.SirenaConfig{
-  		ClientID:                 os.Getenv("CLIENT_ID"),
+	clientID, _ := utils.String2Uint16(os.Getenv("CLIENT_ID"))
+	sc := &configuration.SirenaConfig{
+  		ClientID:                 clientID,
   		Host:                     os.Getenv("HOST"),
   		Port:                     os.Getenv("PORT"),
-  		ClientPublicKey:          os.Getenv("CLIENT_PUBLIC_KEY"),
-  		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
+  		ClientPublicKeyFile:      os.Getenv("CLIENT_PUBLIC_KEY"),
+  		ClientPrivateKeyFile:     os.Getenv("CLIENT_PRIVATE_KEY"),
+  		ServerPublicKeyFile:      os.Getenv("SERVER_PUBLIC_KEY"),
   		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
-  		ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
   		KeysPath:                 os.Getenv("KEYS_PATH"),
+  		UseSymmetricKeyCrypt:     true,
+      ZipRequests:              true,
+      ZipResponses:             true,
   	}
   	lc := &logs.Config{
   		Level:  "info",
   		Format: "text",
   	}
   	
-	client := sirena.NewClient(sc, lc, sirena.NewClientOptions{Test: true})
+	client, err := sirena.NewClient(sc, lc)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	var keyInfoXML = []byte(`<?xml version="1.0" encoding="UTF-8"?><sirena><query><key_info/></query></sirena>`)
+
 	request := &sirena.Request{
-  		Message: []byte(keyInfoXML),
+  		Message: keyInfoXML,
+  		Header: sirena.NewHeader(&sirena.NewHeaderParams{
+  			ClientID: client.Config.ClientID,
+        MessageLength:  uint32(len(keyInfoXML)),
+      }),
   	}
-	var err error
-  request.Header, err = sirena.NewHeader(sc, sirena.NewHeaderParams{
-    Message: request.Message,
-  })
-  if err != nil {
-    log.Fatal(err)
-  }
 
   response, err := client.Send(request)
   if err != nil {
@@ -65,8 +66,8 @@ func main() {
 
 Fill `.env` file from `test.env-example` and run tests:
 
-	go test ./... -v
+	make test
 
 ## Licence
 
-This software is provided under [MIT Licence](LICENCE).
+This software is provided under [MIT License](LICENSE).
