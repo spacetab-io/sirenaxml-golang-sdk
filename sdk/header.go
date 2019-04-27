@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/pkg/errors"
 )
 
@@ -114,7 +113,7 @@ func ParseHeader(data []byte) (*Header, error) {
 	}
 
 	if rh.MessageLength == 0 {
-		return nil, errors.Errorf("sirena response header doesn't include message length: %s", spew.Sdump(rh))
+		return nil, errors.Errorf("sirena response header doesn't include message length: %+v", rh)
 	}
 
 	if rh.RequestNoHandled {

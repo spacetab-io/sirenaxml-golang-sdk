@@ -3,6 +3,7 @@ package service
 import (
 	"log"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/joho/godotenv"
@@ -11,7 +12,7 @@ import (
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/sdk"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/utils"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
 var (
@@ -20,15 +21,13 @@ var (
 	lc *logs.Config
 )
 
-var keyInfoXML = []byte(`<?xml version="1.0" encoding="UTF-8"?><sirena><query><key_info/></query></sirena>`)
-
 func tearUp() {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatal("ErrorResponse loading .env file")
 	}
 
-	clientID, _ := utils.String2Uint16(os.Getenv("CLIENT_ID"))
+	clientID, _ := String2Uint16(os.Getenv("CLIENT_ID"))
 
 	sc = &configuration.SirenaConfig{
 		ClientID:                 clientID,
@@ -49,6 +48,15 @@ func tearUp() {
 	}
 }
 
+// String2Uint16 converts string to uint16
+func String2Uint16(s string) (uint16, error) {
+	b, err := strconv.ParseUint(s, 10, 16)
+	if err != nil {
+		return 0, err
+	}
+	return uint16(b), nil
+}
+
 func TestMain(m *testing.M) {
 	tearUp()
 	retCode := m.Run()
@@ -62,6 +70,7 @@ func TestMain(m *testing.M) {
 //		t.FailNow()
 //	}
 //
+// var keyInfoXML = []byte(`<?xml version="1.0" encoding="UTF-8"?><sirena><query><key_info/></query></sirena>`)
 //	request := &Request{
 //		Message: keyInfoXML,
 //		Header: NewHeader(&NewHeaderParams{
@@ -191,12 +200,12 @@ func testAvailability(t *testing.T, sc *configuration.SirenaConfig) {
 	if !assert.NotEmpty(t, sdkClient.Key) {
 		t.FailNow()
 	}
-	availabiliteReq := &sdk.AvailabilityRequest{
-		Query: sdk.AvailabilityRequestQuery{
-			Availability: sdk.Availability{
+	availabiliteReq := &structs.AvailabilityRequest{
+		Query: structs.AvailabilityRequestQuery{
+			Availability: structs.Availability{
 				Departure: "MOW",
 				Arrival:   "LED",
-				AnswerParams: sdk.AvailabilityAnswerParams{
+				AnswerParams: structs.AvailabilityAnswerParams{
 					ShowFlighttime: true,
 				},
 			},

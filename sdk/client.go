@@ -18,14 +18,6 @@ import (
 	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 )
 
-// Request is a Sirena request
-type Request struct {
-	Header           *Header
-	SubHeader        []byte
-	Message          []byte
-	MessageSignature []byte
-}
-
 // Response is a Sirena response
 type Response struct {
 	Header  *Header
@@ -160,6 +152,7 @@ func (client *SirenaClient) Send(request *Request) (*Response, error) {
 const MaxReDialAttempts int = 3
 
 // SendXMLRequest send XML request to Sirena and expects XML response
+// Deprecated
 func (client *SirenaClient) SendXMLRequest(xmlRequest []byte) ([]byte, error) {
 	if len(client.Key) == 0 {
 		return nil, errors.New("SirenaClient doesn't have symmetric key defined")

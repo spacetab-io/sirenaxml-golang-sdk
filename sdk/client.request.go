@@ -13,6 +13,14 @@ import (
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 )
 
+// Request is a Sirena request
+type Request struct {
+	Header           *Header
+	SubHeader        []byte
+	Message          []byte
+	MessageSignature []byte
+}
+
 func (client *SirenaClient) NewSignRequest(key []byte) (*Request, error) {
 	logs.Log.Debugf("Trying to sign DES key %s with Sirena", key)
 

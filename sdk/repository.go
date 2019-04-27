@@ -10,6 +10,7 @@ import (
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
 // SirenaClient is a sirena client
@@ -57,7 +58,7 @@ func NewClient(sc *configuration.SirenaConfig, lc *log.Config) (*SirenaClient, e
 	return client, nil
 }
 
-func (client *SirenaClient) GetAvailability(req []byte) (*AvailabilityResponse, error) {
+func (client *SirenaClient) GetAvailability(req []byte) (*structs.AvailabilityResponse, error) {
 	// Create Sirena request
 	request, err := client.NewRequest(req)
 	if err != nil {
@@ -69,7 +70,7 @@ func (client *SirenaClient) GetAvailability(req []byte) (*AvailabilityResponse, 
 		return nil, err
 	}
 
-	var availabilityResponse AvailabilityResponse
+	var availabilityResponse structs.AvailabilityResponse
 	if err := xml.Unmarshal(response.Message, &availabilityResponse); err != nil {
 		return nil, err
 	}
