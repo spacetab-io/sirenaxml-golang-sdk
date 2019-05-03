@@ -1,4 +1,4 @@
-package sdk
+package client
 
 import (
 	"encoding/binary"
@@ -12,18 +12,29 @@ const (
 	HeaderSize int32 = 100
 )
 
-// HeaderOffsets holds information about header offset lengths
-var HeaderOffsets = map[int]int{
-	0: 0,
-	1: 4,
-	2: 8,
-	3: 12,
-	4: 44,
-	5: 46,
-	6: 47,
-	7: 48,
-	8: 52,
-}
+var (
+	// HeaderOffsets holds information about header offset lengths
+	HeaderOffsets = map[int]int{
+		0: 0,
+		1: 4,
+		2: 8,
+		3: 12,
+		4: 44,
+		5: 46,
+		6: 47,
+		7: 48,
+		8: 52,
+	}
+	notHandledRequestError = errors.New("sirena response not handled for some reason!")
+	emptyMessageError      = errors.Errorf("sirena response header doesn't include message length")
+)
+
+const (
+	ZippedRequest    byte = 0x04 // ZippedRequest is a flag saying request is gzipped
+	ZippedResponse        = 0x10 // ZippedResponse is a flag saying response can be gzipped
+	EncryptSymmetric      = 0x08 // EncryptSymmetric is a flag saying message is encrypted by symmetric key (DES)
+	EncryptPublic         = 0x40 // EncryptPublic is a flag saying message is encrypted by public key (RSA)
+)
 
 // Header is a header in Sirena request
 type Header struct {
@@ -101,7 +112,7 @@ func (h *Header) ToBytes() []byte {
 }
 
 // ParseHeader parses bytes into header
-func ParseHeader(data []byte) (*Header, error) {
+func ParseHeader(data []byte) *Header {
 	rh := &Header{
 		MessageLength:    binary.BigEndian.Uint32(data[HeaderOffsets[0]:]),
 		CreatedAt:        binary.BigEndian.Uint32(data[HeaderOffsets[1]:]),
@@ -112,15 +123,7 @@ func ParseHeader(data []byte) (*Header, error) {
 		KeyID:            binary.BigEndian.Uint32(data[HeaderOffsets[7]:]),
 	}
 
-	if rh.MessageLength == 0 {
-		return nil, errors.Errorf("sirena response header doesn't include message length: %+v", rh)
-	}
-
-	if rh.RequestNoHandled {
-		return nil, errors.New("sirena response not handled for some reason")
-	}
-
-	return rh, nil
+	return rh
 }
 
 // MakeSubHeader returns sub header holding length of data passed

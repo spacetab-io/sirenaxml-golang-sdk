@@ -9,6 +9,7 @@ import (
 
 type SirenaConfig struct {
 	ClientID                 uint16 `yaml:"client_id,omitempty"`
+	SirenaRequestHandlers    int    `yaml:"sirena_request_handlers"`
 	Host                     string `yaml:"host,omitempty"`
 	Port                     string `yaml:"port,omitempty"`
 	KeysPath                 string `yaml:"key_path"`

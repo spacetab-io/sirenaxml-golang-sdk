@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"sync"
 	"testing"
 
 	"github.com/joho/godotenv"
@@ -43,7 +44,7 @@ func tearUp() {
 		ZipResponses:             false,
 	}
 	lc = &logs.Config{
-		Level:  "debug",
+		Level:  "info",
 		Format: "test",
 	}
 }
@@ -212,7 +213,19 @@ func testAvailability(t *testing.T, sc *configuration.SirenaConfig) {
 		},
 	}
 
-	response, err := service.Avalability(availabiliteReq)
+	var wg sync.WaitGroup
+	for i := 0; i < sc.SirenaRequestHandlers; i++ {
+		wg.Add(1)
+		go func() {
+			response, err := service.Avalability(availabiliteReq)
+			if !assert.NoError(t, err) {
+				t.FailNow()
+			}
+			assert.NotEmpty(t, response.Answer.Availability.Flights)
+			wg.Done()
 
-	assert.NotEmpty(t, response.Answer.Availability.Flights)
+		}()
+	}
+
+	wg.Wait()
 }

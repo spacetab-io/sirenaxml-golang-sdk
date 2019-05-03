@@ -1,6 +1,7 @@
 defaults:
   sirena:
     client_id: ""
+    sirena_request_handlers: "" #how much pults client has to handle his requests
     host: ""
     port: ""
     key_path: "keys"

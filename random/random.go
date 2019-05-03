@@ -23,3 +23,7 @@ func StringWithCharset(length int, charset string) string {
 func String(length int) string {
 	return StringWithCharset(length, charset)
 }
+
+func Uint32() uint32 {
+	return seededRand.Uint32()
+}
