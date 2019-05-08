@@ -22,7 +22,7 @@ type Booking struct {
 	Contacts        []BookingRequestContacts       `xml:"contacts,omitempty"`
 	SpecialServices *BookingRequestSpecialServices `xml:"special_services,omitempty"`
 	Remarks         *BookingRequestRemarks         `xml:"remarks,omitempty"`
-	AgentComission  []BookingRequestAgentComission `xml:"agent_comission,omitempty"`
+	AgentComission  *BookingRequestAgentComission  `xml:"agent_comission,omitempty"`
 	AnswerParams    BookingAnswerParams            `xml:"answer_params,omitempty"`
 	RequestParams   BookingRequestParams           `xml:"request_params,omitempty"`
 }
