@@ -20,8 +20,8 @@ type Booking struct {
 	StandbySegments []BookingRequestStandbySegment `xml:"standby_segment"`
 	Passenger       []BookingRequestPassenger      `xml:"passenger"`
 	Contacts        []BookingRequestContacts       `xml:"contacts,omitempty"`
-	SpecialServices BookingRequestSpecialServices  `xml:"special_services,omitempty"`
-	Remarks         BookingRequestRemarks          `xml:"remarks,omitempty"`
+	SpecialServices *BookingRequestSpecialServices `xml:"special_services,omitempty"`
+	Remarks         *BookingRequestRemarks         `xml:"remarks,omitempty"`
 	AgentComission  []BookingRequestAgentComission `xml:"agent_comission,omitempty"`
 	AnswerParams    BookingAnswerParams            `xml:"answer_params,omitempty"`
 	RequestParams   BookingRequestParams           `xml:"request_params,omitempty"`

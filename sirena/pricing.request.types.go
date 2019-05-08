@@ -64,7 +64,7 @@ type PricingRequestPassenger struct {
 // PricingRequestParams is a <request_params> section in <pricing> request
 type PricingRequestParams struct {
 	MinResults        string                 `xml:"min_results,omitempty"`
-	MaxResults        string                 `xml:"max_results,omitempty"`
+	MaxResults        int                    `xml:"max_results,omitempty"`
 	MixScls           bool                   `xml:"mix_scls,omitempty"`
 	MixAc             bool                   `xml:"mix_ac,omitempty"`
 	FingeringOrder    string                 `xml:"fingering_order,omitempty"`
