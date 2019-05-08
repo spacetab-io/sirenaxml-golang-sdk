@@ -19,7 +19,7 @@ type Booking struct {
 	LandSegments    []BookingRequestLandSegment    `xml:"land_segment"`
 	StandbySegments []BookingRequestStandbySegment `xml:"standby_segment"`
 	Passenger       []BookingRequestPassenger      `xml:"passenger"`
-	Contacts        []BookingRequestContacts       `xml:"contacts,omitempty"`
+	Contacts        *BookingRequestContacts        `xml:"contacts,omitempty"`
 	SpecialServices *BookingRequestSpecialServices `xml:"special_services,omitempty"`
 	Remarks         *BookingRequestRemarks         `xml:"remarks,omitempty"`
 	AgentComission  *BookingRequestAgentComission  `xml:"agent_comission,omitempty"`
@@ -54,9 +54,9 @@ type BookingAnswerParams struct {
 
 // BookingRequestAgentComission is an <agent_comission> in Sirena booking request
 type BookingRequestAgentComission struct {
-	Type  string  `xml:"type,attr"`
-	Curr  string  `xml:"curr,attr,omitempty"`
-	Value float64 `xml:",chardata"`
+	Type  string `xml:"type,attr"`
+	Curr  string `xml:"curr,attr,omitempty"`
+	Value string `xml:",chardata"`
 }
 
 // BookingRequestRemarks is a <remarks> section in Sirena booking request
@@ -77,8 +77,8 @@ type Ssr struct {
 }
 
 type BookingRequestContacts struct {
-	Phones []Phone  `xml:"phone"`
-	Email  []string `xml:"email"`
+	Phone *Phone `xml:"phone"`
+	Email string `xml:"email"`
 }
 
 type BookingRequestPassenger struct {
