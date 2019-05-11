@@ -10,7 +10,7 @@ type GetItinReceiptsDataRequest struct {
 
 // GetItinReceiptsDataRequestQuery is a <query> section in <get_itin_receipts_data> request
 type GetItinReceiptsDataRequestQuery struct {
-	GetItinReceiptsData GetItinReceiptsData `xml:"get_itin_receipts"`
+	GetItinReceiptsData GetItinReceiptsData `xml:"get_itin_receipts_data"`
 }
 
 // GetItinReceiptsData is a body of <get_itin_receipts_data> request
