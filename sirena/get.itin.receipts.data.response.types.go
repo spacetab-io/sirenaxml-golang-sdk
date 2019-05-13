@@ -10,8 +10,14 @@ type GetItinReceiptsDataResponse struct {
 
 // GetItinReceiptsDataAnswer is an <answer> section in Sirena <get_itin_receipts_data> response
 type GetItinReceiptsDataAnswer struct {
-	Answer              string                            `xml:"answer,attr,omitempty"`
-	GetItinReceiptsData GetItinReceiptsDataAnswerReceipts `xml:"get_itin_receipts_data>receipts"`
+	Answer              string                  `xml:"answer,attr,omitempty"`
+	GetItinReceiptsData GetItinReceiptsDataBody `xml:"get_itin_receipts_data"`
+}
+
+// GetItinReceiptsDataBody is a body of <get_itin_receipts_data> response
+type GetItinReceiptsDataBody struct {
+	Receipts *GetItinReceiptsDataAnswerReceipts `xml:"receipts"`
+	Error    *Error                             `xml:"error,omitempty"`
 }
 
 // GetItinReceiptsDataAnswerReceipts is a <receipts> element in Sirena <get_itin_receipts_data> response
@@ -23,5 +29,4 @@ type GetItinReceiptsDataAnswerReceipts struct {
 		DocOfPassenger  string `xml:"doc_of_passenger"`
 		Total           string `xml:"total"`
 	} `xml:"ticket_form"`
-	Error *Error `xml:"error,omitempty"`
 }
