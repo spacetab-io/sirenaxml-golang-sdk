@@ -18,11 +18,11 @@ type AddFFInfo struct {
 	Regnum    string                      `xml:"regnum"`
 	Surname   string                      `xml:"surname"`
 	Passenger []AddFFInfoRequestPassenger `xml:"passenger"`
-	ID        int                         `xml:"id,attr,omitempty"`
 }
 
 // AddFFInfoRequestPassenger is a passenger in <add_ff_info> request
 type AddFFInfoRequestPassenger struct {
+	ID          int                                `xml:"id,attr"`
 	FreqFlierID PassengerFreqFlierID               `xml:"freq_flier_id"`
 	Segment     []AddFFInfoRequestPassengerSegment `xml:"segment"`
 }
@@ -35,5 +35,5 @@ type AddFFInfoRequestPassengerSegment struct {
 // PassengerFreqFlierID is a <freq_flier_id> subsection of <passenger> section of <add_ff_info> request
 type PassengerFreqFlierID struct {
 	IssuedBy string `xml:"issued_by,attr,omitempty"`
-	Value    uint   `xml:",chardata"`
+	Value    string `xml:",chardata"`
 }
