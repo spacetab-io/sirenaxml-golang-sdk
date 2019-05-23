@@ -15,30 +15,31 @@ type CitiesAnswer struct {
 
 // CitiesAnswerDetails is a <describe> section in all cities response
 type CitiesAnswerDetails struct {
-	Data []CitiesAnswerData `xml:"data"`
+	Data  []CitiesAnswerData `xml:"data"`
+	Error *Error             `xml:"error"`
 }
 
 // CitiesAnswerData is a <data> section in all cities response
 type CitiesAnswerData struct {
-	Code    []CitiesAnswerDataCode    `xml:"code"`
-	Name    []CitiesAnswerDataName    `xml:"name"`
-	Country []CitiesAnswerDataCountry `xml:"country"`
+	Code    []CitiesAnswerDataCode    `xml:"code" json:"code"`
+	Name    []CitiesAnswerDataName    `xml:"name" json:"name"`
+	Country []CitiesAnswerDataCountry `xml:"country" json:"country"`
 }
 
 // CitiesAnswerDataCode represents <code> entry in <data> section
 type CitiesAnswerDataCode struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
 
 // CitiesAnswerDataName represents <name> entry in <data> section
 type CitiesAnswerDataName struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
 
 // CitiesAnswerDataCountry represents <country> entry in <data> section
 type CitiesAnswerDataCountry struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
