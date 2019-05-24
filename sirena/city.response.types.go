@@ -21,9 +21,10 @@ type CitiesAnswerDetails struct {
 
 // CitiesAnswerData is a <data> section in all cities response
 type CitiesAnswerData struct {
-	Code    []CitiesAnswerDataCode    `xml:"code" json:"code"`
-	Name    []CitiesAnswerDataName    `xml:"name" json:"name"`
-	Country []CitiesAnswerDataCountry `xml:"country" json:"country"`
+	Code     []CitiesAnswerDataCode    `xml:"code" json:"code"`
+	Name     []CitiesAnswerDataName    `xml:"name" json:"name"`
+	Country  []CitiesAnswerDataCountry `xml:"country" json:"country"`
+	Timezone *CitiesAnswerDataTimezone `xml:"timezone" json:"timezone"`
 }
 
 // CitiesAnswerDataCode represents <code> entry in <data> section
@@ -41,5 +42,11 @@ type CitiesAnswerDataName struct {
 // CitiesAnswerDataCountry represents <country> entry in <data> section
 type CitiesAnswerDataCountry struct {
 	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
+}
+
+// CitiesAnswerDataTimezone represents <timezone> entry in <data> section
+type CitiesAnswerDataTimezone struct {
+	ID    string `xml:"id,attr" json:"id"`
 	Value string `xml:",chardata" json:"value"`
 }

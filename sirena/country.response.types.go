@@ -15,23 +15,24 @@ type CountriesAnswer struct {
 
 // CountriesAnswerDetails is a <describe> section in all countries response
 type CountriesAnswerDetails struct {
-	Data []CountriesAnswerData `xml:"data"`
+	Data  []CountriesAnswerData `xml:"data"`
+	Error *Error                `xml:"error"`
 }
 
 // CountriesAnswerData is a <data> section in all countries response
 type CountriesAnswerData struct {
-	Code []CountriesAnswerDataCode `xml:"code"`
-	Name []CountriesAnswerDataName `xml:"name"`
+	Code []CountriesAnswerDataCode `xml:"code" json:"code"`
+	Name []CountriesAnswerDataName `xml:"name" json:"name"`
 }
 
 // CountriesAnswerDataCode represents <code> entry in <data> section
 type CountriesAnswerDataCode struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
 
 // CountriesAnswerDataName represents <name> entry in <data> section
 type CountriesAnswerDataName struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }

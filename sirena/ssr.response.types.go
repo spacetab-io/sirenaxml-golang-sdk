@@ -15,28 +15,29 @@ type SSRAnswer struct {
 
 // SSRAnswerDetails is a <describe> section in all special requests response
 type SSRAnswerDetails struct {
-	Data []SSRAnswerData `xml:"data"`
+	Data  []SSRAnswerData `xml:"data"`
+	Error *Error          `xml:"error"`
 }
 
 // SSRAnswerData is a <data> section in all special requests response
 type SSRAnswerData struct {
-	Code              []SSRAnswerDataCode `xml:"code"`
-	Name              []SSRAnswerDataName `xml:"name"`
-	Category          int                 `xml:"category"`
-	ForSegment        int                 `xml:"for_segment"`
-	ForPassenger      int                 `xml:"for_passenger"`
-	FreeText          int                 `xml:"free_text"`
-	TravelPortAllowed bool                `xml:"travelport_allowed"`
+	Code              []SSRAnswerDataCode `xml:"code" json:"code"`
+	Name              []SSRAnswerDataName `xml:"name" json:"name"`
+	Category          int                 `xml:"category" json:"category"`
+	ForSegment        int                 `xml:"for_segment" json:"for_segment"`
+	ForPassenger      int                 `xml:"for_passenger" json:"for_passenger"`
+	FreeText          int                 `xml:"free_text" json:"free_text"`
+	TravelPortAllowed bool                `xml:"travelport_allowed" json:"travelport_allowed"`
 }
 
 // SSRAnswerDataCode represents <code> entry in <data> section
 type SSRAnswerDataCode struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
 
 // SSRAnswerDataName represents <name> entry in <data> section
 type SSRAnswerDataName struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }

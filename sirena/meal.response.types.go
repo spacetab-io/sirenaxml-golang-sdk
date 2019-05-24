@@ -15,30 +15,24 @@ type MealsAnswer struct {
 
 // MealsAnswerDetails is a <describe> section in all meals response
 type MealsAnswerDetails struct {
-	Data []MealsAnswerData `xml:"data"`
+	Data  []MealsAnswerData `xml:"data"`
+	Error *Error            `xml:"error"`
 }
 
 // MealsAnswerData is a <data> section in all meals response
 type MealsAnswerData struct {
-	Code    []MealsAnswerDataCode    `xml:"code"`
-	Name    []MealsAnswerDataName    `xml:"name"`
-	Country []MealsAnswerDataCountry `xml:"country"`
+	Code []MealsAnswerDataCode `xml:"code" json:"code"`
+	Name []MealsAnswerDataName `xml:"name" json:"name"`
 }
 
 // MealsAnswerDataCode represents <code> entry in <data> section
 type MealsAnswerDataCode struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
 
 // MealsAnswerDataName represents <name> entry in <data> section
 type MealsAnswerDataName struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
-}
-
-// MealsAnswerDataCountry represents <country> entry in <data> section
-type MealsAnswerDataCountry struct {
-	Lang  string `xml:"lang,attr"`
-	Value string `xml:",chardata"`
+	Lang  string `xml:"lang,attr" json:"lang"`
+	Value string `xml:",chardata" json:"value"`
 }
