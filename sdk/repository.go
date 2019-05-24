@@ -10,16 +10,16 @@ import (
 )
 
 type storage struct {
-	c   *client.SirenaClient
+	c   *client.Channel
 	Key []byte
 }
 
 func NewClient(sc *configuration.SirenaConfig, lc *l.Config) (*storage, error) {
 	err := logs.Init(lc)
 	if err != nil {
-		return nil, errors.Wrap(err, "sirena client loggin init error")
+		return nil, errors.Wrap(err, "sirena client logging init error")
 	}
-	c, err := client.NewSirenaClient(sc)
+	c, err := client.NewChannel(sc)
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")
 	}

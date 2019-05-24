@@ -2,7 +2,7 @@ package crypt
 
 import (
 	"crypto"
-	crand "crypto/rand"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
@@ -14,7 +14,7 @@ import (
 func EncryptDataWithServerPubKey(data, key []byte) ([]byte, error) {
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "PUBLIC KEY" {
-		return nil, errors.New("Failed to decode PEM block containing public key")
+		return nil, errors.New("failed to decode PEM block containing public key")
 	}
 	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
@@ -22,9 +22,9 @@ func EncryptDataWithServerPubKey(data, key []byte) ([]byte, error) {
 	}
 	pubKey, ok := pub.(*rsa.PublicKey)
 	if !ok {
-		return nil, errors.New("Failed to cast public key into *rsa.PublicKey")
+		return nil, errors.New("failed to cast public key into *rsa.PublicKey")
 	}
-	encryptedData, err := rsa.EncryptPKCS1v15(crand.Reader, pubKey, data)
+	encryptedData, err := rsa.EncryptPKCS1v15(rand.Reader, pubKey, data)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func EncryptDataWithServerPubKey(data, key []byte) ([]byte, error) {
 func DecryptDataWithClientPrivateKey(data, key []byte, keyPassword string) ([]byte, error) {
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
-		return nil, errors.New("Failed to decode PEM block containing private key")
+		return nil, errors.New("failed to decode PEM block containing private key")
 	}
 	var privateKey *rsa.PrivateKey
 	if keyPassword != "" {
@@ -54,18 +54,14 @@ func DecryptDataWithClientPrivateKey(data, key []byte, keyPassword string) ([]by
 			return nil, err
 		}
 	}
-	encryptedData, err := rsa.DecryptPKCS1v15(crand.Reader, privateKey, data)
-	if err != nil {
-		return nil, err
-	}
-	return encryptedData, nil
+	return rsa.DecryptPKCS1v15(rand.Reader, privateKey, data)
 }
 
 // GeneratePrivateKeySignature creates private key signature
 func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, error) {
 	block, _ := pem.Decode(key)
 	if block == nil || block.Type != "RSA PRIVATE KEY" {
-		return nil, errors.New("Failed to decode PEM block containing private key")
+		return nil, errors.New("failed to decode PEM block containing private key")
 	}
 	var privateKey *rsa.PrivateKey
 	if keyPassword != "" {
@@ -87,7 +83,7 @@ func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, 
 	h := sha1.New()
 	h.Write(data)
 	digest := h.Sum(nil)
-	s, err := rsa.SignPKCS1v15(crand.Reader, privateKey, crypto.SHA1, digest)
+	s, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA1, digest)
 	if err != nil {
 		return nil, err
 	}

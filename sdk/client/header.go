@@ -2,41 +2,13 @@ package client
 
 import (
 	"encoding/binary"
-	"time"
+	"fmt"
 
 	"github.com/pkg/errors"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
-const (
-	// HeaderSize is a header size
-	HeaderSize int32 = 100
-)
-
-var (
-	// HeaderOffsets holds information about header offset lengths
-	HeaderOffsets = map[int]int{
-		0: 0,
-		1: 4,
-		2: 8,
-		3: 12,
-		4: 44,
-		5: 46,
-		6: 47,
-		7: 48,
-		8: 52,
-	}
-	notHandledRequestError = errors.New("sirena response not handled for some reason!")
-	emptyMessageError      = errors.Errorf("sirena response header doesn't include message length")
-)
-
-const (
-	ZippedRequest    byte = 0x04 // ZippedRequest is a flag saying request is gzipped
-	ZippedResponse        = 0x10 // ZippedResponse is a flag saying response can be gzipped
-	EncryptSymmetric      = 0x08 // EncryptSymmetric is a flag saying message is encrypted by symmetric key (DES)
-	EncryptPublic         = 0x40 // EncryptPublic is a flag saying message is encrypted by public key (RSA)
-)
-
-// Header is a header in Sirena request
 type Header struct {
 	CreatedAt        uint32
 	MessageID        uint32
@@ -47,58 +19,49 @@ type Header struct {
 	RequestNoHandled bool
 }
 
-// NewHeaderParams holds params for new header
-type NewHeaderParams struct {
-	ClientID            uint16
-	KeyID               uint32
-	MessageLength       uint32
-	MessageID           uint32
-	MessageIsZipped     bool
-	ResponseCanBeZipped bool
-	UseEncrypt          bool
-	UsePublic           bool
-	UseSymmetric        bool
+// HeaderOffsets holds information about header offset lengths
+var HeaderOffsets = map[int]int{
+	0: 0,
+	1: 4,
+	2: 8,
+	3: 12,
+	4: 44,
+	5: 46,
+	6: 47,
+	7: 48,
+	8: 52,
 }
 
-// NewHeader creates new header for provided message
-func NewHeader(params *NewHeaderParams) *Header {
-	return &Header{
-		MessageLength: params.MessageLength,
-		CreatedAt:     uint32(time.Now().Unix()),
-		ClientID:      params.ClientID,
-		MessageID:     uint32(params.MessageID),
-		Flags:         setFlags(params),
-		KeyID:         params.KeyID,
-	}
-}
-
-func setFlags(params *NewHeaderParams) *HeaderFlags {
-	flags := &HeaderFlags{}
-
-	// flags = 0x22
-	if params.MessageIsZipped {
-		flags.Set(ZippedRequest)
+// ParseHeader parses bytes into header
+func parseHeader(data []byte) (*Header, error) {
+	header := &Header{
+		MessageLength:    binary.BigEndian.Uint32(data[HeaderOffsets[0]:]),
+		CreatedAt:        binary.BigEndian.Uint32(data[HeaderOffsets[1]:]),
+		MessageID:        binary.BigEndian.Uint32(data[HeaderOffsets[2]:]),
+		ClientID:         binary.BigEndian.Uint16(data[HeaderOffsets[4]:]),
+		Flags:            NewHeaderFlags(data[HeaderOffsets[5]]),
+		RequestNoHandled: 0x01&data[HeaderOffsets[6]] != 0,
+		KeyID:            binary.BigEndian.Uint32(data[HeaderOffsets[7]:]),
 	}
 
-	if params.ResponseCanBeZipped {
-		flags.Set(ZippedResponse)
+	if header.MessageID == 0 {
+		return nil, errors.New("messageID is not set")
 	}
-	if params.UseSymmetric {
-		flags.Set(EncryptSymmetric)
+
+	if header.MessageLength == 0 {
+		return nil, errors.New(fmt.Sprintf("[%d] empty message", header.MessageID))
 	}
-	if params.UseEncrypt {
-		params.MessageLength += 4 + 128
-		flags.Set(EncryptPublic)
+
+	if header.RequestNoHandled {
+		return nil, errors.New(fmt.Sprintf("[%d] request not handled", header.MessageID))
 	}
-	if params.UsePublic {
-		flags.Set(EncryptPublic)
-	}
-	return flags
+
+	return header, nil
 }
 
 // ToBytes converts header into bytes
 func (h *Header) ToBytes() []byte {
-	headerBytes := make([]byte, HeaderSize)
+	headerBytes := make([]byte, 100)
 	binary.BigEndian.PutUint32(headerBytes[HeaderOffsets[0]:], h.MessageLength)
 	binary.BigEndian.PutUint32(headerBytes[HeaderOffsets[1]:], h.CreatedAt)
 	binary.BigEndian.PutUint32(headerBytes[HeaderOffsets[2]:], h.MessageID)
@@ -111,24 +74,25 @@ func (h *Header) ToBytes() []byte {
 	return headerBytes
 }
 
-// ParseHeader parses bytes into header
-func ParseHeader(data []byte) *Header {
-	rh := &Header{
-		MessageLength:    binary.BigEndian.Uint32(data[HeaderOffsets[0]:]),
-		CreatedAt:        binary.BigEndian.Uint32(data[HeaderOffsets[1]:]),
-		MessageID:        binary.BigEndian.Uint32(data[HeaderOffsets[2]:]),
-		ClientID:         binary.BigEndian.Uint16(data[HeaderOffsets[4]:]),
-		Flags:            NewHeaderFlags(data[HeaderOffsets[5]]),
-		RequestNoHandled: 0x01&data[HeaderOffsets[6]] != 0,
-		KeyID:            binary.BigEndian.Uint32(data[HeaderOffsets[7]:]),
+func (h *Header) setFlags(cfg *configuration.SirenaConfig, encrypt bool) {
+	h.Flags = &HeaderFlags{}
+
+	// flags = 0x22
+	if cfg.ZipRequests {
+		h.Flags.Set(ZippedRequest)
 	}
 
-	return rh
-}
-
-// MakeSubHeader returns sub header holding length of data passed
-func MakeSubHeader(data []byte) []byte {
-	subHeader := make([]byte, 4)
-	binary.BigEndian.PutUint32(subHeader[0:], uint32(len(data)))
-	return subHeader
+	if cfg.ZipResponses {
+		h.Flags.Set(ZippedResponse)
+	}
+	if cfg.UseSymmetricKeyCrypt {
+		h.Flags.Set(EncryptSymmetric)
+	}
+	if encrypt {
+		h.MessageLength += 4 + 128
+		h.Flags.Set(EncryptPublic)
+	}
+	if cfg.UsePublicKeyCrypt {
+		h.Flags.Set(EncryptPublic)
+	}
 }

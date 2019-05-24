@@ -1,14 +1,18 @@
 package client
 
-import "github.com/tmconsulting/sirenaxml-golang-sdk/logs"
-
 type HeaderFlags struct {
 	val byte
 }
 
+const (
+	ZippedRequest    byte = 0x04 // ZippedRequest is a flag saying request is gzipped
+	ZippedResponse        = 0x10 // ZippedResponse is a flag saying response can be gzipped
+	EncryptSymmetric      = 0x08 // EncryptSymmetric is a flag saying message is encrypted by symmetric key (DES)
+	EncryptPublic         = 0x40 // EncryptPublic is a flag saying message is encrypted by public key (RSA)
+)
+
 func NewHeaderFlags(preset byte) *HeaderFlags {
 	hf := &HeaderFlags{val: preset}
-	logs.Log.Debugf("reading response header flags: ZippedRequest: %v, ZippedResponse: %v, EncryptSymmetric: %v, EncryptPublic: %v", hf.Has(ZippedRequest), hf.Has(ZippedResponse), hf.Has(EncryptSymmetric), hf.Has(EncryptPublic))
 	return hf
 }
 

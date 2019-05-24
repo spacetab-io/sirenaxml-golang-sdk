@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"sync"
 	"testing"
 
 	"github.com/joho/godotenv"
@@ -23,12 +22,13 @@ var (
 )
 
 func tearUp() {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("ErrorResponse loading .env file")
 	}
 
 	clientID, _ := String2Uint16(os.Getenv("CLIENT_ID"))
+	requestHandlersNum, _ := String2Int32(os.Getenv("REQUEST_HANDLERS"))
 
 	sc = &configuration.SirenaConfig{
 		ClientID:                 clientID,
@@ -39,6 +39,7 @@ func tearUp() {
 		ServerPublicKeyFile:      os.Getenv("SERVER_PUBLIC_KEY"),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 		KeysPath:                 os.Getenv("KEYS_PATH"),
+		SirenaRequestHandlers:    requestHandlersNum,
 		UseSymmetricKeyCrypt:     false,
 		ZipRequests:              false,
 		ZipResponses:             false,
@@ -56,6 +57,15 @@ func String2Uint16(s string) (uint16, error) {
 		return 0, err
 	}
 	return uint16(b), nil
+}
+
+// String2Uint16 converts string to uint16
+func String2Int32(s string) (uint32, error) {
+	b, err := strconv.ParseUint(s, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return uint32(b), nil
 }
 
 func TestMain(m *testing.M) {
@@ -197,7 +207,6 @@ func testAvailability(t *testing.T, sc *configuration.SirenaConfig) {
 	}
 
 	service := NewSKD(sdkClient)
-
 	if !assert.NotEmpty(t, sdkClient.Key) {
 		t.FailNow()
 	}
@@ -213,19 +222,43 @@ func testAvailability(t *testing.T, sc *configuration.SirenaConfig) {
 		},
 	}
 
-	var wg sync.WaitGroup
-	for i := 0; i < sc.SirenaRequestHandlers; i++ {
-		wg.Add(1)
-		go func() {
-			response, err := service.Avalability(availabiliteReq)
-			if !assert.NoError(t, err) {
-				t.FailNow()
-			}
-			assert.NotEmpty(t, response.Answer.Availability.Flights)
-			wg.Done()
+	//var (
+	//	//wg       sync.WaitGroup
+	//	respChan chan *structs.AvailabilityResponse
+	//	errChan  chan error
+	//)
+	//for i := 0; i < int(sc.SirenaRequestHandlers); i++ {
+	//	//wg.Add(1)
+	//	go func() {
+	//		response, err := service.Avalability(availabiliteReq)
+	//		if err != nil {
+	//			errChan <- err
+	//			//wg.Done()
+	//			return
+	//		}
+	//		respChan <- response
+	//		//wg.Done()
+	//	}()
+	//}
+	////wg.Wait()
+	//
+	//select {
+	//case response := <-respChan:
+	//	if !assert.NotEmpty(t, response.Answer.Availability.Flights) {
+	//		t.FailNow()
+	//	}
+	//case err := <-errChan:
+	//	if !assert.NoError(t, err) {
+	//		t.FailNow()
+	//	}
+	//}
 
-		}()
+	response, err := service.Avalability(availabiliteReq)
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
+	if !assert.NotEmpty(t, response.Answer.Availability.Flights) {
+		t.FailNow()
 	}
 
-	wg.Wait()
 }

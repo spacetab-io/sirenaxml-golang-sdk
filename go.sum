@@ -7,10 +7,14 @@ github.com/evalphobia/logrus_sentry v0.8.2 h1:dotxHq+YLZsT1Bb45bB5UQbfCh3gM/nFFe
 github.com/evalphobia/logrus_sentry v0.8.2/go.mod h1:pKcp+vriitUqu9KiWj/VRFbRfFNUwz95/UkgG8a6MNc=
 github.com/getsentry/raven-go v0.2.0 h1:no+xWJRb5ZI7eE8TWgIq1jLulQiIoLG0IfYxv5JYMGs=
 github.com/getsentry/raven-go v0.2.0/go.mod h1:KungGk8q33+aIAZUIVWZDr2OfAEBsO49PX4NzFV5kcQ=
+github.com/homfen/easygo v0.0.0-20181204071203-0f436aec4e2d h1:2CA5Qz2GoxVEQ3khan+gbdlRrL3Fbul5cHFlwd4T7FM=
+github.com/homfen/easygo v0.0.0-20181204071203-0f436aec4e2d/go.mod h1:2X0X8qMHN0+i244FMVlpKt+YAtaBNI3hS+K08A2c8/s=
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
+github.com/mailru/easygo v0.0.0-20180630075556-0c8322a753d0 h1:o0WDRM1ApjP4UFwhPcXkHe9sKMycnp0W0EbIcW8G2a8=
+github.com/mailru/easygo v0.0.0-20180630075556-0c8322a753d0/go.mod h1:tHCZHV8b2A90ObojrEAzY0Lb03gxUxjDHr5IJyAh4ew=
 github.com/microparts/logs-go v1.1.0 h1:Oil80j8HU1shFAY35xRPhS9oo8tpfupWHPWkL7InFog=
 github.com/microparts/logs-go v1.1.0/go.mod h1:AHIfsrwcwXs0RANYTgIJoamBKqDf67nnKZ/+GqgT5Is=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=

@@ -8,18 +8,13 @@ import (
 
 func (s *storage) GetAvailability(req []byte) (*structs.AvailabilityResponse, error) {
 	// Create Sirena request
-	request, err := s.c.NewRequest(req)
-	if err != nil {
-		return nil, err
-	}
-	// Send request to Sirena
-	response, err := s.c.Send(request)
+	response, err := s.c.SendMsg(req)
 	if err != nil {
 		return nil, err
 	}
 
 	var availabilityResponse structs.AvailabilityResponse
-	if err := xml.Unmarshal(response.Message, &availabilityResponse); err != nil {
+	if err := xml.Unmarshal(response, &availabilityResponse); err != nil {
 		return nil, err
 	}
 

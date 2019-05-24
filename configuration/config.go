@@ -9,7 +9,7 @@ import (
 
 type SirenaConfig struct {
 	ClientID                 uint16 `yaml:"client_id,omitempty"`
-	SirenaRequestHandlers    int    `yaml:"sirena_request_handlers"`
+	SirenaRequestHandlers    uint32 `yaml:"sirena_request_handlers"`
 	Host                     string `yaml:"host,omitempty"`
 	Port                     string `yaml:"port,omitempty"`
 	KeysPath                 string `yaml:"key_path"`
@@ -18,6 +18,7 @@ type SirenaConfig struct {
 	ClientPrivateKeyPassword string `yaml:"client_private_key_password,omitempty"`
 	ServerPublicKeyFile      string `yaml:"server_public_key_file,omitempty"`
 	UseSymmetricKeyCrypt     bool   `yaml:"use_symmetric_key_crypt"`
+	UsePublicKeyCrypt        bool   `yaml:"use_public_key_crypt"`
 	ZipRequests              bool   `yaml:"zip_requests"`
 	ZipResponses             bool   `yaml:"zip_responses"`
 	ClientPublicKey          []byte
