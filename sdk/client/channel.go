@@ -2,11 +2,9 @@ package client
 
 import (
 	"bufio"
-	"log"
 	"net"
 	"time"
 
-	"github.com/homfen/easygo/netpoll"
 	"github.com/pkg/errors"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
@@ -22,10 +20,8 @@ type Packet struct {
 }
 
 var (
-	sendPool    = NewGPool(11)
-	receivePool = NewGPool(128)
-	respPool    *RespPool
-	msgPool     *MsgPool
+	respPool *RespPool
+	msgPool  *MsgPool
 )
 
 // Channel wraps user connection.
@@ -64,27 +60,15 @@ func NewChannel(sc *configuration.SirenaConfig) (*Channel, error) {
 		return nil, err
 	}
 
-	poller, err := netpoll.New(nil)
-	if err != nil {
-		panic(err)
-	}
-	desc, err := netpoll.HandleRead(conn)
-	if err != nil {
-		panic(err) // panic for now @TODO change it
-	}
-
-	// lets listen for incoming data
-	err = poller.Start(desc, func(ev netpoll.Event) {
-		log.Print(ev.String())
-		// We will block poller wait loop when
-		// all receivePool workers are busy.
-		receivePool.Schedule(func() {
-			err = receive(c)
+	go func() {
+		buf := bufio.NewReader(c.conn)
+		for {
+			err := c.readPacket(buf)
 			if err != nil {
-				panic(err) // panic for now @TODO change it
+				logs.Log.WithField("error", err).Error("read message error") // panic for now @TODO change it
 			}
-		})
-	})
+		}
+	}()
 
 	return c, err
 }
@@ -101,33 +85,12 @@ func (c *Channel) SendMsg(msg []byte) ([]byte, error) {
 }
 
 func (c *Channel) sendPacket(p *Packet) {
-	if c.noWriterYet() {
-		sendPool.Schedule(c.writer)
-	}
-
-	c.send <- p
-}
-
-func receive(c *Channel) error {
-	buf := bufio.NewReader(c.conn)
-
-	return readPacket(buf)
-}
-
-func (c *Channel) writer() {
-	// We make buffered write to reduce write syscalls.
 	buf := bufio.NewWriter(c.conn)
 
-	for pkt := range c.send {
-		if err := writePacket(buf, pkt); err != nil {
-			panic(err) // panic for now @TODO change it
-		}
-		_ = buf.Flush()
+	if err := writePacket(buf, p); err != nil {
+		panic(err) // panic for now @TODO change it
 	}
-}
-
-func (c *Channel) noWriterYet() bool {
-	return len(sendPool.sem) == 0
+	_ = buf.Flush()
 }
 
 func createSignKey(c *Channel) error {

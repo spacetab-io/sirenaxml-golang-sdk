@@ -1,4 +1,4 @@
-package des
+package crypt
 
 import (
 	"bytes"
@@ -7,22 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PKCS5Padding implements PKCS padding
-func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
-	padding := blockSize - len(ciphertext)%blockSize
-	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(ciphertext, padtext...)
-}
-
-// PKCS5UnPadding implements PKCS unpadding
-func PKCS5UnPadding(origData []byte) []byte {
-	length := len(origData)
-	unpadding := int(origData[length-1])
-	return origData[:(length - unpadding)]
-}
-
-// Encrypt implements DES encryption in ECB mode with PKCS padding
-func Encrypt(src, key []byte) ([]byte, error) {
+// DesEncrypt implements DES encryption in ECB mode with PKCS padding
+func DesEncrypt(src, key []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -42,8 +28,8 @@ func Encrypt(src, key []byte) ([]byte, error) {
 	return out, nil
 }
 
-// Decrypt implements DES decryption in ECB mode with PKCS padding
-func Decrypt(src, key []byte) ([]byte, error) {
+// DesDecrypt implements DES decryption in ECB mode with PKCS padding
+func DesDecrypt(src, key []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -61,4 +47,18 @@ func Decrypt(src, key []byte) ([]byte, error) {
 	}
 	out = PKCS5UnPadding(out)
 	return out, nil
+}
+
+// PKCS5Padding implements PKCS padding
+func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
+	padding := blockSize - len(ciphertext)%blockSize
+	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(ciphertext, padtext...)
+}
+
+// PKCS5UnPadding implements PKCS unpadding
+func PKCS5UnPadding(origData []byte) []byte {
+	length := len(origData)
+	unpadding := int(origData[length-1])
+	return origData[:(length - unpadding)]
 }

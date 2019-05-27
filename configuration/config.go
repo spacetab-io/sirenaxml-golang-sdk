@@ -17,10 +17,7 @@ type SirenaConfig struct {
 	ClientPrivateKeyFile     string `yaml:"client_private_key_file,omitempty"`
 	ClientPrivateKeyPassword string `yaml:"client_private_key_password,omitempty"`
 	ServerPublicKeyFile      string `yaml:"server_public_key_file,omitempty"`
-	UseSymmetricKeyCrypt     bool   `yaml:"use_symmetric_key_crypt"`
-	UsePublicKeyCrypt        bool   `yaml:"use_public_key_crypt"`
-	ZipRequests              bool   `yaml:"zip_requests"`
-	ZipResponses             bool   `yaml:"zip_responses"`
+	ZippedMessaging          bool   `yaml:"zipped_messaging"`
 	ClientPublicKey          []byte
 	ClientPrivateKey         []byte
 	ServerPublicKey          []byte

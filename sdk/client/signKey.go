@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bufio"
 	"bytes"
 	"compress/zlib"
 	"encoding/binary"
@@ -10,13 +11,11 @@ import (
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/des"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/random"
 )
 
 func (c *Channel) signKey() error {
 	// Create key as a random string of 8 characters
-	var key = []byte(random.String(8))
+	var key = []byte(crypt.RandString(8))
 
 	// Create Sirena request
 	request, err := c.newSignRequestPacket(key)
@@ -28,13 +27,13 @@ func (c *Channel) signKey() error {
 	c.sendPacket(request)
 
 	// oneshot receiving action
-	if err := receive(c); err != nil {
+	if err := c.readPacket(bufio.NewReader(c.conn)); err != nil {
 		return errors.Wrap(err, "schedule receive error")
 	}
 
 	response := getResponseFromMsgPool(request.header.MessageID)
 
-	// Decrypt response
+	// DesDecrypt response
 	c.Key, err = crypt.DecryptDataWithClientPrivateKey(response.message[4:132], c.cfg.ClientPrivateKey, c.cfg.ClientPrivateKeyPassword)
 	if err != nil {
 		return errors.Wrap(err, "decrypting data with client private key error")
@@ -46,30 +45,26 @@ func (c *Channel) signKey() error {
 		return errors.Errorf("Request symmetric key (%s) != response symmetric key(%s)", key, c.Key)
 	}
 
-	c.cfg.UseSymmetricKeyCrypt = true
 	return nil
 }
 
 func (c *Channel) newSignRequestPacket(key []byte) (*Packet, error) {
-	// Encrypt symmetric key with server public key
+	// DesEncrypt symmetric key with server public key
 	encryptedKey, err := crypt.EncryptDataWithServerPubKey(key, c.cfg.ServerPublicKey)
 	if err != nil {
 		return nil, errors.Wrap(err, "encrypting data with server pubKey error")
 	}
 
 	initCfg := c.cfg
-	initCfg.UseSymmetricKeyCrypt = false
-	initCfg.UsePublicKeyCrypt = false
-	initCfg.ZipResponses = false
-	initCfg.ZipRequests = false
+	initCfg.ZippedMessaging = false
 
-	return NewPacket(initCfg, encryptedKey)
+	return NewPacket(initCfg, encryptedKey, c.KeyID)
 }
 
-func NewPacket(cfg *configuration.SirenaConfig, key []byte) (*Packet, error) {
+func NewPacket(cfg *configuration.SirenaConfig, key []byte, keyID uint32) (*Packet, error) {
 	var err error
 	p := &Packet{}
-	p.makeHeader(cfg, key)
+	p.makeHeader(cfg, key, keyID)
 	p.messageSignature, err = crypt.GeneratePrivateKeySignature(key, cfg.ClientPrivateKey, cfg.ClientPrivateKeyPassword)
 	if err != nil {
 		return nil, err
@@ -79,11 +74,11 @@ func NewPacket(cfg *configuration.SirenaConfig, key []byte) (*Packet, error) {
 }
 
 func (c *Channel) NewRequest(msg []byte) (*Packet, error) {
-
-	if c.cfg.ZipRequests {
+	var err error
+	if c.cfg.ZippedMessaging {
 		buf := new(bytes.Buffer)
 		w := zlib.NewWriter(buf)
-		_, err := w.Write(msg)
+		_, err = w.Write(msg)
 		if err != nil {
 			return nil, err
 		}
@@ -94,41 +89,36 @@ func (c *Channel) NewRequest(msg []byte) (*Packet, error) {
 		msg = buf.Bytes()
 	}
 
-	//logs.Log.Debugf("encrypt message with symmetric DES key %s (keyID %d)", client.Key, client.KeyID)
-	msg, err := des.Encrypt(msg, c.Key)
-	if err != nil {
-		return nil, err
+	if c.Key != nil {
+		msg, err = crypt.DesEncrypt(msg, c.Key)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	p := &Packet{}
-	p.makeMsgHeader(c.cfg, msg, c.KeyID)
-	//logs.Log.Debug("GeneratePrivateKeySignature")
+	p.makeHeader(c.cfg, msg, c.KeyID)
 	p.message = msg
 	return p, err
 }
 
-func (p *Packet) makeHeader(cfg *configuration.SirenaConfig, key []byte) {
+func (p *Packet) makeHeader(cfg *configuration.SirenaConfig, key []byte, keyID uint32) {
 	msgID := msgPool.GetMsgID()
+	sign := false
 	p.header = &Header{
 		MessageID:     msgID,
 		ClientID:      cfg.ClientID,
 		MessageLength: uint32(len(key)),
 		CreatedAt:     uint32(time.Now().Unix()),
 	}
-	p.header.setFlags(cfg, true)
-	p.makeSubHeader(key)
-}
-func (p *Packet) makeMsgHeader(cfg *configuration.SirenaConfig, key []byte, keyID uint32) {
-	msgID := msgPool.GetMsgID()
-	p.header = &Header{
-		MessageID:     msgID,
-		ClientID:      cfg.ClientID,
-		MessageLength: uint32(len(key)),
-		CreatedAt:     uint32(time.Now().Unix()),
-		KeyID:         keyID,
+	if keyID == 0 {
+		sign = true
+		p.makeSubHeader(key)
+	} else {
+		p.header.KeyID = keyID
 	}
-	p.header.setFlags(cfg, true)
-	p.makeSubHeader(key)
+
+	p.header.setFlags(cfg, sign)
 }
 
 func (p *Packet) makeSubHeader(data []byte) {

@@ -74,25 +74,19 @@ func (h *Header) ToBytes() []byte {
 	return headerBytes
 }
 
-func (h *Header) setFlags(cfg *configuration.SirenaConfig, encrypt bool) {
+func (h *Header) setFlags(cfg *configuration.SirenaConfig, sign bool) {
 	h.Flags = &HeaderFlags{}
 
-	// flags = 0x22
-	if cfg.ZipRequests {
+	// it will be easier to manage zipped status of request and response in one config attribute
+	if cfg.ZippedMessaging {
 		h.Flags.Set(ZippedRequest)
-	}
-
-	if cfg.ZipResponses {
 		h.Flags.Set(ZippedResponse)
 	}
-	if cfg.UseSymmetricKeyCrypt {
-		h.Flags.Set(EncryptSymmetric)
-	}
-	if encrypt {
+
+	if sign {
 		h.MessageLength += 4 + 128
 		h.Flags.Set(EncryptPublic)
-	}
-	if cfg.UsePublicKeyCrypt {
-		h.Flags.Set(EncryptPublic)
+	} else {
+		h.Flags.Set(EncryptSymmetric)
 	}
 }
