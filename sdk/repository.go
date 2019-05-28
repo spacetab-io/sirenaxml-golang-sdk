@@ -14,7 +14,7 @@ type storage struct {
 	Key []byte
 }
 
-func NewClient(sc *configuration.SirenaConfig, lc *l.Config) (*storage, error) {
+func NewClient(sc *configuration.SirenaConfig, lc *l.Logger) (*storage, error) {
 	err := logs.Init(lc)
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client logging init error")

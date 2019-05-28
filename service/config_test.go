@@ -14,8 +14,8 @@ import (
 
 var (
 	// SignedKey is a signed symmetric key to sign in TestKeyCreate and use in TestAvailability
-	sc configuration.SirenaConfig
-	lc *logs.Config
+	sc     configuration.SirenaConfig
+	logger *logs.Logger
 )
 
 func tearUp() {
@@ -39,9 +39,13 @@ func tearUp() {
 		SirenaRequestHandlers:    requestHandlersNum,
 		ZippedMessaging:          false,
 	}
-	lc = &logs.Config{
+	lc := &logs.Config{
 		Level:  "info",
 		Format: "test",
+	}
+	logger, err = logs.NewLogger(lc)
+	if err != nil {
+		log.Fatal("ErrorResponse loading .env file")
 	}
 }
 
