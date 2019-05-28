@@ -25,7 +25,7 @@ func TestService(t *testing.T) {
 	t.Run("test error params", func(t *testing.T) {
 		customSirenConfig := sc
 		customSirenConfig.ClientID = 1111
-		_, err := sdk.NewClient(&customSirenConfig, lc)
+		_, err := sdk.NewClient(&customSirenConfig, logger)
 		if !assert.Error(t, err) {
 			t.FailNow()
 		}
@@ -33,7 +33,7 @@ func TestService(t *testing.T) {
 }
 
 func TestService_RawRequest(t *testing.T) {
-	sdkClient, err := sdk.NewClient(&sc, lc)
+	sdkClient, err := sdk.NewClient(&sc, logger)
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
@@ -69,7 +69,7 @@ func TestService_RawRequest(t *testing.T) {
 
 func TestService_Avalability(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		sdkClient, err := sdk.NewClient(&sc, lc)
+		sdkClient, err := sdk.NewClient(&sc, logger)
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}
@@ -99,7 +99,7 @@ func TestService_Avalability(t *testing.T) {
 		}
 	})
 	//t.Run("error", func(t *testing.T) {
-	//	sdkClient, err := sdk.NewClient(&sc, lc)
+	//	sdkClient, err := sdk.NewClient(&sc, logger)
 	//	if !assert.NoError(t, err) {
 	//		t.FailNow()
 	//	}
@@ -131,7 +131,7 @@ func TestService_Avalability(t *testing.T) {
 }
 
 func testRequest(t *testing.T, sc configuration.SirenaConfig) {
-	sdkClient, err := sdk.NewClient(&sc, lc)
+	sdkClient, err := sdk.NewClient(&sc, logger)
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}

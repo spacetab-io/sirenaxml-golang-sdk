@@ -6,10 +6,7 @@ import (
 
 var Log *logs.Logger
 
-func Init(logsCfg *logs.Config) (err error) {
-	//logsCfg.Level = "debug"
-	if Log, err = logs.NewLogger(logsCfg); err != nil {
-		return err
-	}
+func Init(logger *logs.Logger) (err error) {
+	Log = logger
 	return
 }
