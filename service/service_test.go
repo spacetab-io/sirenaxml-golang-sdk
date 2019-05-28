@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/xml"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -29,6 +30,41 @@ func TestService(t *testing.T) {
 			t.FailNow()
 		}
 	})
+}
+
+func TestService_RawRequest(t *testing.T) {
+	sdkClient, err := sdk.NewClient(&sc, lc)
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
+
+	service := NewSKD(sdkClient)
+	if !assert.NotEmpty(t, sdkClient.Key) {
+		t.FailNow()
+	}
+	xmlReq := []byte(`<?xml version="1.0" encoding="UTF-8"?><sirena><query><key_info/></query></sirena>`)
+	response, err := service.RawRequest(xmlReq)
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
+	// Decode XML and make sure Sirena Public Key is returned
+	var keyInfoResponse = struct {
+		Answer struct {
+			KeyInfo struct {
+				KeyManager struct {
+					ServerPubliKey string `xml:"server_public_key"`
+				} `xml:"key_manager"`
+			} `xml:"key_info"`
+		} `xml:"answer"`
+	}{}
+	err = xml.Unmarshal(response, &keyInfoResponse)
+	if !assert.NoError(t, err) {
+		t.FailNow()
+	}
+
+	if !assert.NotEmpty(t, keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPubliKey) {
+		t.FailNow()
+	}
 }
 
 func TestService_Avalability(t *testing.T) {

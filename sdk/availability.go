@@ -8,7 +8,7 @@ import (
 
 func (s *storage) GetAvailability(req []byte) (*structs.AvailabilityResponse, error) {
 	// Create Sirena request
-	response, err := s.c.SendMsg(req)
+	response, err := s.SendRawRequest(req)
 	if err != nil {
 		return nil, err
 	}

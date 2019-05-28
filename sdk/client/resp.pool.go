@@ -22,7 +22,7 @@ func (rp *RespPool) SavePacket(msgID uint32, p *Packet) error {
 	select {
 	case rp.p[msgID] <- p:
 		return nil
-	case <-time.After(200 * time.Millisecond):
+	case <-time.After(2000 * time.Millisecond):
 		return errors.New("save packet timeout")
 	}
 }
