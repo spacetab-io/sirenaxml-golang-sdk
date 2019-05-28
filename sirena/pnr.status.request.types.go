@@ -21,7 +21,8 @@ type PNRStatus struct {
 
 // PNRStatusAnswerParams is a <answer_params> section in <pnr_status> request
 type PNRStatusAnswerParams struct {
-	Tickinfo        bool `xml:"tickinfo,omitempty"`
-	AddCommonStatus bool `xml:"add_common_status,omitempty"`
-	MoreInfo        bool `xml:"more_info,omitempty"`
+	Tickinfo        bool   `xml:"tickinfo,omitempty"`
+	AddCommonStatus bool   `xml:"add_common_status,omitempty"`
+	MoreInfo        bool   `xml:"more_info,omitempty"`
+	Lang            string `xml:"lang,omitempty"`
 }

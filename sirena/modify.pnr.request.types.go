@@ -15,9 +15,8 @@ type ModifyPNRQuery struct {
 
 // ModifyPNR is a body of <modify_pnr> request
 type ModifyPNR struct {
-	Regnum  string `xml:"regnum"`
-	Surname string `xml:"surname"`
-	// Modify    ModifyPNRModify    `xml:"modify,omitempty"`
+	Regnum    string             `xml:"regnum"`
+	Surname   string             `xml:"surname"`
 	AddParams ModifyPNRAddParams `xml:"add,omitempty"`
 }
 
@@ -25,7 +24,6 @@ type ModifyPNR struct {
 type ModifyPNRAddParams struct {
 	Contact      []ModifyPNRContact      `xml:"contact,omitempty"`
 	PassDocument []ModifyPNRPassDocument `xml:"pass_document,omitempty"`
-	// Passenger    []BookingRequestPassenger `xml:"passenger,omitempty"`
 }
 
 // ModifyPNRContact is <contact> element for <add> section

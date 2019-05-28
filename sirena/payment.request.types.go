@@ -26,7 +26,7 @@ type PaymentRequestBody struct {
 // Paydoc is a <paydoc> entry in <payment-ext-auth> request
 type Paydoc struct {
 	Formpay  string `xml:"formpay"`
-	Type     string `xml:"type"`
+	Type     string `xml:"type,omitempty"`
 	Num      string `xml:"num,omitempty"`
 	ExpDate  string `xml:"exp_date,omitempty"`
 	Holder   string `xml:"holder,omitempty"`
