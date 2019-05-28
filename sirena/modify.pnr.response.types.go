@@ -2,8 +2,8 @@ package sirena
 
 import "encoding/xml"
 
-// ModifyPNRResponce is a Sirena response to <modify_pnr> request
-type ModifyPNRResponce struct {
+// ModifyPNRResponse is a Sirena response to <modify_pnr> request
+type ModifyPNRResponse struct {
 	Answer  ModifyPNRAnswer `xml:"answer"`
 	XMLName xml.Name        `xml:"sirena" json:"-"`
 }
