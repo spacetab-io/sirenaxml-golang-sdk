@@ -25,3 +25,7 @@ func NewClient(sc *configuration.SirenaConfig, lc *l.Config) (*storage, error) {
 	}
 	return &storage{c: c, Key: c.Key}, nil
 }
+
+func (s *storage) SendRawRequest(req []byte) ([]byte, error) {
+	return s.c.SendMsg(req)
+}
