@@ -26,7 +26,7 @@ var (
 
 // Channel wraps user connection.
 type Channel struct {
-	cfg    *configuration.SirenaConfig
+	cfg    *sirena.Config
 	conn   net.Conn // Socket connection.
 	send   chan *Packet
 	Key    []byte
@@ -34,24 +34,24 @@ type Channel struct {
 	Logger logs.LogWriter
 }
 
-func NewChannel(sc *configuration.SirenaConfig) (*Channel, error) {
-	err := sc.GetCerts()
+func NewChannel(sc *sirena.Config) (*Channel, error) {
+	err := sc.PrepareKeys()
 	if err != nil {
 		return nil, err
 	}
-	conn, err := net.Dial("tcp", sc.GetSirenaAddr())
+	conn, err := net.Dial("tcp", sc.GetAddr())
 	if err != nil {
 		return nil, errors.Wrap(err, "dial sirena addr error")
 	}
 
 	c := &Channel{
 		conn: conn,
-		send: make(chan *Packet, sc.SirenaRequestHandlers),
+		send: make(chan *Packet, sc.RequestHandlers),
 		cfg:  sc,
 	}
 
 	respPool = NewRespPool()
-	msgPool, err = NewMsgPool(respPool, sc.SirenaRequestHandlers)
+	msgPool, err = NewMsgPool(respPool, sc.RequestHandlers)
 	if err != nil {
 		return nil, err
 	}

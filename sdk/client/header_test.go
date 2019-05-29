@@ -9,7 +9,7 @@ import (
 )
 
 func TestHeaderFlags_Set(t *testing.T) {
-	cfg := &configuration.SirenaConfig{
+	cfg := &sirena.Config{
 		ZippedMessaging: true,
 	}
 

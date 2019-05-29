@@ -61,7 +61,7 @@ func (c *Channel) newSignRequestPacket(key []byte) (*Packet, error) {
 	return NewPacket(initCfg, encryptedKey, c.KeyID)
 }
 
-func NewPacket(cfg *configuration.SirenaConfig, key []byte, keyID uint32) (*Packet, error) {
+func NewPacket(cfg *sirena.Config, key []byte, keyID uint32) (*Packet, error) {
 	var err error
 	p := &Packet{}
 	p.makeHeader(cfg, key, keyID)
@@ -102,7 +102,7 @@ func (c *Channel) NewRequest(msg []byte) (*Packet, error) {
 	return p, err
 }
 
-func (p *Packet) makeHeader(cfg *configuration.SirenaConfig, key []byte, keyID uint32) {
+func (p *Packet) makeHeader(cfg *sirena.Config, key []byte, keyID uint32) {
 	msgID := msgPool.GetMsgID()
 	sign := false
 	p.header = &Header{
