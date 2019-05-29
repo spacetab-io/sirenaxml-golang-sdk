@@ -134,7 +134,7 @@ func TestService_Avalability(t *testing.T) {
 	//})
 }
 
-func testRequest(t *testing.T, sc configuration.SirenaConfig) {
+func testRequest(t *testing.T, sc sirena.Config) {
 	logger := logs.NewNullLog()
 	sdkClient, err := sdk.NewClient(&sc, logger)
 	if !assert.NoError(t, err) {
@@ -161,7 +161,7 @@ func testRequest(t *testing.T, sc configuration.SirenaConfig) {
 		respChan = make(chan *structs.AvailabilityResponse)
 		errChan  = make(chan error)
 	)
-	for i := 0; i < int(sc.SirenaRequestHandlers); i++ {
+	for i := 0; i < int(sc.RequestHandlers); i++ {
 		go func() {
 			response, err := service.Avalability(availabiliteReq)
 			if err != nil {

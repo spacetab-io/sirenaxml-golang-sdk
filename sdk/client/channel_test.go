@@ -1,39 +1,31 @@
 package client
 
 import (
-	"log"
 	"os"
 	"strconv"
 	"testing"
 
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
 var (
-	// SignedKey is a signed symmetric key to sign in TestKeyCreate and use in TestAvailability
-	sc *configuration.SirenaConfig
+	sc *sirena.Config
 )
 
 func tearUp() {
-	err := godotenv.Load(os.Getenv("ENV_FILE"))
-	if err != nil {
-		log.Fatalf("loading .env file error: %v", err)
-	}
-
 	clientID, _ := String2Uint16(os.Getenv("CLIENT_ID"))
 	handlersNum, _ := String2Uint32(os.Getenv("REQUEST_HANDLERS"))
-	sc = &configuration.SirenaConfig{
+	sc = &sirena.Config{
 		ClientID:                 clientID,
-		Host:                     os.Getenv("HOST"),
+		Ip:                       os.Getenv("HOST"),
 		Port:                     os.Getenv("PORT"),
-		SirenaRequestHandlers:    handlersNum,
-		ClientPublicKeyFile:      os.Getenv("CLIENT_PUBLIC_KEY"),
-		ClientPrivateKeyFile:     os.Getenv("CLIENT_PRIVATE_KEY"),
-		ServerPublicKeyFile:      os.Getenv("SERVER_PUBLIC_KEY"),
+		RequestHandlers:          handlersNum,
+		ClientPublicKey:          []byte(os.Getenv("CLIENT_PUBLIC_KEY")),
+		ClientPrivateKey:         []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
+		ServerPublicKey:          []byte(os.Getenv("SERVER_PUBLIC_KEY")),
 		KeysPath:                 os.Getenv("KEYS_PATH"),
 		ZippedMessaging:          false,
 	}

@@ -1,14 +1,11 @@
 defaults:
   sirena:
     client_id: ""
-    sirena_request_handlers: "" #how much pults client has to handle his requests
-    host: ""
+    putls_count: "" #how much pults client has to handle his requests
+    ip: ""
     port: ""
-    key_path: "keys"
-    client_public_key: Client.Public.key.pem
-    client_private_key: Client.Private.key.pem
-    server_public_key: Server.Public.key.pem
+    client_public_key: ""
+    client_private_key: ""
     client_private_key_password: ""
-    use_symmetric_key_crypt: true
-    zip_requests: true
-    zip_responses: true
+    server_public_key: ""
+    zipped_messaging: true

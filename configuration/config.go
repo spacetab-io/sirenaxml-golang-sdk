@@ -1,57 +1,49 @@
-package configuration
+package sirena
 
 import (
-	"io/ioutil"
-	"os"
+	"strings"
 
 	"github.com/pkg/errors"
 )
 
-type SirenaConfig struct {
-	ClientID                 uint16 `yaml:"client_id,omitempty"`
-	SirenaRequestHandlers    uint32 `yaml:"sirena_request_handlers"`
-	Host                     string `yaml:"host,omitempty"`
-	Port                     string `yaml:"port,omitempty"`
+type Config struct {
+	ClientID                 uint16 `yaml:"client_id"`
+	RequestHandlers          uint32 `yaml:"putls_count"`
+	Ip                       string `yaml:"ip"`
+	Port                     string `yaml:"port"`
 	KeysPath                 string `yaml:"key_path"`
-	ClientPublicKeyFile      string `yaml:"client_public_key_file,omitempty"`
-	ClientPrivateKeyFile     string `yaml:"client_private_key_file,omitempty"`
-	ClientPrivateKeyPassword string `yaml:"client_private_key_password,omitempty"`
-	ServerPublicKeyFile      string `yaml:"server_public_key_file,omitempty"`
+	ClientPublicKey          []byte `yaml:"client_public_key"`
+	ClientPrivateKey         []byte `yaml:"client_private_key"`
+	ClientPrivateKeyPassword string `yaml:"client_private_key_password"`
+	ServerPublicKey          []byte `yaml:"server_public_key"`
 	ZippedMessaging          bool   `yaml:"zipped_messaging"`
-	ClientPublicKey          []byte
-	ClientPrivateKey         []byte
-	ServerPublicKey          []byte
 }
 
-// GetSirenaAddr return sirena address to connect client to
-func (config *SirenaConfig) GetSirenaAddr() string {
+// GetAddr return sirena address to connect client to
+func (config *Config) GetAddr() string {
 	if config == nil {
 		return ""
 	}
 	if config.Port == "" {
-		return config.Host
+		return config.Ip
 	}
-	return config.Host + ":" + config.Port
+	return config.Ip + ":" + config.Port
 }
 
-// GetKeyFile returns contents of key file
-func (config *SirenaConfig) GetKeyFile(keyFile string) ([]byte, error) {
-	KeyPath := config.KeysPath + "/" + keyFile
-	if _, err := os.Stat(KeyPath); os.IsNotExist(err) {
-		return nil, err
+func (config *Config) PrepareKeys() error {
+	if len(config.ServerPublicKey) == 0 {
+		return errors.New("server public key is empty")
+	}
+	if len(config.ClientPublicKey) == 0 {
+		return errors.New("client public key is empty")
+	}
+	if len(config.ClientPrivateKey) == 0 {
+		return errors.New("client private key is empty")
 	}
 
-	return ioutil.ReadFile(KeyPath)
-}
+	config.ServerPublicKey = []byte(strings.ReplaceAll(string(config.ServerPublicKey), "\\n", "\n"))
+	config.ClientPublicKey = []byte(strings.ReplaceAll(string(config.ClientPublicKey), "\\n", "\n"))
+	config.ClientPrivateKey = []byte(strings.ReplaceAll(string(config.ClientPrivateKey), "\\n", "\n"))
 
-func (config *SirenaConfig) GetCerts() (err error) {
-	if config.ServerPublicKey, err = config.GetKeyFile(config.ServerPublicKeyFile); err != nil || len(config.ServerPublicKey) == 0 {
-		return errors.Wrap(err, "getting server publicKey error")
-	}
-
-	if config.ClientPrivateKey, err = config.GetKeyFile(config.ClientPrivateKeyFile); err != nil || len(config.ClientPrivateKey) == 0 {
-		return errors.Wrap(err, "getting client privateKey error")
-	}
-
-	return
+	return nil
 }
