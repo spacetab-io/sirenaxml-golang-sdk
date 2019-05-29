@@ -19,7 +19,7 @@ func tearUp() {
 	handlersNum, _ := String2Uint32(os.Getenv("REQUEST_HANDLERS"))
 	sc = &sirena.Config{
 		ClientID:                 clientID,
-		Ip:                       os.Getenv("HOST"),
+		Ip:                       os.Getenv("IP"),
 		Port:                     os.Getenv("PORT"),
 		RequestHandlers:          handlersNum,
 		ClientPublicKey:          []byte(os.Getenv("CLIENT_PUBLIC_KEY")),

@@ -18,7 +18,7 @@ func tearUp() {
 
 	sc = sirena.Config{
 		ClientID:                 clientID,
-		Ip:                       os.Getenv("HOST"),
+		Ip:                       os.Getenv("IP"),
 		Port:                     os.Getenv("PORT"),
 		ClientPublicKey:          []byte(os.Getenv("CLIENT_PUBLIC_KEY")),
 		ClientPrivateKey:         []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
