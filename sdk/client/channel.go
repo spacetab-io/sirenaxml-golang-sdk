@@ -26,11 +26,12 @@ var (
 
 // Channel wraps user connection.
 type Channel struct {
-	cfg   *configuration.SirenaConfig
-	conn  net.Conn // Socket connection.
-	send  chan *Packet
-	Key   []byte
-	KeyID uint32
+	cfg    *configuration.SirenaConfig
+	conn   net.Conn // Socket connection.
+	send   chan *Packet
+	Key    []byte
+	KeyID  uint32
+	Logger logs.LogWriter
 }
 
 func NewChannel(sc *configuration.SirenaConfig) (*Channel, error) {
@@ -65,7 +66,7 @@ func NewChannel(sc *configuration.SirenaConfig) (*Channel, error) {
 		for {
 			err := c.readPacket(buf)
 			if err != nil {
-				logs.Log.WithField("error", err).Error("read message error") // panic for now @TODO change it
+				c.Logger.Error(err) // log it for now @TODO change it
 			}
 		}
 	}()
@@ -93,6 +94,10 @@ func (c *Channel) sendPacket(p *Packet) {
 	_ = buf.Flush()
 }
 
+func (c *Channel) SetLogger(l logs.LogWriter) {
+	c.Logger = l
+}
+
 func createSignKey(c *Channel) error {
 	// Create symmetric key
 	if err := c.signKey(); err != nil {
@@ -102,7 +107,7 @@ func createSignKey(c *Channel) error {
 	go func() {
 		for range time.Tick(time.Hour) {
 			if err := c.signKey(); err != nil {
-				logs.Log.Fatal("key updating error")
+				logs.Logger.Fatal("key updating error")
 			}
 		}
 	}()

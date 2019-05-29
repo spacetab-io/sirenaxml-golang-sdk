@@ -1,12 +1,12 @@
 package logs
 
-import (
-	"github.com/microparts/logs-go"
-)
+var Logger LogWriter
 
-var Log *logs.Logger
-
-func Init(logger *logs.Logger) (err error) {
-	Log = logger
-	return
+type LogWriter interface {
+	Debug(msg interface{})
+	Notice(msg interface{})
+	Info(msg interface{})
+	Warning(msg interface{})
+	Error(msg interface{})
+	Fatal(msg interface{})
 }

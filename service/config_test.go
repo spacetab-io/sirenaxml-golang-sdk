@@ -7,15 +7,13 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/microparts/logs-go"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
 var (
 	// SignedKey is a signed symmetric key to sign in TestKeyCreate and use in TestAvailability
-	sc     configuration.SirenaConfig
-	logger *logs.Logger
+	sc configuration.SirenaConfig
 )
 
 func tearUp() {
@@ -38,14 +36,6 @@ func tearUp() {
 		KeysPath:                 os.Getenv("KEYS_PATH"),
 		SirenaRequestHandlers:    requestHandlersNum,
 		ZippedMessaging:          false,
-	}
-	lc := &logs.Config{
-		Level:  "info",
-		Format: "test",
-	}
-	logger, err = logs.NewLogger(lc)
-	if err != nil {
-		log.Fatal("ErrorResponse loading .env file")
 	}
 }
 
