@@ -24,7 +24,7 @@ func main() {
 	clientID, _ := string2Uint16(os.Getenv("CLIENT_ID"))
 	sc := &configuration.SirenaConfig{
 		ClientID:                 clientID,
-		Host:                     os.Getenv("HOST"),
+		Host:                     os.Getenv("IP"),
 		Port:                     os.Getenv("PORT"),
 		ClientPublicKeyFile:      os.Getenv("CLIENT_PUBLIC_KEY"),
 		ClientPrivateKeyFile:     os.Getenv("CLIENT_PRIVATE_KEY"),
