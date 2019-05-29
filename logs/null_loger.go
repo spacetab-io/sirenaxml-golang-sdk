@@ -8,8 +8,8 @@ func NewNullLog() *NullLog {
 	return &NullLog{}
 }
 
-func (*NullLog) Debug(msg interface{})   {}
-func (*NullLog) Info(msg interface{})    {}
-func (*NullLog) Warning(msg interface{}) {}
-func (*NullLog) Error(msg interface{})   {}
-func (*NullLog) Fatal(msg interface{})   {}
+func (*NullLog) Debug(args ...interface{})   {}
+func (*NullLog) Info(args ...interface{})    {}
+func (*NullLog) Warning(args ...interface{}) {}
+func (*NullLog) Error(args ...interface{})   {}
+func (*NullLog) Fatal(args ...interface{})   {}
