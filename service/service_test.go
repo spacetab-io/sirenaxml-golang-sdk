@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/sdk"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
@@ -23,6 +24,7 @@ func TestService(t *testing.T) {
 		testRequest(t, customSirenConfig)
 	})
 	t.Run("test error params", func(t *testing.T) {
+		logger := logs.NewNullLog()
 		customSirenConfig := sc
 		customSirenConfig.ClientID = 1111
 		_, err := sdk.NewClient(&customSirenConfig, logger)
@@ -33,6 +35,7 @@ func TestService(t *testing.T) {
 }
 
 func TestService_RawRequest(t *testing.T) {
+	logger := logs.NewNullLog()
 	sdkClient, err := sdk.NewClient(&sc, logger)
 	if !assert.NoError(t, err) {
 		t.FailNow()
@@ -69,6 +72,7 @@ func TestService_RawRequest(t *testing.T) {
 
 func TestService_Avalability(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
+		logger := logs.NewNullLog()
 		sdkClient, err := sdk.NewClient(&sc, logger)
 		if !assert.NoError(t, err) {
 			t.FailNow()
@@ -131,6 +135,7 @@ func TestService_Avalability(t *testing.T) {
 }
 
 func testRequest(t *testing.T, sc configuration.SirenaConfig) {
+	logger := logs.NewNullLog()
 	sdkClient, err := sdk.NewClient(&sc, logger)
 	if !assert.NoError(t, err) {
 		t.FailNow()
