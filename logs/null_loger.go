@@ -9,7 +9,6 @@ func NewNullLog() *NullLog {
 }
 
 func (*NullLog) Debug(msg interface{})   {}
-func (*NullLog) Notice(msg interface{})  {}
 func (*NullLog) Info(msg interface{})    {}
 func (*NullLog) Warning(msg interface{}) {}
 func (*NullLog) Error(msg interface{})   {}
