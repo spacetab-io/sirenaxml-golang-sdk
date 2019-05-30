@@ -26,7 +26,7 @@ var (
 
 // Channel wraps user connection.
 type Channel struct {
-	cfg    *sirena.Config
+	cfg    *sirenaXML.Config
 	conn   net.Conn // Socket connection.
 	send   chan *Packet
 	Key    []byte
@@ -34,7 +34,7 @@ type Channel struct {
 	Logger logs.LogWriter
 }
 
-func NewChannel(sc *sirena.Config) (*Channel, error) {
+func NewChannel(sc *sirenaXML.Config) (*Channel, error) {
 	err := sc.PrepareKeys()
 	if err != nil {
 		return nil, err

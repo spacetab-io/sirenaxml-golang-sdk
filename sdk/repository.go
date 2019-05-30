@@ -13,7 +13,7 @@ type storage struct {
 	Key []byte
 }
 
-func NewClient(sc *sirena.Config, l logs.LogWriter) (*storage, error) {
+func NewClient(sc *sirenaXML.Config, l logs.LogWriter) (*storage, error) {
 	c, err := client.NewChannel(sc)
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")

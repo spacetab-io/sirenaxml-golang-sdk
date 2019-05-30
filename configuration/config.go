@@ -1,4 +1,4 @@
-package sirena
+package sirenaXML
 
 import (
 	"strings"
@@ -11,7 +11,6 @@ type Config struct {
 	RequestHandlers          uint32 `yaml:"putls_count"`
 	Ip                       string `yaml:"ip"`
 	Port                     string `yaml:"port"`
-	KeysPath                 string `yaml:"key_path"`
 	ClientPublicKey          []byte `yaml:"client_public_key"`
 	ClientPrivateKey         []byte `yaml:"client_private_key"`
 	ClientPrivateKeyPassword string `yaml:"client_private_key_password"`

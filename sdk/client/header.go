@@ -74,7 +74,7 @@ func (h *Header) ToBytes() []byte {
 	return headerBytes
 }
 
-func (h *Header) setFlags(cfg *sirena.Config, sign bool) {
+func (h *Header) setFlags(cfg *sirenaXML.Config, sign bool) {
 	h.Flags = &HeaderFlags{}
 
 	// it will be easier to manage zipped status of request and response in one config attribute
