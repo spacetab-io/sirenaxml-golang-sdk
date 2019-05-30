@@ -14,15 +14,15 @@ jobs:
           command: |
             mkdir -p /tmp/artifacts
       - run:
-          name: "Rise ssh port forwarding connection"
+          name: "Config ssh port forwarding"
           command: |
             echo ${PROXY_PRIVATE_KEY} | base64 --decode > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/*
             ssh-keyscan -H ${PROXY_IP} >> ~/.ssh/known_hosts
-            ssh -fNT -L 127.0.0.1:${PORT}:${IP}:${PORT} circleci@${PROXY_IP}
       - run:
           name: "Run tests and collect coverage reports"
           command: |
+            ssh -4 -fNT -L ${PORT}:${IP}:${PORT} circleci@${PROXY_IP}
             go mod vendor
             go test ./... -coverprofile=c.out
             go tool cover -html=c.out -o coverage.html
