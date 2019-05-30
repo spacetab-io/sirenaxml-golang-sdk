@@ -10,15 +10,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Create a temp directory for artifacts"
+          name: "Create directories"
           command: |
             mkdir -p /tmp/artifacts
+            mkdir ~/.ssh
       - run:
-          name: "Rise ssh port forwarding"
+          name: "Rise ssh port forwarding connection"
           command: |
-            echo `echo ${PROXY_PRIVATE_KEY} | base64 --decode` > ~/.ssh/id_ed25519
+            echo ${PROXY_PRIVATE_KEY} | base64 --decode > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/*
-            ssh -o "StrictHostKeyChecking no" -fNT -L 34323:${IP}:34323 circleci@${PROXY_IP}
+            ssh -o "StrictHostKeyChecking no" -fNT -L ${PORT}:${IP}:${PORT} circleci@${PROXY_IP}
       - run:
           name: "Run tests and collect coverage reports"
           command: |
