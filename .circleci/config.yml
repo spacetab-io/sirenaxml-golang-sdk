@@ -18,7 +18,7 @@ jobs:
           command: |
             echo "${PROXY_PRIVATE_KEY}" > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/id_ed25519
-            ssh -fNT -L 34323:${IP}:34323 circleci@${PROXY_IP} -i ~/.ssh/id_ed25519
+            ssh -o "StrictHostKeyChecking no" -fNT -L 34323:${IP}:34323 circleci@${PROXY_IP} -i ~/.ssh/id_ed25519
       - run:
           name: "Run tests and collect coverage reports"
           command: |
