@@ -9,9 +9,11 @@ type ErrorResponse struct {
 }
 
 type ErrorAnswer struct {
-	Error struct {
-		Code       int    `xml:"code,attr"`
-		CryptError bool   `xml:"crypt_error,attr"`
-		Message    string `xml:",chardata"`
-	} `xml:"error"`
+	Error Error `xml:"error"`
+}
+
+type Error struct {
+	Code       int    `xml:"code,attr"`
+	CryptError bool   `xml:"crypt_error,attr"`
+	Message    string `xml:",chardata"`
 }
