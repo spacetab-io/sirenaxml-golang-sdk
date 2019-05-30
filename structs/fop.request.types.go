@@ -1,4 +1,4 @@
-package sirena
+package structs
 
 import "encoding/xml"
 
