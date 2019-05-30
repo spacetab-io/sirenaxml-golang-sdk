@@ -30,5 +30,10 @@ jobs:
             mv c.out /tmp/artifacts
       - store_artifacts:
           path: /tmp/artifacts
-      - codecov/upload:
-          file: /tmp/artifacts/*
+      - run:
+          name: Upload Coverage Results
+          command: "bash <(curl -s https://codecov.io/bash) \
+            -f /tmp/artifacts/* \
+            -n ${CIRCLE_BUILD_NUM} \
+            -t ${CODECOV_TOKEN} \
+            -y .codecov.yml"
