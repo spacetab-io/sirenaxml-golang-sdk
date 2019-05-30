@@ -13,7 +13,6 @@ jobs:
           name: "Create directories"
           command: |
             mkdir -p /tmp/artifacts
-            mkdir ~/.ssh
       - run:
           name: "Rise ssh port forwarding connection"
           command: |
