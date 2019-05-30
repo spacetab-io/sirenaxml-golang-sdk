@@ -1,6 +1,8 @@
 sirena-xml-sdk
 --------------
 
+[![CircleCI](https://circleci.com/gh/tmconsulting/sirenaxml-golang-sdk.svg?style=shield)](https://circleci.com/gh/tmconsulting/sirenaxml-golang-sdk) [![codecov](https://codecov.io/gh/tmconsulting/sirenaxml-golang-sdk/graph/badge.svg)](https://codecov.io/gh/tmconsulting/sirenaxml-golang-sdk)
+
 Sirena XML connector written on golang
 
 ## Usage
