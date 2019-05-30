@@ -126,7 +126,7 @@ func TestService_Avalability(t *testing.T) {
 	//})
 }
 
-func testRequest(t *testing.T, sc sirena.Config) {
+func testRequest(t *testing.T, sc sirenaXML.Config) {
 	logger := logs.NewNullLog()
 	sdkClient, err := sdk.NewClient(&sc, logger)
 	if !assert.NoError(t, err) {

@@ -11,13 +11,13 @@ import (
 )
 
 var (
-	sc *sirena.Config
+	sc *sirenaXML.Config
 )
 
 func tearUp() {
 	clientID, _ := String2Uint16(os.Getenv("CLIENT_ID"))
 	handlersNum, _ := String2Uint32(os.Getenv("REQUEST_HANDLERS"))
-	sc = &sirena.Config{
+	sc = &sirenaXML.Config{
 		ClientID:                 clientID,
 		Ip:                       os.Getenv("IP"),
 		Port:                     os.Getenv("PORT"),
@@ -26,7 +26,6 @@ func tearUp() {
 		ClientPrivateKey:         []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 		ServerPublicKey:          []byte(os.Getenv("SERVER_PUBLIC_KEY")),
-		KeysPath:                 os.Getenv("KEYS_PATH"),
 		ZippedMessaging:          false,
 	}
 }

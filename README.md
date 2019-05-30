@@ -1,7 +1,7 @@
 sirena-xml-sdk
 --------------
 
-[![CircleCI](https://circleci.com/gh/tmconsulting/sirenaxml-golang-sdk.svg?style=shield)](https://circleci.com/gh/tmconsulting/sirenaxml-golang-sdk) [![codecov](https://codecov.io/gh/tmconsulting/sirenaxml-golang-sdk/graph/badge.svg)](https://codecov.io/gh/tmconsulting/sirenaxml-golang-sdk)
+[![CircleCI](https://circleci.com/gh/tmconsulting/sirenaxml-golang-sdk.svg?style=shield)](https://circleci.com/gh/tmconsulting/sirenaxml-golang-sdk) [![codecov](https://codecov.io/gh/tmconsulting/sirenaxml-golang-sdk/graph/badge.svg)](https://codecov.io/gh/tmconsulting/sirenaxml-golang-sdk/refactoring)
 
 Sirena XML connector written on golang
 
@@ -23,17 +23,19 @@ import (
 )
 
 func main() {
-	clientID, _ := string2Uint16(os.Getenv("CLIENT_ID"))
-	sc := &sirena.Config{
-		ClientID:                 clientID,
-		Ip:                     os.Getenv("IP"),
+	clientID, err := strconv.ParseUint(os.Getenv("CLIENT_ID"), 10, 16)
+	if err != nil {
+	  panic(err)
+	}
+	sc := &sirenaXML.Config{
+		ClientID:                 uint16(clientID),
+		Ip:                       os.Getenv("IP"),
 		Port:                     os.Getenv("PORT"),
-		ClientPublicKey:      []byte(os.Getenv("CLIENT_PUBLIC_KEY")),
-		ClientPrivateKey:     []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
-		ServerPublicKey:      []byte(os.Getenv("SERVER_PUBLIC_KEY")),
+		ClientPublicKey:      	  []byte(os.Getenv("CLIENT_PUBLIC_KEY")),
+		ClientPrivateKey:         []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
+		ServerPublicKey:          []byte(os.Getenv("SERVER_PUBLIC_KEY")),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
-		KeysPath:                 os.Getenv("KEYS_PATH"),
-		ZippedMessaging:             true,
+		ZippedMessaging:          true,
 	}
   
 	logger := logs.NewNullLog()
