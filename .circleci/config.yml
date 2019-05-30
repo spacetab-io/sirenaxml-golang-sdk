@@ -5,22 +5,29 @@ orbs:
 
 jobs:
   build:
-    machine: true
+    machine:
+      image: circleci/golang:1.12
     steps:
       - checkout
       - run:
-          name: check content
+          name: "Create a temp directory for artifacts"
           command: |
-            ls -la
+            mkdir -p /tmp/artifacts
       - run:
-          name: Run docker containe for test
+          name: "Rise ssh port forwarding"
           command: |
-            docker run --device=/dev/net/tun \
-              -v "$(pwd)":/home/circleci/project \
-              circleci/golang:1.12 \
-            ./.circleci/test.sh
+            cat ${PROXY_PRIVATE_KEY} > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+            ssh -fNT -L 34323:${IP}:34323 circleci@${PROXY_IP} -i ~/.ssh/id_ed25519
+      - run:
+          name: "Run tests and collect coverage reports"
+          command: |
+            go mod vendor
+            go test ./... -coverprofile=c.out
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html /tmp/artifacts
+            mv c.out /tmp/artifacts
       - store_artifacts:
-          path: ./artifacts
-      - run:
-          command: |
-            bash <(curl -s https://codecov.io/bash)
+          path: /tmp/artifacts
+      - codecov/upload:
+          file: /tmp/artifacts/*
