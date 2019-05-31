@@ -20,6 +20,7 @@ func tearUp() {
 	sc = &sirenaXML.Config{
 		ClientID:                 clientID,
 		Environment:              os.Getenv("ENV"),
+		Ip:                       os.Getenv("IP"),
 		MaxConnections:           handlersNum,
 		ClientPublicKey:          os.Getenv("CLIENT_PUBLIC_KEY"),
 		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),

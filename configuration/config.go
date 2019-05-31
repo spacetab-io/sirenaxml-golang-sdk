@@ -1,9 +1,7 @@
 package sirenaXML
 
 import (
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/pkg/errors"
 )
@@ -15,7 +13,6 @@ const (
 )
 
 var (
-	ipsSlice = []string{"193.104.87.251", "194.84.25.50"}
 	portsMap = map[string]string{
 		EnvLearning:   "34323",
 		EnvTesting:    "34322",
@@ -26,6 +23,7 @@ var (
 type Config struct {
 	ClientID                 uint16 `yaml:"client_id"`
 	MaxConnections           uint32 `yaml:"max_connections"`
+	Ip                       string `yaml:"ip"`
 	Environment              string `yaml:"environment"`
 	ClientPublicKey          string `yaml:"client_public_key"`
 	ClientPrivateKey         string `yaml:"client_private_key"`
@@ -39,9 +37,10 @@ func (config *Config) GetAddr() (string, error) {
 	if config.Environment == "" {
 		return "", errors.New("environment is not set")
 	}
-	rand.Seed(time.Now().Unix())
-	i := rand.Int() % len(ipsSlice)
-	return ipsSlice[i] + ":" + portsMap[config.Environment], nil
+	if config.Ip == "" {
+		return "", errors.New("ip is not set")
+	}
+	return config.Ip + ":" + portsMap[config.Environment], nil
 }
 
 func (config *Config) PrepareKeys() error {
