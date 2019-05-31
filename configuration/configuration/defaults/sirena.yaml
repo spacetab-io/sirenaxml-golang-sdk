@@ -1,0 +1,10 @@
+defaults:
+  sirena:
+    client_id: ""
+    max_connections: # maximum concurrent connections sirena server can afford. Your pult configuration
+    environment: "" # GRU (learning) | GRT (testing) | GRS (production)
+    client_public_key: ""
+    client_private_key: ""
+    client_private_key_password: ""
+    server_public_key: ""
+    zipped_messaging: true

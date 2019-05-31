@@ -1,0 +1,40 @@
+version: 2.0
+
+orbs:
+  codecov: codecov/codecov@1.0.4
+
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: "Create directories"
+          command: |
+            mkdir -p /tmp/artifacts
+            mkdir -p ~/.ssh
+      - run:
+          name: "Config ssh port forwarding"
+          command: |
+            echo ${PROXY_PRIVATE_KEY} | base64 --decode > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/*
+            ssh-keyscan -H ${PROXY_IP} >> ~/.ssh/known_hosts
+            ssh -4 -fNT -L ${IP}:${PORT}:${IP_REMOTE}:${PORT} circleci@${PROXY_IP}
+      - run:
+          name: "Run tests and collect coverage reports"
+          command: |
+            go mod vendor
+            go test ./... -coverprofile=c.out
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html /tmp/artifacts
+            mv c.out /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
+      - run:
+          name: Upload Coverage Results
+          command: "bash <(curl -s https://codecov.io/bash) \
+            -f /tmp/artifacts/* \
+            -n ${CIRCLE_BUILD_NUM} \
+            -t ${CODECOV_TOKEN} \
+            -y .codecov.yml"
