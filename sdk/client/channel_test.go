@@ -22,10 +22,10 @@ func tearUp() {
 		Ip:                       os.Getenv("IP"),
 		Port:                     os.Getenv("PORT"),
 		RequestHandlers:          handlersNum,
-		ClientPublicKey:          []byte(os.Getenv("CLIENT_PUBLIC_KEY")),
-		ClientPrivateKey:         []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
+		ClientPublicKey:          os.Getenv("CLIENT_PUBLIC_KEY"),
+		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
-		ServerPublicKey:          []byte(os.Getenv("SERVER_PUBLIC_KEY")),
+		ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 		ZippedMessaging:          false,
 	}
 }

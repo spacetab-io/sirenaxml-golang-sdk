@@ -34,7 +34,7 @@ func (c *Channel) signKey() error {
 	response := getResponseFromMsgPool(request.header.MessageID)
 
 	// DesDecrypt response
-	c.Key, err = crypt.DecryptDataWithClientPrivateKey(response.message[4:132], c.cfg.ClientPrivateKey, c.cfg.ClientPrivateKeyPassword)
+	c.Key, err = crypt.DecryptDataWithClientPrivateKey(response.message[4:132], []byte(c.cfg.ClientPrivateKey), c.cfg.ClientPrivateKeyPassword)
 	if err != nil {
 		return errors.Wrap(err, "decrypting data with client private key error")
 	}
@@ -50,7 +50,7 @@ func (c *Channel) signKey() error {
 
 func (c *Channel) newSignRequestPacket(key []byte) (*Packet, error) {
 	// DesEncrypt symmetric key with server public key
-	encryptedKey, err := crypt.EncryptDataWithServerPubKey(key, c.cfg.ServerPublicKey)
+	encryptedKey, err := crypt.EncryptDataWithServerPubKey(key, []byte(c.cfg.ServerPublicKey))
 	if err != nil {
 		return nil, errors.Wrap(err, "encrypting data with server pubKey error")
 	}
@@ -65,7 +65,7 @@ func NewPacket(cfg *sirenaXML.Config, key []byte, keyID uint32) (*Packet, error)
 	var err error
 	p := &Packet{}
 	p.makeHeader(cfg, key, keyID)
-	p.messageSignature, err = crypt.GeneratePrivateKeySignature(key, cfg.ClientPrivateKey, cfg.ClientPrivateKeyPassword)
+	p.messageSignature, err = crypt.GeneratePrivateKeySignature(key, []byte(cfg.ClientPrivateKey), cfg.ClientPrivateKeyPassword)
 	if err != nil {
 		return nil, err
 	}
