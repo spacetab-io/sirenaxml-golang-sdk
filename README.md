@@ -30,10 +30,10 @@ func main() {
 	sc := &sirenaXML.Config{
 		ClientID:                 uint16(clientID),
 		Ip:                       os.Getenv("IP"),
-		Port:                     os.Getenv("PORT"),
-		ClientPublicKey:      	  []byte(os.Getenv("CLIENT_PUBLIC_KEY")),
-		ClientPrivateKey:         []byte(os.Getenv("CLIENT_PRIVATE_KEY")),
-		ServerPublicKey:          []byte(os.Getenv("SERVER_PUBLIC_KEY")),
+		Environment:              os.Getenv("ENV"),
+		ClientPublicKey:      	  os.Getenv("CLIENT_PUBLIC_KEY"),
+		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
+		ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 		ZippedMessaging:          true,
 	}
@@ -71,6 +71,25 @@ Pass config data in ENV and run tests:
 
 	make test
 
-## Licence
+Feel free to help us to rise coverage!
 
-This software is provided under [MIT License](LICENSE).
+## Contribution
+
+Contribution, in any kind of way, is highly welcome!
+It doesn't matter if you are not able to write code.
+Creating issues or holding talks and help other people to use 
+[sirenaxml-golang-sdk](https://github.com/tmconsulting/sirenaxml-golang-sdk) is contribution, too!
+
+A few examples:
+
+* Correct typos in the README / documentation
+* Reporting bugs
+* Implement a new feature or service
+* Sharing the love if like to use [sirenaxml-golang-sdk](https://github.com/tmconsulting/sirenaxml-golang-sdk) and help people 
+to get use to it
+
+If you are new to pull requests, checkout [Collaborating on projects using issues and pull requests / Creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
+
+## License
+
+SDK is released under the [MIT License](./LICENSE).
