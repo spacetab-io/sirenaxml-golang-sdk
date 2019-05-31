@@ -1,9 +1,8 @@
 defaults:
   sirena:
     client_id: ""
-    putls_count: "" #how much pults client has to handle his requests
-    ip: ""
-    port: ""
+    max_connections: # maximum concurrent connections sirena server can afford. Your pult configuration
+    environment: "" # GRU (learning) | GRT (testing) | GRS (production)
     client_public_key: ""
     client_private_key: ""
     client_private_key_password: ""
