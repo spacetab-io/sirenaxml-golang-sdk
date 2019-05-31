@@ -16,12 +16,11 @@ var (
 
 func tearUp() {
 	clientID, _ := String2Uint16(os.Getenv("CLIENT_ID"))
-	handlersNum, _ := String2Uint32(os.Getenv("REQUEST_HANDLERS"))
+	handlersNum, _ := String2Uint32(os.Getenv("MAX_CONNECTIONS"))
 	sc = &sirenaXML.Config{
 		ClientID:                 clientID,
-		Ip:                       os.Getenv("IP"),
-		Port:                     os.Getenv("PORT"),
-		RequestHandlers:          handlersNum,
+		Environment:              os.Getenv("ENV"),
+		MaxConnections:           handlersNum,
 		ClientPublicKey:          os.Getenv("CLIENT_PUBLIC_KEY"),
 		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),

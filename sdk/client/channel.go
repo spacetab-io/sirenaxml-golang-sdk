@@ -35,23 +35,26 @@ type Channel struct {
 }
 
 func NewChannel(sc *sirenaXML.Config) (*Channel, error) {
-	err := sc.PrepareKeys()
+	if err := sc.PrepareKeys(); err != nil {
+		return nil, err
+	}
+	addr, err := sc.GetAddr()
 	if err != nil {
 		return nil, err
 	}
-	conn, err := net.Dial("tcp", sc.GetAddr())
+	conn, err := net.Dial("tcp", addr)
 	if err != nil {
 		return nil, errors.Wrap(err, "dial sirena addr error")
 	}
 
 	c := &Channel{
 		conn: conn,
-		send: make(chan *Packet, sc.RequestHandlers),
+		send: make(chan *Packet, sc.MaxConnections),
 		cfg:  sc,
 	}
 
 	respPool = NewRespPool()
-	msgPool, err = NewMsgPool(respPool, sc.RequestHandlers)
+	msgPool, err = NewMsgPool(respPool, sc.MaxConnections)
 	if err != nil {
 		return nil, err
 	}

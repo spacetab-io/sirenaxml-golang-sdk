@@ -9,6 +9,9 @@ import (
 
 // DesEncrypt implements DES encryption in ECB mode with PKCS padding
 func DesEncrypt(src, key []byte) ([]byte, error) {
+	if src == nil {
+		return nil, errors.New("src must not be empty!")
+	}
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
