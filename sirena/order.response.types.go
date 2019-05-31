@@ -38,8 +38,8 @@ type OrderAnswerPNR struct {
 	LatinRegistration  bool                        `xml:"latin_registration"`
 	Version            int                         `xml:"version"`
 	Contacts           BookingAnswerContacts       `xml:"contacts"`
-	Segments           []BookingAnswerPNRSegment   `xml:"segments"`
-	Passengers         []BookingAnswerPNRPassenger `xml:"passengers"`
+	Segments           []BookingAnswerPNRSegment   `xml:"segments>segment"`
+	Passengers         []BookingAnswerPNRPassenger `xml:"passengers>passenger"`
 	Prices             BookingAnswerPNRPrices      `xml:"prices"`
 	CommonStatus       string                      `xml:"common_status"`
 	PossibleActionList PNRPossibleActionList       `xml:"possible_action_list"`
