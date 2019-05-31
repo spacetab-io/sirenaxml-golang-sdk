@@ -1,14 +1,11 @@
 package logs
 
-import (
-	"github.com/microparts/logs-go"
-)
+var Logger LogWriter
 
-var Log *logs.Logger
-
-func Init(logsCfg *logs.Config) (err error) {
-	if Log, err = logs.NewLogger(logsCfg); err != nil {
-		return err
-	}
-	return
+type LogWriter interface {
+	Debug(args ...interface{})
+	Info(args ...interface{})
+	Warning(args ...interface{})
+	Error(args ...interface{})
+	Fatal(args ...interface{})
 }
