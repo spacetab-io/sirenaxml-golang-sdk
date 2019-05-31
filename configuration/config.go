@@ -11,10 +11,10 @@ type Config struct {
 	RequestHandlers          uint32 `yaml:"putls_count"`
 	Ip                       string `yaml:"ip"`
 	Port                     string `yaml:"port"`
-	ClientPublicKey          []byte `yaml:"client_public_key"`
-	ClientPrivateKey         []byte `yaml:"client_private_key"`
+	ClientPublicKey          string `yaml:"client_public_key"`
+	ClientPrivateKey         string `yaml:"client_private_key"`
 	ClientPrivateKeyPassword string `yaml:"client_private_key_password"`
-	ServerPublicKey          []byte `yaml:"server_public_key"`
+	ServerPublicKey          string `yaml:"server_public_key"`
 	ZippedMessaging          bool   `yaml:"zipped_messaging"`
 }
 
@@ -40,9 +40,9 @@ func (config *Config) PrepareKeys() error {
 		return errors.New("client private key is empty")
 	}
 
-	config.ServerPublicKey = []byte(strings.ReplaceAll(string(config.ServerPublicKey), "\\n", "\n"))
-	config.ClientPublicKey = []byte(strings.ReplaceAll(string(config.ClientPublicKey), "\\n", "\n"))
-	config.ClientPrivateKey = []byte(strings.ReplaceAll(string(config.ClientPrivateKey), "\\n", "\n"))
+	config.ServerPublicKey = strings.ReplaceAll(config.ServerPublicKey, "\\n", "\n")
+	config.ClientPublicKey = strings.ReplaceAll(config.ClientPublicKey, "\\n", "\n")
+	config.ClientPrivateKey = strings.ReplaceAll(config.ClientPrivateKey, "\\n", "\n")
 
 	return nil
 }
