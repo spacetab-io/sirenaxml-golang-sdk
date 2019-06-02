@@ -24,9 +24,8 @@ jobs:
       - run:
           name: "Run tests and collect coverage reports"
           command: |
-            go mod vendor
-            go test ./... -coverprofile=c.out
-            go tool cover -html=c.out -o coverage.html
+            make deps
+            make test
             mv coverage.html /tmp/artifacts
             mv c.out /tmp/artifacts
       - store_artifacts:

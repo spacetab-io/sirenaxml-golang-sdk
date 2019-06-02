@@ -83,9 +83,5 @@ func GeneratePrivateKeySignature(data, key []byte, keyPassword string) ([]byte, 
 	h := sha1.New()
 	h.Write(data)
 	digest := h.Sum(nil)
-	s, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA1, digest)
-	if err != nil {
-		return nil, err
-	}
-	return s, nil
+	return rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA1, digest)
 }
