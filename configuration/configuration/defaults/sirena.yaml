@@ -3,6 +3,7 @@ defaults:
     client_id: ""
     max_connections: # maximum concurrent connections sirena server can afford. Your pult configuration
     environment: "" # GRU (learning) | GRT (testing) | GRS (production)
+    ip: "" # connection ip address: 194.84.25.50 or 193.104.87.251
     client_public_key: ""
     client_private_key: ""
     client_private_key_password: ""
