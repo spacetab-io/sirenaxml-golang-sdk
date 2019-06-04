@@ -16,7 +16,7 @@ type MealsAnswer struct {
 // MealsAnswerDetails is a <describe> section in all meals response
 type MealsAnswerDetails struct {
 	Data  []MealsAnswerData `xml:"data"`
-	Error *Error            `xml:"error"`
+	Error *Error            `xml:"error,omitempty"`
 }
 
 // MealsAnswerData is a <data> section in all meals response

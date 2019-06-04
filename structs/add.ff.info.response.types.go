@@ -17,5 +17,5 @@ type AddFFInfoAnswer struct {
 // AddFFInfoAnswerAddFFInfo is a <add_ff_info> section in Sirena <add_ff_info> response
 type AddFFInfoAnswerAddFFInfo struct {
 	Ok    *struct{}      `xml:"ok,omitempty"`
-	Error *ErrorResponse `xml:"error,omitempty"`
+	Error *Error `xml:"error,omitempty"`
 }

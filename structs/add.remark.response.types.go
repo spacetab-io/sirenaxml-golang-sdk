@@ -17,5 +17,5 @@ type AddRemarkAnswer struct {
 // AddRemarkAnswerAddRemark is a <add_remark> section in Sirena <add_remark> response
 type AddRemarkAnswerAddRemark struct {
 	Ok    *struct{}      `xml:"ok,omitempty"`
-	Error *ErrorResponse `xml:"error,omitempty"`
+	Error *Error `xml:"error,omitempty"`
 }

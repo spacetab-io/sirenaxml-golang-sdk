@@ -16,7 +16,7 @@ type PCardTypesAnswer struct {
 // PCardTypesAnswerDetails is a <describe> section in all pcard_types response
 type PCardTypesAnswerDetails struct {
 	Data  []PCardTypesAnswerData `xml:"data"`
-	Error *Error                 `xml:"error"`
+	Error *Error                 `xml:"error,omitempty"`
 }
 
 // PCardTypesAnswerData is a <data> section in all pcard_types response

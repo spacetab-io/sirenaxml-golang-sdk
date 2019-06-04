@@ -11,7 +11,7 @@ type PricingRouteAnswer struct {
 type PricingRouteAnswerPricingRoute struct {
 	Variants []PricingRouteAnswerVariant `xml:"variant"`
 	Flights  []*PricingRouteAnswerFlight `xml:"flight"`
-	Error    *ErrorResponse              `xml:"error"`
+	Error    *Error              `xml:"error,omitempty"`
 }
 
 type PricingRouteAnswerFlight struct {

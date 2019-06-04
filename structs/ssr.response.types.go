@@ -16,7 +16,7 @@ type SSRAnswer struct {
 // SSRAnswerDetails is a <describe> section in all special requests response
 type SSRAnswerDetails struct {
 	Data  []SSRAnswerData `xml:"data"`
-	Error *Error          `xml:"error"`
+	Error *Error          `xml:"error,omitempty"`
 }
 
 // SSRAnswerData is a <data> section in all special requests response

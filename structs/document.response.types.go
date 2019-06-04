@@ -16,7 +16,7 @@ type DocumentsAnswer struct {
 // DocumentsAnswerDetails is a <describe> section in all documents response
 type DocumentsAnswerDetails struct {
 	Data  []DocumentsAnswerData `xml:"data"`
-	Error *Error                `xml:"error"`
+	Error *Error                `xml:"error,omitempty"`
 }
 
 // DocumentsAnswerData is a <data> section in all documents response
