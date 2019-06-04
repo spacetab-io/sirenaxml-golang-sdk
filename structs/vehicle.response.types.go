@@ -16,7 +16,7 @@ type VehiclesAnswer struct {
 // VehiclesAnswerDetails is a <describe> section in all vehicles response
 type VehiclesAnswerDetails struct {
 	Data  []VehiclesAnswerData `xml:"data"`
-	Error *Error               `xml:"error"`
+	Error *Error               `xml:"error,omitempty"`
 }
 
 // VehiclesAnswerData is a <data> section in all vehicles response

@@ -17,7 +17,7 @@ type ReleaseSeatsAnswer struct {
 // ReleaseSeatsAnswerBody is a <release_seats> section in Sirena <release_seats> response
 type ReleaseSeatsAnswerBody struct {
 	Orders []ReleaseSeatsAnswerOrder `xml:"orders"`
-	Error  *ErrorResponse            `xml:"error"`
+	Error  *Error            `xml:"error,omitempty"`
 }
 
 // ReleaseSeatsAnswerOrder is an <order> entry in Sirena <release_seats> response

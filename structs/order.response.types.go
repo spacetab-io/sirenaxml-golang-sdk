@@ -25,7 +25,7 @@ type OrderAnswerOrder struct {
 	Agency   string              `xml:"agency,attr"`
 	PNR      OrderAnswerPNR      `xml:"pnr"`
 	Tickinfo OrderAnswerTickinfo `xml:"tickinfo"`
-	Error    *ErrorResponse      `xml:"error"`
+	Error    *Error      `xml:"error,omitempty"`
 }
 
 // OrderAnswerPNR is a <pnr> section in Sirena order response

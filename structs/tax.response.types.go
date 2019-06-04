@@ -16,7 +16,7 @@ type TaxesAnswer struct {
 // TaxesAnswerDetails is a <describe> section in all taxes response
 type TaxesAnswerDetails struct {
 	Data  []TaxesAnswerData `xml:"data"`
-	Error *Error            `xml:"error"`
+	Error *Error            `xml:"error,omitempty"`
 }
 
 // TaxesAnswerData is a <data> section in all taxes response

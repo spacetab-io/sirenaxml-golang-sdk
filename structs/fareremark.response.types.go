@@ -18,5 +18,5 @@ type FareRemarkAnswer struct {
 type FareRemarkAnswerFareRemark struct {
 	NewFare bool           `xml:"new_fare,omitempty"`
 	Remark  string         `xml:"remark"`
-	Error   *ErrorResponse `xml:"error,omitempty"`
+	Error   *Error `xml:"error,omitempty"`
 }

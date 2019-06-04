@@ -16,7 +16,7 @@ type CountriesAnswer struct {
 // CountriesAnswerDetails is a <describe> section in all countries response
 type CountriesAnswerDetails struct {
 	Data  []CountriesAnswerData `xml:"data"`
-	Error *Error                `xml:"error"`
+	Error *Error                `xml:"error,omitempty"`
 }
 
 // CountriesAnswerData is a <data> section in all countries response

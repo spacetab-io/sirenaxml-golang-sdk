@@ -16,7 +16,7 @@ type RegionsAnswer struct {
 // RegionsAnswerDetails is a <describe> section in all regions response
 type RegionsAnswerDetails struct {
 	Data  []RegionsAnswerData `xml:"data"`
-	Error *Error              `xml:"error"`
+	Error *Error              `xml:"error,omitempty"`
 }
 
 // RegionsAnswerData is a <data> section in all regions response

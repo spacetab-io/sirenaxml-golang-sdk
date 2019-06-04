@@ -16,7 +16,7 @@ type AirlinesAnswer struct {
 // AirlinesAnswerDetails is a <describe> section in all airlines response
 type AirlinesAnswerDetails struct {
 	Data  []AirlinesAnswerData `xml:"data"`
-	Error *Error               `xml:"error"`
+	Error *Error               `xml:"error,omitempty"`
 }
 
 // AirlinesAnswerData is a <data> section in all airlines response

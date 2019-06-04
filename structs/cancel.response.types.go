@@ -16,5 +16,5 @@ type OrderCancelAnswer struct {
 // OrderCancelData is a <booking-cancel> entry in Sirena booking cancel response
 type OrderCancelData struct {
 	OK    *struct{}      `xml:"ok,omitempty"`
-	Error *ErrorResponse `xml:"error,omitempty"`
+	Error *Error `xml:"error,omitempty"`
 }

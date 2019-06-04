@@ -16,7 +16,7 @@ type FOPAnswer struct {
 // FOPAnswerDetails is a <describe> section in all fop response
 type FOPAnswerDetails struct {
 	Data  []FOPAnswerData `xml:"data"`
-	Error *Error          `xml:"error"`
+	Error *Error          `xml:"error,omitempty"`
 }
 
 // FOPAnswerData is a <data> section in all fop response

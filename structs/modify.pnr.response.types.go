@@ -17,5 +17,5 @@ type ModifyPNRAnswer struct {
 // ModifyPNRAnswerModifyPNR is a <modify_pnr> section in Sirena <modify_pnr> response
 type ModifyPNRAnswerModifyPNR struct {
 	Ok    *struct{}      `xml:"ok,omitempty"`
-	Error *ErrorResponse `xml:"error,omitempty"`
+	Error *Error `xml:"error,omitempty"`
 }

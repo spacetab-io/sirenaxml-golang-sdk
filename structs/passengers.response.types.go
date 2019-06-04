@@ -16,7 +16,7 @@ type PassengersAnswer struct {
 // PassengersAnswerDetails is a <describe> section in passenger(s) response
 type PassengersAnswerDetails struct {
 	Data  []PassengersAnswerData `xml:"data"`
-	Error *Error                 `xml:"error"`
+	Error *Error                 `xml:"error,omitempty"`
 }
 
 // PassengersAnswerData is a <data> section in all passenger(s) response

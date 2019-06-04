@@ -16,7 +16,7 @@ type CitiesAnswer struct {
 // CitiesAnswerDetails is a <describe> section in all cities response
 type CitiesAnswerDetails struct {
 	Data  []CitiesAnswerData `xml:"data"`
-	Error *Error             `xml:"error"`
+	Error *Error             `xml:"error,omitempty"`
 }
 
 // CitiesAnswerData is a <data> section in all cities response
