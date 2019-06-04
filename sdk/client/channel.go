@@ -69,7 +69,7 @@ func NewChannel(sc *sirenaXML.Config) (*Channel, error) {
 		for {
 			err := c.readPacket(buf)
 			if err != nil {
-				c.Logger.Error(err) // log it for now @TODO change it
+				panic(err) // panic for now @TODO investigate why it and change the reaction on proper action
 			}
 		}
 	}()
