@@ -9,19 +9,21 @@ import (
 )
 
 type storage struct {
-	c   *client.Channel
-	Key []byte
+	c *client.Channel
 }
 
 func NewClient(sc *sirenaXML.Config, l logs.LogWriter) (*storage, error) {
-	c, err := client.NewChannel(sc)
+	c, err := client.NewChannel(sc, l)
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")
 	}
-	c.SetLogger(l)
-	return &storage{c: c, Key: c.Key}, nil
+	return &storage{c: c}, nil
 }
 
 func (s *storage) SendRawRequest(req []byte) ([]byte, error) {
 	return s.c.SendMsg(req)
+}
+
+func (s *storage) GetKeyData() client.KeyData {
+	return s.c.GetKeyData()
 }
