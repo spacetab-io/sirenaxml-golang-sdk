@@ -100,11 +100,10 @@ func (c *Channel) connect() error {
 				break
 			default:
 				err := c.readPacket(buf)
-				switch err {
-				case io.EOF:
+				if err != nil && err == io.EOF {
 					go c.reconnect(err)
 					break
-				default:
+				} else if err != nil {
 					c.Logger.Errorf("reading packet error: %v", err)
 				}
 			}
