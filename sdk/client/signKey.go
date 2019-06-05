@@ -27,22 +27,22 @@ func (c *Channel) signKey() error {
 	c.sendPacket(request)
 
 	// oneshot receiving action
-	if err := c.readPacket(bufio.NewReader(c.conn)); err != nil {
-		return errors.Wrap(err, "schedule receive error")
+	if err := c.readPacket(bufio.NewReader(c.socket.conn)); err != nil {
+		return errors.Wrap(err, "receive key error")
 	}
 
 	response := getResponseFromMsgPool(request.header.MessageID)
 
 	// DesDecrypt response
-	c.Key, err = crypt.DecryptDataWithClientPrivateKey(response.message[4:132], []byte(c.cfg.ClientPrivateKey), c.cfg.ClientPrivateKeyPassword)
+	c.socket.KeyData.Key, err = crypt.DecryptDataWithClientPrivateKey(response.message[4:132], []byte(c.cfg.ClientPrivateKey), c.cfg.ClientPrivateKeyPassword)
 	if err != nil {
 		return errors.Wrap(err, "decrypting data with client private key error")
 	}
-	c.KeyID = response.header.KeyID
+	c.socket.KeyData.ID = response.header.KeyID
 
 	// Make sure request symmetric key = response symmatric key
-	if string(key) != string(c.Key) {
-		return errors.Errorf("Request symmetric key (%s) != response symmetric key(%s)", key, c.Key)
+	if string(key) != string(c.socket.KeyData.Key) {
+		return errors.Errorf("Request symmetric key (%s) != response symmetric key(%s)", key, c.socket.KeyData.Key)
 	}
 
 	return nil
@@ -58,7 +58,7 @@ func (c *Channel) newSignRequestPacket(key []byte) (*Packet, error) {
 	initCfg := c.cfg
 	initCfg.ZippedMessaging = false
 
-	return NewPacket(initCfg, encryptedKey, c.KeyID)
+	return NewPacket(initCfg, encryptedKey, c.socket.KeyData.ID)
 }
 
 func NewPacket(cfg *sirenaXML.Config, key []byte, keyID uint32) (*Packet, error) {
@@ -89,15 +89,15 @@ func (c *Channel) NewRequest(msg []byte) (*Packet, error) {
 		msg = buf.Bytes()
 	}
 
-	if c.Key != nil {
-		msg, err = crypt.DesEncrypt(msg, c.Key)
+	if c.socket.KeyData.Key != nil {
+		msg, err = crypt.DesEncrypt(msg, c.socket.KeyData.Key)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	p := &Packet{}
-	p.makeHeader(c.cfg, msg, c.KeyID)
+	p.makeHeader(c.cfg, msg, c.socket.KeyData.ID)
 	p.message = msg
 	return p, err
 }

@@ -18,11 +18,7 @@ import (
 func (c *Channel) readPacket(reader *bufio.Reader) error {
 	responseHeaderBytes := make([]byte, 100)
 	if _, err := reader.Read(responseHeaderBytes); err != nil {
-		if err.Error() == "EOF" {
-			return errors.New("your ip is not in white list")
-		} else {
-			return errors.Wrap(err, "receiving header error")
-		}
+		return errors.Wrap(err, "receiving header error")
 	}
 
 	header, err := parseHeader(responseHeaderBytes)
@@ -30,7 +26,7 @@ func (c *Channel) readPacket(reader *bufio.Reader) error {
 		return err
 	}
 
-	message, err := readMessage(header, reader, c.Key)
+	message, err := readMessage(header, reader, c.socket.KeyData.Key)
 	if err != nil {
 		// @TODO send error packet
 		return err

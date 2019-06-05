@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/xml"
 
+	"github.com/tmconsulting/sirenaxml-golang-sdk/sdk/client"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
@@ -10,6 +11,7 @@ type SirenaSDK interface {
 	SendRawRequest(req []byte) ([]byte, error)
 	GetAvailability(req []byte) (*structs.AvailabilityResponse, error)
 	GetKeyInfo(req []byte) (*structs.KeyInfoResponse, error)
+	GetKeyData() client.KeyData
 }
 
 type Service interface {

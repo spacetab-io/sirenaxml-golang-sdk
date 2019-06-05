@@ -2,6 +2,7 @@ package client
 
 import (
 	"bufio"
+	"context"
 	"net"
 	"time"
 
@@ -27,30 +28,32 @@ var (
 // Channel wraps user connection.
 type Channel struct {
 	cfg    *sirenaXML.Config
-	conn   net.Conn // Socket connection.
 	send   chan *Packet
-	Key    []byte
-	KeyID  uint32
+	socket *socket
 	Logger logs.LogWriter
 }
 
-func NewChannel(sc *sirenaXML.Config) (*Channel, error) {
+type KeyData struct {
+	ID  uint32
+	Key []byte
+}
+
+type socket struct {
+	KeyData  KeyData
+	cancel   context.CancelFunc
+	conn     net.Conn  // Socket connection session
+	addr     string    // address
+	sessNum  int       // number of success tries
+	initTime time.Time // time of last connection
+}
+
+func NewChannel(sc *sirenaXML.Config, l logs.LogWriter) (*Channel, error) {
 	if err := sc.PrepareKeys(); err != nil {
 		return nil, err
 	}
 	addr, err := sc.GetAddr()
 	if err != nil {
 		return nil, err
-	}
-	conn, err := net.Dial("tcp", addr)
-	if err != nil {
-		return nil, errors.Wrap(err, "dial sirena addr error")
-	}
-
-	c := &Channel{
-		conn: conn,
-		send: make(chan *Packet, sc.MaxConnections),
-		cfg:  sc,
 	}
 
 	respPool = NewRespPool()
@@ -59,22 +62,51 @@ func NewChannel(sc *sirenaXML.Config) (*Channel, error) {
 		return nil, err
 	}
 
-	err = createSignKey(c)
-	if err != nil {
-		return nil, err
+	c := &Channel{
+		socket: &socket{addr: addr},
+		send:   make(chan *Packet, sc.MaxConnections),
+		cfg:    sc,
 	}
+	c.SetLogger(l)
 
-	go func() {
-		buf := bufio.NewReader(c.conn)
-		for {
-			err := c.readPacket(buf)
-			if err != nil {
-				panic(err) // panic for now @TODO investigate why it and change the reaction on proper action
-			}
-		}
-	}()
+	err = c.connect()
 
 	return c, err
+}
+
+func (c *Channel) connect() error {
+	conn, err := net.Dial("tcp", c.socket.addr)
+	if err != nil {
+		return errors.Wrap(err, "dial sirena addr error")
+	}
+	c.socket.conn = conn
+	err = createSignKey(c)
+	if err != nil {
+		return err
+	}
+
+	c.socket.sessNum++
+	c.socket.initTime = time.Now()
+	c.Logger.Debugf("connection session number %d", c.socket.sessNum)
+	var ctx context.Context
+	ctx, c.socket.cancel = context.WithCancel(context.Background())
+	go func(ctx context.Context) {
+		buf := bufio.NewReader(c.socket.conn)
+		for {
+			select {
+			case <-ctx.Done(): // if cancel() execute
+				break
+			default:
+				err := c.readPacket(buf)
+				if err != nil {
+					go c.reconnect(err)
+					break
+				}
+			}
+		}
+	}(ctx)
+
+	return err
 }
 
 func (c *Channel) SendMsg(msg []byte) ([]byte, error) {
@@ -89,7 +121,7 @@ func (c *Channel) SendMsg(msg []byte) ([]byte, error) {
 }
 
 func (c *Channel) sendPacket(p *Packet) {
-	buf := bufio.NewWriter(c.conn)
+	buf := bufio.NewWriter(c.socket.conn)
 
 	if err := writePacket(buf, p); err != nil {
 		panic(err) // panic for now @TODO change it
@@ -99,6 +131,31 @@ func (c *Channel) sendPacket(p *Packet) {
 
 func (c *Channel) SetLogger(l logs.LogWriter) {
 	c.Logger = l
+}
+
+func (c *Channel) reconnect(err error) {
+	c.socket.cancel() // close listener goroutine
+	c.socket.KeyData.Key = nil
+	c.socket.KeyData.ID = 0
+	time.Sleep(10 * time.Millisecond)
+	now := time.Now()
+	trottlingLimit := c.socket.initTime.Add(1 * time.Second)
+	if trottlingLimit.Sub(now) > 0 {
+		panic(errors.New("stop dosing sirena socket"))
+	}
+	c.Logger.Warningf("reconnect! %s", err)
+	err = c.connect()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (c *Channel) disconnect() error {
+	return c.socket.conn.Close()
+}
+
+func (c *Channel) GetKeyData() KeyData {
+	return c.socket.KeyData
 }
 
 func createSignKey(c *Channel) error {
