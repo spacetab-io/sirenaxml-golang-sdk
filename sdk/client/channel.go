@@ -3,6 +3,7 @@ package client
 import (
 	"bufio"
 	"context"
+	"io"
 	"net"
 	"time"
 
@@ -99,9 +100,12 @@ func (c *Channel) connect() error {
 				break
 			default:
 				err := c.readPacket(buf)
-				if err != nil {
+				switch err {
+				case io.EOF:
 					go c.reconnect(err)
 					break
+				default:
+					c.Logger.Errorf("reading packet error: %v", err)
 				}
 			}
 		}

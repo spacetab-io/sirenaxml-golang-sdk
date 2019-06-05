@@ -4,21 +4,18 @@ import (
 	"bufio"
 	"bytes"
 	"compress/zlib"
-	"encoding/xml"
 	"io"
 	"io/ioutil"
-	"strings"
 
 	"github.com/pkg/errors"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
 func (c *Channel) readPacket(reader *bufio.Reader) error {
 	responseHeaderBytes := make([]byte, 100)
 	if _, err := reader.Read(responseHeaderBytes); err != nil {
-		return errors.Wrap(err, "receiving header error")
+		return err
 	}
 
 	header, err := parseHeader(responseHeaderBytes)
@@ -70,20 +67,6 @@ func readMessage(header *Header, reader *bufio.Reader, key []byte) ([]byte, erro
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	return checkError(responseMessageBytes)
-}
-
-func checkError(responseMessageBytes []byte) ([]byte, error) {
-	// parse message
-	if strings.Contains(string(responseMessageBytes), "<error") {
-		var errResp structs.ErrorResponse
-		err := xml.Unmarshal(responseMessageBytes, &errResp)
-		if err != nil {
-			return nil, err
-		}
-		return nil, errors.Errorf("error [code %d | is_crypt_error %v]: %s\nxml:%s", errResp.Answer.Error.Code, errResp.Answer.Error.CryptError, errResp.Answer.Error.Message, string(responseMessageBytes))
 	}
 
 	return responseMessageBytes, nil
