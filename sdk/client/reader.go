@@ -72,14 +72,18 @@ func readMessage(header *Header, reader *bufio.Reader, key []byte) ([]byte, erro
 		}
 	}
 
+	return checkError(responseMessageBytes)
+}
+
+func checkError(responseMessageBytes []byte) ([]byte, error) {
 	// parse message
-	if strings.Contains(string(responseMessageBytes), "error") {
+	if strings.Contains(string(responseMessageBytes), "<error") {
 		var errResp structs.ErrorResponse
 		err := xml.Unmarshal(responseMessageBytes, &errResp)
 		if err != nil {
 			return nil, err
 		}
-		return nil, errors.Errorf("error [code %d | is_crypt_error %v]: %s", errResp.Answer.Error.Code, errResp.Answer.Error.CryptError, errResp.Answer.Error.Message)
+		return nil, errors.Errorf("error [code %d | is_crypt_error %v]: %s\nxml:%s", errResp.Answer.Error.Code, errResp.Answer.Error.CryptError, errResp.Answer.Error.Message, string(responseMessageBytes))
 	}
 
 	return responseMessageBytes, nil

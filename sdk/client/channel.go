@@ -87,10 +87,11 @@ func (c *Channel) connect() error {
 
 	c.socket.sessNum++
 	c.socket.initTime = time.Now()
-	c.Logger.Debugf("connection session number %d", c.socket.sessNum)
+	c.Logger.Infof("started connection session number %d", c.socket.sessNum)
 	var ctx context.Context
 	ctx, c.socket.cancel = context.WithCancel(context.Background())
 	go func(ctx context.Context) {
+		c.Logger.Infof("listening session %d", c.socket.sessNum)
 		buf := bufio.NewReader(c.socket.conn)
 		for {
 			select {
@@ -137,10 +138,9 @@ func (c *Channel) reconnect(err error) {
 	c.socket.cancel() // close listener goroutine
 	c.socket.KeyData.Key = nil
 	c.socket.KeyData.ID = 0
-	time.Sleep(10 * time.Millisecond)
 	now := time.Now()
 	trottlingLimit := c.socket.initTime.Add(1 * time.Second)
-	if trottlingLimit.Sub(now) > 0 {
+	if now.Sub(trottlingLimit) < 0 {
 		panic(errors.New("stop dosing sirena socket"))
 	}
 	c.Logger.Warningf("reconnect! %s", err)
