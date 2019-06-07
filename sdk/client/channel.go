@@ -94,23 +94,29 @@ func (c *Channel) connect() error {
 	go func(ctx context.Context) {
 		c.Logger.Infof("listening session %d", c.socket.sessNum)
 		buf := bufio.NewReader(c.socket.conn)
+		var err error
+
+	incomingDataReader:
 		for {
 			select {
 			case <-ctx.Done(): // if cancel() execute
-				break
+				return
 			default:
-				err := c.readPacket(buf)
+				err = c.readPacket(buf)
 				if err != nil && err == io.EOF {
-					go c.reconnect(err)
-					break
+					break incomingDataReader
 				} else if err != nil {
 					c.Logger.Errorf("reading packet error: %v", err)
 				}
 			}
 		}
+		c.reconnect(err)
 	}(ctx)
-
 	return err
+}
+
+func (c *Channel) stopListener() {
+	c.socket.cancel() // close listener goroutine
 }
 
 func (c *Channel) SendMsg(msg []byte) ([]byte, error) {
@@ -138,9 +144,7 @@ func (c *Channel) SetLogger(l logs.LogWriter) {
 }
 
 func (c *Channel) reconnect(err error) {
-	c.socket.cancel() // close listener goroutine
-	c.socket.KeyData.Key = nil
-	c.socket.KeyData.ID = 0
+	c.clearConnect()
 	now := time.Now()
 	trottlingLimit := c.socket.initTime.Add(1 * time.Second)
 	if now.Sub(trottlingLimit) < 0 {
@@ -159,6 +163,15 @@ func (c *Channel) disconnect() error {
 
 func (c *Channel) GetKeyData() KeyData {
 	return c.socket.KeyData
+}
+
+func (c *Channel) clearConnect() {
+	if c.socket.conn != nil {
+		_ = c.socket.conn.Close()
+	}
+	c.socket.conn = nil
+	c.socket.KeyData.Key = nil
+	c.socket.KeyData.ID = 0
 }
 
 func createSignKey(c *Channel) error {

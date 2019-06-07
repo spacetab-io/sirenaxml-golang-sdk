@@ -56,16 +56,16 @@ func TestNewChannel(t *testing.T) {
 		}
 		time.Sleep(1 * time.Second)
 		assert.NotPanics(t, func() {
-			c.reconnect(errors.New("test reconnect"))
+			c.stopListener()
 		})
 	})
-	t.Run("error trottling", func(t *testing.T) {
+	t.Run("error throttling", func(t *testing.T) {
 		c, err := NewChannel(&sc, l)
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}
 		assert.Panics(t, func() {
-			c.reconnect(errors.New("trottling"))
+			c.reconnect(errors.New("throttling"))
 		})
 	})
 }

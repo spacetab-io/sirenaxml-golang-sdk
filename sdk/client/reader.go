@@ -13,35 +13,41 @@ import (
 )
 
 func (c *Channel) readPacket(reader *bufio.Reader) error {
+	if reader == nil {
+		return errors.New("reader is closed")
+	}
+	var (
+		err     error
+		header  *Header
+		message []byte
+	)
 	responseHeaderBytes := make([]byte, 100)
-	if _, err := reader.Read(responseHeaderBytes); err != nil {
-		return err
+	if _, err = io.ReadFull(reader, responseHeaderBytes); err != nil {
+		return errors.Wrap(err, "read header error")
 	}
 
-	header, err := parseHeader(responseHeaderBytes)
-	if err != nil {
-		return err
+	if header, err = parseHeader(responseHeaderBytes); err != nil {
+		return errors.Wrap(err, "parse header error")
 	}
 
-	message, err := readMessage(header, reader, c.socket.KeyData.Key)
-	if err != nil {
-		// @TODO send error packet
-		return err
+	if message, err = readMessage(header, reader, c.socket.KeyData.Key); err != nil {
+		return errors.Wrap(err, "read message error")
 	}
 
 	if err := respPool.SavePacket(header.MessageID, &Packet{header: header, message: message}); err != nil {
-		// @TODO send error packet
-		return err
+		return errors.Wrap(err, "save packet error")
 	}
 
 	return nil
 }
 
 func readMessage(header *Header, reader *bufio.Reader, key []byte) ([]byte, error) {
-	responseMessageBytes := make([]byte, header.MessageLength)
-	_, err := io.ReadFull(reader, responseMessageBytes)
-	if err != nil {
-		return nil, err
+	var (
+		err                  error
+		responseMessageBytes = make([]byte, header.MessageLength)
+	)
+	if _, err = io.ReadFull(reader, responseMessageBytes); err != nil {
+		return nil, errors.Wrap(err, "read response message bytes error")
 	}
 
 	// unzip message if it was zipped
@@ -63,8 +69,7 @@ func readMessage(header *Header, reader *bufio.Reader, key []byte) ([]byte, erro
 
 	// decrypt symmetric key encrypted message
 	if key != nil && header.Flags.Has(EncryptSymmetric) {
-		responseMessageBytes, err = crypt.DesDecrypt(responseMessageBytes, key)
-		if err != nil {
+		if responseMessageBytes, err = crypt.DesDecrypt(responseMessageBytes, key); err != nil {
 			return nil, err
 		}
 	}
