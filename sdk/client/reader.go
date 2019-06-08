@@ -23,7 +23,7 @@ func (c *Channel) readPacket(reader *bufio.Reader) error {
 	)
 	responseHeaderBytes := make([]byte, 100)
 	if _, err = io.ReadFull(reader, responseHeaderBytes); err != nil {
-		return errors.Wrap(err, "read header error")
+		return err
 	}
 
 	if header, err = parseHeader(responseHeaderBytes); err != nil {
