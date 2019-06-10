@@ -81,7 +81,7 @@ func (c *Channel) connect() error {
 		return errors.Wrap(err, "dial sirena addr error")
 	}
 	c.socket.conn = conn
-	err = createSignKey(c)
+	err = c.signKey()
 	if err != nil {
 		return err
 	}
@@ -172,23 +172,6 @@ func (c *Channel) clearConnect() {
 	c.socket.conn = nil
 	c.socket.KeyData.Key = nil
 	c.socket.KeyData.ID = 0
-}
-
-func createSignKey(c *Channel) error {
-	// Create symmetric key
-	if err := c.signKey(); err != nil {
-		return errors.Wrap(err, "creating and signing key error")
-	}
-	// Update key every 1 hour
-	go func() {
-		for range time.Tick(time.Hour) {
-			if err := c.signKey(); err != nil {
-				logs.Logger.Fatal("key updating error")
-			}
-		}
-	}()
-
-	return nil
 }
 
 func getResponseFromMsgPool(msgID uint32) *Packet {
