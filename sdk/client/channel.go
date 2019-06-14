@@ -5,6 +5,7 @@ import (
 	"context"
 	"io"
 	"net"
+	"sync"
 	"time"
 
 	"github.com/pkg/errors"
@@ -40,6 +41,7 @@ type KeyData struct {
 }
 
 type socket struct {
+	m        sync.Mutex
 	KeyData  KeyData
 	cancel   context.CancelFunc
 	conn     net.Conn  // Socket connection session
@@ -144,6 +146,7 @@ func (c *Channel) SetLogger(l logs.LogWriter) {
 }
 
 func (c *Channel) reconnect(err error) {
+	c.socket.m.Lock()
 	c.clearConnect()
 	now := time.Now()
 	trottlingLimit := c.socket.initTime.Add(1 * time.Second)
@@ -155,6 +158,7 @@ func (c *Channel) reconnect(err error) {
 	if err != nil {
 		panic(err)
 	}
+	c.socket.m.Unlock()
 }
 
 func (c *Channel) disconnect() error {
