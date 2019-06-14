@@ -45,6 +45,9 @@ func TestNewChannel(t *testing.T) {
 		if !assert.NotEmpty(t, c.socket.KeyData.ID) {
 			t.FailNow()
 		}
+		assert.NotPanics(t, func() {
+			c.stopListener()
+		})
 	})
 	t.Run("reconnect", func(t *testing.T) {
 		c, err := NewChannel(&sc, l)
@@ -66,6 +69,9 @@ func TestNewChannel(t *testing.T) {
 		}
 		assert.Panics(t, func() {
 			c.reconnect(errors.New("throttling"))
+		})
+		assert.NotPanics(t, func() {
+			c.stopListener()
 		})
 	})
 }

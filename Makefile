@@ -13,5 +13,5 @@ key_without_secret:
 test_prepare: key_with_secret key_without_secret
 
 test: test_prepare
-	go test ./... -coverprofile=c.out
+	go test ./... -coverprofile=c.out -v
 	go tool cover -html=c.out -o coverage.html
