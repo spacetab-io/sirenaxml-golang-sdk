@@ -5,7 +5,7 @@ import (
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/sdk/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
 )
 
 type storage struct {
@@ -22,8 +22,4 @@ func NewClient(sc *sirenaXML.Config, l logs.LogWriter) (*storage, error) {
 
 func (s *storage) SendRawRequest(req []byte) ([]byte, error) {
 	return s.c.SendMsg(req)
-}
-
-func (s *storage) GetKeyData() client.KeyData {
-	return s.c.GetKeyData()
 }

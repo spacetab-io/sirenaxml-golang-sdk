@@ -3,10 +3,11 @@ package sdk
 import (
 	"encoding/xml"
 
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *storage) GetKeyInfo(req []byte) (*structs.KeyInfoResponse, error) {
+func (s *storage) GetCurrentKeyInfo(req []byte) (*structs.KeyInfoResponse, error) {
 	// Create Sirena request
 	response, err := s.SendRawRequest(req)
 	if err != nil {
@@ -19,4 +20,9 @@ func (s *storage) GetKeyInfo(req []byte) (*structs.KeyInfoResponse, error) {
 	}
 
 	return &keyInfo, nil
+}
+
+func (s *storage) GetKeyData() (*client.KeyData, error) {
+	kd := s.c.GetKeyData()
+	return &kd, nil
 }

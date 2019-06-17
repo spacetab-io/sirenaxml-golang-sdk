@@ -36,8 +36,8 @@ type Channel struct {
 }
 
 type KeyData struct {
-	ID  uint32
-	Key []byte
+	ID  uint32 `json:"id"`
+	Key []byte `json:"key"`
 }
 
 type socket struct {
@@ -72,9 +72,21 @@ func NewChannel(sc *sirenaXML.Config, l logs.LogWriter) (*Channel, error) {
 	}
 	c.SetLogger(l)
 
-	err = c.connect()
+	err = tryToConnect(c)
 
 	return c, err
+}
+
+func tryToConnect(c *Channel) (err error) {
+	for i := 0; i <= c.cfg.MaxConnectTries; i++ {
+		c.Logger.Debugf("connection try %d start", i)
+		err = c.connect()
+		if err == nil {
+			c.Logger.Debugf("connection try %d succeed", i)
+			break
+		}
+	}
+	return err
 }
 
 func (c *Channel) connect() error {
@@ -154,7 +166,7 @@ func (c *Channel) reconnect(err error) {
 		panic(errors.New("stop dosing sirena socket"))
 	}
 	c.Logger.Warningf("reconnect! %s", err)
-	err = c.connect()
+	err = tryToConnect(c)
 	if err != nil {
 		panic(err)
 	}

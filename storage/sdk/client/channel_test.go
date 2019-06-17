@@ -31,6 +31,7 @@ func tearUp() {
 		ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 		ZippedMessaging:          false,
+		MaxConnectTries:          3,
 	}
 }
 

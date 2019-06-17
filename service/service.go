@@ -1,17 +1,15 @@
 package service
 
 import (
-	"encoding/xml"
-
-	"github.com/tmconsulting/sirenaxml-golang-sdk/sdk/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-type SirenaSDK interface {
+type Storage interface {
 	SendRawRequest(req []byte) ([]byte, error)
 	GetAvailability(req []byte) (*structs.AvailabilityResponse, error)
-	GetKeyInfo(req []byte) (*structs.KeyInfoResponse, error)
-	GetKeyData() client.KeyData
+	GetCurrentKeyInfo(req []byte) (*structs.KeyInfoResponse, error)
+	GetKeyData() (*client.KeyData, error)
 }
 
 type Service interface {
@@ -21,30 +19,13 @@ type Service interface {
 }
 
 type service struct {
-	sdk SirenaSDK
+	sdk Storage
 }
 
-func NewSKD(sdk SirenaSDK) Service {
+func NewSKD(sdk Storage) Service {
 	return &service{sdk: sdk}
 }
 
 func (s *service) RawRequest(req []byte) ([]byte, error) {
 	return s.sdk.SendRawRequest(req)
-}
-
-func (s *service) KeyInfo() (*structs.KeyInfoResponse, error) {
-	reqXML, err := xml.Marshal(&structs.KeyInfoRequest{})
-	if err != nil {
-		return nil, err
-	}
-	return s.sdk.GetKeyInfo(reqXML)
-}
-
-func (s *service) Avalability(req *structs.AvailabilityRequest) (*structs.AvailabilityResponse, error) {
-	reqXML, err := xml.Marshal(req)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.sdk.GetAvailability(reqXML)
 }

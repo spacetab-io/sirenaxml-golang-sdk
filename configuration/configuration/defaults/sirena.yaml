@@ -9,3 +9,4 @@ defaults:
     client_private_key_password: ""
     server_public_key: ""
     zipped_messaging: true
+    max_connect_tries: 3 # maximum socket connection tries

@@ -24,6 +24,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
+			MaxConnectTries:          3,
 		}
 		err := sc.PrepareKeys()
 		if !assert.NoError(t, err) {
@@ -41,6 +42,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
+			MaxConnectTries:          3,
 		}
 		err := sc.PrepareKeys()
 		if !assert.Error(t, err) {
@@ -58,6 +60,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
+			MaxConnectTries:          3,
 		}
 		err := sc.PrepareKeys()
 		if !assert.Error(t, err) {
@@ -75,6 +78,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
+			MaxConnectTries:          3,
 		}
 		err := sc.PrepareKeys()
 		if !assert.Error(t, err) {

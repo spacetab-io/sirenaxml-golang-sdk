@@ -18,3 +18,4 @@ func (*NullLog) Error(args ...interface{})                   {}
 func (*NullLog) Errorf(format string, args ...interface{})   {}
 func (*NullLog) Fatal(args ...interface{})                   { panic(args) }
 func (*NullLog) Fatalf(format string, args ...interface{})   { panic(args) }
+func (*NullLog) Write(p []byte) (n int, err error)           { return 0, nil }

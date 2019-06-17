@@ -30,6 +30,7 @@ type Config struct {
 	ClientPrivateKeyPassword string `yaml:"client_private_key_password"`
 	ServerPublicKey          string `yaml:"server_public_key"`
 	ZippedMessaging          bool   `yaml:"zipped_messaging"`
+	MaxConnectTries          int    `yaml:"max_connect_tries"`
 }
 
 // GetAddr return sirena address to connect client to
