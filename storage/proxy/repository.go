@@ -3,8 +3,8 @@ package proxy
 import (
 	"fmt"
 
+	"github.com/go-resty/resty"
 	"github.com/pkg/errors"
-	"gopkg.in/resty.v1"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 )
