@@ -21,11 +21,12 @@ type OrderAnswer struct {
 
 // OrderAnswerOrder is an <order> section in Sirena <order> response
 type OrderAnswerOrder struct {
-	Regnum   string              `xml:"regnum,attr"`
-	Agency   string              `xml:"agency,attr"`
-	PNR      OrderAnswerPNR      `xml:"pnr"`
-	Tickinfo OrderAnswerTickinfo `xml:"tickinfo"`
-	Error    *Error      `xml:"error,omitempty"`
+	Regnum          string              `xml:"regnum,attr"`
+	Agency          string              `xml:"agency,attr"`
+	PNR             OrderAnswerPNR      `xml:"pnr"`
+	Tickinfo        OrderAnswerTickinfo `xml:"tickinfo,omitempty"`
+	SpecialServices []Ssr               `xml:"special_services>ssr,omitempty"`
+	Error           *Error              `xml:"error,omitempty"`
 }
 
 // OrderAnswerPNR is a <pnr> section in Sirena order response
