@@ -105,6 +105,8 @@ func (c *Channel) connect() error {
 	c.Logger.Infof("started connection session number %d", c.socket.sessNum)
 	var ctx context.Context
 	ctx, c.socket.cancel = context.WithCancel(context.Background())
+
+	// start listener
 	go func(ctx context.Context) {
 		c.Logger.Infof("listening session %d", c.socket.sessNum)
 		buf := bufio.NewReader(c.socket.conn)
@@ -125,6 +127,13 @@ func (c *Channel) connect() error {
 			}
 		}
 		c.reconnect(err)
+	}(ctx)
+
+	// Update symmetric key every 1 hour
+	go func(ctx context.Context) {
+		for range time.Tick(time.Hour) {
+			ctx.Done()
+		}
 	}(ctx)
 	return err
 }
