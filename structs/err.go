@@ -4,12 +4,10 @@ import "encoding/xml"
 
 // ErrorResponse is an <error> section in Sirena  response
 type ErrorResponse struct {
-	Answer  ErrorAnswer `xml:"answer"`
-	XMLName xml.Name    `xml:"sirena" json:"-"`
-}
-
-type ErrorAnswer struct {
-	Error Error `xml:"error"`
+	Answer struct {
+		Error Error `xml:"error"`
+	} `xml:"answer"`
+	XMLName xml.Name `xml:"sirena" json:"-"`
 }
 
 type Error struct {

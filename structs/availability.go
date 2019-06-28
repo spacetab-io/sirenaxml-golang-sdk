@@ -23,12 +23,10 @@ type Availability struct {
 }
 
 type AvailabilityResponse struct {
-	XMLName xml.Name           `xml:"sirena"`
-	Answer  AvailabilityAnswer `xml:"answer"`
-}
-
-type AvailabilityAnswer struct {
-	Availability Availability `xml:"availability"`
+	XMLName xml.Name `xml:"sirena"`
+	Answer  struct {
+		Availability Availability `xml:"availability"`
+	} `xml:"answer"`
 }
 
 type AvailabilityFlight struct {

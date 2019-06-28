@@ -56,7 +56,7 @@ func TestService_RawRequest(t *testing.T) {
 			t.FailNow()
 		}
 
-		if !assert.NotEmpty(t, keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPubliKey) {
+		if !assert.NotEmpty(t, keyInfoResponse.Answer.KeyInfo.KeyManager.ServerPublicKey) {
 			t.FailNow()
 		}
 	})
@@ -73,7 +73,7 @@ func testRequest(t *testing.T, sc sirenaXML.Config) {
 	checkKeyData(t, sdkClient)
 
 	var (
-		respChan = make(chan *structs.KeyInfoResponse)
+		respChan = make(chan *structs.KeyManager)
 		errChan  = make(chan error)
 	)
 	for i := 0; i < int(sc.MaxConnections); i++ {
@@ -89,7 +89,7 @@ func testRequest(t *testing.T, sc sirenaXML.Config) {
 
 	select {
 	case response := <-respChan:
-		if !assert.NotEmpty(t, response.Answer.KeyInfo.KeyManager.ServerPubliKey) {
+		if !assert.NotEmpty(t, response.ServerPublicKey) {
 			t.FailNow()
 		}
 	case err := <-errChan:

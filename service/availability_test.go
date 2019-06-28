@@ -10,7 +10,7 @@ import (
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func TestService_Avalability(t *testing.T) {
+func TestService_Availability(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		logger := logs.NewNullLog()
 		sdkClient, err := sdk.NewClient(&sc, logger)
@@ -20,7 +20,7 @@ func TestService_Avalability(t *testing.T) {
 
 		service := NewSKD(sdkClient)
 		checkKeyData(t, sdkClient)
-		availabiliteReq := &structs.AvailabilityRequest{
+		availabilityRequest := &structs.AvailabilityRequest{
 			Query: structs.AvailabilityRequestQuery{
 				Availability: structs.Availability{
 					Departure: "MOW",
@@ -32,7 +32,7 @@ func TestService_Avalability(t *testing.T) {
 			},
 		}
 
-		_, err = service.Avalability(availabiliteReq)
+		_, err = service.Availability(availabilityRequest)
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}

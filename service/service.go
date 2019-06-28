@@ -14,8 +14,8 @@ type Storage interface {
 
 type Service interface {
 	RawRequest(req []byte) ([]byte, error)
-	Avalability(req *structs.AvailabilityRequest) (*structs.AvailabilityResponse, error)
-	KeyInfo() (*structs.KeyInfoResponse, error)
+	Availability(req *structs.AvailabilityRequest) (*structs.Availability, error)
+	KeyInfo() (*structs.KeyManager, error)
 }
 
 type service struct {

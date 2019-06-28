@@ -24,7 +24,7 @@ func TestStorage_GetCurrentKeyInfo(t *testing.T) {
 	if !assert.NotNil(t, resp) {
 		t.FailNow()
 	}
-	assert.NotEmpty(t, resp.Answer.KeyInfo.KeyManager.ServerPubliKey)
+	assert.NotEmpty(t, resp.Answer.KeyInfo.KeyManager.ServerPublicKey)
 }
 
 func _TestStorage_GetKeyData(t *testing.T) {
