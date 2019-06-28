@@ -90,7 +90,7 @@ func tryToConnect(c *Channel) (err error) {
 }
 
 func (c *Channel) connect() error {
-	conn, err := net.Dial("tcp", c.socket.addr)
+	conn, err := net.DialTimeout("tcp", c.socket.addr, 1*time.Second)
 	if err != nil {
 		return errors.Wrap(err, "dial sirena addr error")
 	}
