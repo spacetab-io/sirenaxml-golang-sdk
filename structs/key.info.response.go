@@ -16,7 +16,7 @@ type KeyInfoResponse struct {
 
 type KeyManager struct {
 	Key             KeyData    `xml:"key"`
-	Expiration      SirenaTime `xml:"expiration"`
+	Expiration      SirenaTime `xml:"expiration,omitempty"`
 	ServerPublicKey string     `xml:"server_public_key"`
 }
 
