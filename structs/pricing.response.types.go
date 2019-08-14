@@ -12,22 +12,23 @@ type PricingAnswer struct {
 type PricingAnswerPricing struct {
 	Variants []PricingAnswerVariant `xml:"variant"`
 	Flights  []*PricingAnswerFlight `xml:"flight"`
-	Error    *Error         `xml:"error,omitempty"`
+	Error    *Error                 `xml:"error,omitempty"`
 }
 
 type PricingAnswerFlight struct {
-	ID          int                   `xml:"id,attr"`
-	Company     string                `xml:"company"`
-	Num         string                `xml:"num"`
-	Flight      string                `xml:"flight"`
-	Origin      PricingAnswerLocation `xml:"origin"`
-	Destination PricingAnswerLocation `xml:"destination"`
-	DeptDate    string                `xml:"deptdate"`
-	ArrvDate    string                `xml:"arrvdate"`
-	DeptTime    string                `xml:"depttime"`
-	ArrvTime    string                `xml:"arrvtime"`
-	Airplane    string                `xml:"airplane"`
-	FlightTime  string                `xml:"flightTime"`
+	ID               int                   `xml:"id,attr"`
+	Company          string                `xml:"company"`
+	Num              string                `xml:"num"`
+	OperatingCompany string                `xml:"operating_company"`
+	Flight           string                `xml:"flight"`
+	Origin           PricingAnswerLocation `xml:"origin"`
+	Destination      PricingAnswerLocation `xml:"destination"`
+	DeptDate         string                `xml:"deptdate"`
+	ArrvDate         string                `xml:"arrvdate"`
+	DeptTime         string                `xml:"depttime"`
+	ArrvTime         string                `xml:"arrvtime"`
+	Airplane         string                `xml:"airplane"`
+	FlightTime       string                `xml:"flightTime"`
 }
 
 type PricingAnswerVariant struct {
@@ -85,6 +86,12 @@ type PricingAnswerPrice struct {
 	Taxes []PricingAnswerPriceTax `xml:"tax"`
 	Total float64                 `xml:"total"`
 	Upt   PriceUpt                `xml:"upt"`
+	Vat   Vat                     `xml:"vat"`
+}
+
+type Vat struct {
+	Fare string `xml:"fare,attr"`
+	Zz   string `xml:"zz,attr"`
 }
 
 type PricingAnswerPriceFare struct {
