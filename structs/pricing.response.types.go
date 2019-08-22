@@ -1,5 +1,9 @@
 package structs
 
+import (
+	"encoding/xml"
+)
+
 type PricingResponse struct {
 	Answer PricingAnswer `xml:"answer"`
 }
@@ -68,30 +72,36 @@ type PricingAnswerLocation struct {
 }
 
 type PricingAnswerPrice struct {
+	Upt               PriceUpt                `xml:"upt"`
+	Fare              *PricingAnswerPriceFare `xml:"fare"`
+	Taxes             []PricingAnswerPriceTax `xml:"tax"`
+	Vat               *Vat                    `xml:"vat"`
+	Baggage           string                  `xml:"baggage,attr"`
+	ValidatingCompany string                  `xml:"validating_company,attr"`
+	OrigCode          string                  `xml:"orig_code,attr"`
+	Brand             string                  `xml:"brand,attr"`
+	Total             float64                 `xml:"total"`
 	// PassengerID       int                     `xml:"passenger-id,attr"`
 	// Code              string                  `xml:"code,attr"`
 	// Count             int                     `xml:"count,attr"`
 	// Currency          string                  `xml:"currency,attr"`
 	// Ticket            string                  `xml:"ticket,attr"`
-	Baggage string `xml:"baggage,attr"`
 	// FC                string                  `xml:"fc,attr"`
 	// DocID             string                  `xml:"doc_id,attr"`
 	// ACCode            string                  `xml:"accode,attr"`
-	ValidatingCompany string `xml:"validating_company,attr"`
 	// FOP               string                  `xml:"fop,attr"`
-	OrigCode string `xml:"orig_code,attr"`
-	Brand    string `xml:"brand,attr"`
 	// OrigID            int                     `xml:"orig_id,attr"`
-	Fare  *PricingAnswerPriceFare `xml:"fare"`
-	Taxes []PricingAnswerPriceTax `xml:"tax"`
-	Total float64                 `xml:"total"`
-	Upt   PriceUpt                `xml:"upt"`
-	Vat   Vat                     `xml:"vat"`
+}
+
+func (v *Vat) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	v.Fare = start.Name.Local
+	v.Vats = start.Attr
+	return d.Skip()
 }
 
 type Vat struct {
 	Fare string `xml:"fare,attr"`
-	Zz   string `xml:"zz,attr"`
+	Vats []xml.Attr
 }
 
 type PricingAnswerPriceFare struct {
