@@ -36,7 +36,7 @@ type BookingAnswerBooking struct {
 	Agency   string                `xml:"agency,attr"`
 	PNR      BookingAnswerPNR      `xml:"pnr"`
 	Contacts BookingAnswerContacts `xml:"contacts"`
-	Error    *Error        `xml:"error,omitempty"`
+	Error    *Error                `xml:"error,omitempty"`
 }
 
 // BookingAnswerPNR is a <pnr> section in Sirena booking response
@@ -154,6 +154,7 @@ type BookingAnswerPNRPrice struct {
 	Taxes             []PNRPriceTax  `xml:"taxes>tax"`
 	PaymentInfo       PNRPaymentInfo `xml:"payment_info>payment"`
 	Total             float64        `xml:"total"`
+	Vat               *Vat           `xml:"vat"`
 }
 
 // PNRPriceFare is a <fare> entry in a <price> section
