@@ -1,6 +1,7 @@
 package sirenaXML
 
 import (
+	"net"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -13,10 +14,10 @@ const (
 )
 
 var (
-	portsMap = map[string]string{
-		EnvLearning:   "34323",
-		EnvTesting:    "34322",
-		EnvProduction: "34321",
+	portsMap = map[string]int{
+		EnvLearning:   34323,
+		EnvTesting:    34322,
+		EnvProduction: 34321,
 	}
 )
 
@@ -34,30 +35,54 @@ type Config struct {
 }
 
 // GetAddr return sirena address to connect client to
-func (config *Config) GetAddr() (string, error) {
-	if config.Environment == "" {
-		return "", errors.New("environment is not set")
+func (c *Config) GetAddr() (*net.TCPAddr, error) {
+	if c.Environment == "" {
+		return nil, errors.New("environment is not set")
 	}
-	if config.Ip == "" {
-		return "", errors.New("ip is not set")
+	if c.Ip == "" {
+		return nil, errors.New("ip is not set")
 	}
-	return config.Ip + ":" + portsMap[config.Environment], nil
+	return &net.TCPAddr{Port: portsMap[c.Environment], IP: net.ParseIP(c.Ip)}, nil
 }
 
-func (config *Config) PrepareKeys() error {
-	if len(config.ServerPublicKey) == 0 {
+func (c *Config) PrepareKeys() error {
+	if len(c.ServerPublicKey) == 0 {
 		return errors.New("server public key is empty")
 	}
-	if len(config.ClientPublicKey) == 0 {
+	if len(c.ClientPublicKey) == 0 {
 		return errors.New("client public key is empty")
 	}
-	if len(config.ClientPrivateKey) == 0 {
+	if len(c.ClientPrivateKey) == 0 {
 		return errors.New("client private key is empty")
 	}
 
-	config.ServerPublicKey = strings.ReplaceAll(config.ServerPublicKey, "\\n", "\n")
-	config.ClientPublicKey = strings.ReplaceAll(config.ClientPublicKey, "\\n", "\n")
-	config.ClientPrivateKey = strings.ReplaceAll(config.ClientPrivateKey, "\\n", "\n")
+	c.ServerPublicKey = strings.ReplaceAll(c.ServerPublicKey, "\\n", "\n")
+	c.ClientPublicKey = strings.ReplaceAll(c.ClientPublicKey, "\\n", "\n")
+	c.ClientPrivateKey = strings.ReplaceAll(c.ClientPrivateKey, "\\n", "\n")
 
 	return nil
+}
+
+type KeyType int
+
+const (
+	ServerPublicKey KeyType = iota
+	ClientPublicKey
+	ClientPrivateKey
+)
+
+type KeysData struct {
+	Keys              map[KeyType][]byte
+	ClientPrivKeyPass string
+}
+
+func (c *Config) GetKeys() *KeysData {
+	return &KeysData{
+		Keys: map[KeyType][]byte{
+			ServerPublicKey:  []byte(c.ServerPublicKey),
+			ClientPrivateKey: []byte(c.ClientPrivateKey),
+			ClientPublicKey:  []byte(c.ClientPublicKey),
+		},
+		ClientPrivKeyPass: c.ClientPrivateKeyPassword,
+	}
 }

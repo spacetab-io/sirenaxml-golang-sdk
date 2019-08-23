@@ -1,6 +1,7 @@
 package sirenaXML
 
 import (
+	"net"
 	"os"
 	"testing"
 
@@ -24,7 +25,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
-			MaxConnectTries:          3,
+			MaxConnectTries:          1,
 		}
 		err := sc.PrepareKeys()
 		if !assert.NoError(t, err) {
@@ -42,7 +43,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
-			MaxConnectTries:          3,
+			MaxConnectTries:          1,
 		}
 		err := sc.PrepareKeys()
 		if !assert.Error(t, err) {
@@ -60,7 +61,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
-			MaxConnectTries:          3,
+			MaxConnectTries:          1,
 		}
 		err := sc.PrepareKeys()
 		if !assert.Error(t, err) {
@@ -78,7 +79,7 @@ func TestConfig_PrepareKeys(t *testing.T) {
 			ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
 			ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 			ZippedMessaging:          false,
-			MaxConnectTries:          3,
+			MaxConnectTries:          1,
 		}
 		err := sc.PrepareKeys()
 		if !assert.Error(t, err) {
@@ -88,20 +89,20 @@ func TestConfig_PrepareKeys(t *testing.T) {
 }
 
 func TestConfig_GetAddr(t *testing.T) {
-	ip := "193.104.87.251"
-	expectMaps := map[string]string{
-		EnvLearning:   ip + ":34323",
-		EnvTesting:    ip + ":34322",
-		EnvProduction: ip + ":34321",
+	ip := net.ParseIP("193.104.87.251")
+	expectMaps := map[string]net.TCPAddr{
+		EnvLearning:   {IP: ip, Port: 34323},
+		EnvTesting:    {IP: ip, Port: 34322},
+		EnvProduction: {IP: ip, Port: 34321},
 	}
 	for env, ipAddress := range expectMaps {
 		t.Run("success "+env, func(t *testing.T) {
-			sc := Config{Environment: env, Ip: ip}
+			sc := Config{Environment: env, Ip: ip.String()}
 			addr, err := sc.GetAddr()
 			if !assert.NoError(t, err) {
 				t.FailNow()
 			}
-			assert.Equal(t, ipAddress, addr)
+			assert.Equal(t, &ipAddress, addr)
 		})
 	}
 
@@ -114,7 +115,7 @@ func TestConfig_GetAddr(t *testing.T) {
 	})
 
 	t.Run("error no env", func(t *testing.T) {
-		sc := Config{Ip: ip}
+		sc := Config{Ip: ip.String()}
 		_, err := sc.GetAddr()
 		if !assert.Error(t, err) {
 			t.FailNow()

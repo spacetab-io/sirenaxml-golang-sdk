@@ -3,7 +3,9 @@ package sdk
 import (
 	"encoding/xml"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
+	errs "github.com/pkg/errors"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/message"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
@@ -22,7 +24,11 @@ func (s *storage) GetCurrentKeyInfo(req []byte) (*structs.KeyInfoResponse, error
 	return &keyInfo, nil
 }
 
-func (s *storage) GetKeyData() (*client.KeyData, error) {
+func (s *storage) GetKeyData() (*message.KeyData, error) {
 	kd := s.c.GetKeyData()
-	return &kd, nil
+	if &kd == nil {
+		return nil, errs.New("no key data occurred")
+	}
+
+	return kd, nil
 }

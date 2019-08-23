@@ -11,15 +11,15 @@ import (
 
 func TestService_KeyInfo(t *testing.T) {
 	logger := logs.NewNullLog()
-	sdkClient, err := sdk.NewClient(&sc, logger)
+	sdkClient, err := sdk.Client(&sc, logger)
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
 
-	service := NewSKD(sdkClient)
+	service := New(sdkClient)
 	checkKeyData(t, sdkClient)
 	t.Run("success", func(t *testing.T) {
-		_, err = service.KeyInfo()
+		_, _, err = service.KeyInfo()
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}

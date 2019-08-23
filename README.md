@@ -7,6 +7,20 @@ Sirena XML connector written on golang
 
 ## Usage
 
+1. Init new connection
+2. connect
+    - start listener
+        - receive frame
+        - check type
+        - transform frame to message
+        - save message
+    - start sender
+        - make message
+        - set type
+        - transform to frame
+        - send frame
+    - start sign key
+
 ```go
 package main
 

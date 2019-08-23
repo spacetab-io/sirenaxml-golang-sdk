@@ -4,15 +4,16 @@ import (
 	"encoding/xml"
 	"testing"
 
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
 func TestStorage_GetAvailability(t *testing.T) {
-	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+	//logger := logs.NewNullLog()
+	logger := logrus.New()
+	proxyStorage := NewStorage(proxyPath, logger, false)
 	req := &structs.AvailabilityRequest{
 		Query: structs.AvailabilityRequestQuery{
 			Availability: structs.Availability{
@@ -28,7 +29,7 @@ func TestStorage_GetAvailability(t *testing.T) {
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
-	resp, err := proxyStorage.GetAvailability(reqXML)
+	resp, _, err := proxyStorage.GetAvailability(reqXML)
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}

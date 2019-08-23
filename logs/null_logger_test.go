@@ -10,36 +10,36 @@ import (
 )
 
 func TestNewNullLog(t *testing.T) {
-	nl := NewNullLog()
+	logger := NewNullLog()
 	assert.Empty(t, captureOutput(func() {
-		nl.Debug("debug")
+		logger.Debug("debug")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Debugf("debug")
+		logger.Debugf("debug")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Info("info")
+		logger.Info("info")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Infof("info")
+		logger.Infof("info")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Warning("warning")
+		logger.Warning("warning")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Warningf("warning")
+		logger.Warningf("warning")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Error("error")
+		logger.Error("error")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		nl.Errorf("error")
+		logger.Errorf("error")
 	}))
 	assert.Empty(t, captureOutput(func() {
-		assert.Panics(t, func() { nl.Fatal("fatal") })
+		assert.Panics(t, func() { logger.Fatal("fatal") })
 	}))
 	assert.Empty(t, captureOutput(func() {
-		assert.Panics(t, func() { nl.Fatalf("fatal") })
+		assert.Panics(t, func() { logger.Fatalf("fatal") })
 	}))
 }
 

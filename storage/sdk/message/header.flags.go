@@ -1,4 +1,4 @@
-package client
+package message
 
 type HeaderFlags struct {
 	val byte

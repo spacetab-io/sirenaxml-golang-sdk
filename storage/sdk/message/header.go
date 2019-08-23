@@ -1,12 +1,11 @@
-package client
+package message
 
 import (
 	"encoding/binary"
 	"fmt"
+	"time"
 
 	"github.com/pkg/errors"
-
-	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
 type Header struct {
@@ -17,6 +16,7 @@ type Header struct {
 	KeyID            uint32
 	Flags            *HeaderFlags
 	RequestNoHandled bool
+	SubHeader        []byte
 }
 
 // HeaderOffsets holds information about header offset lengths
@@ -32,8 +32,40 @@ var HeaderOffsets = map[int]int{
 	8: 52,
 }
 
+func makeHeader(om *OutgoingMessage, keyData *KeyData) *Header {
+	header := &Header{
+		MessageID:     om.MessageID,
+		ClientID:      om.ClientID,
+		MessageLength: uint32(len(om.Message) + len(om.MessageSignature)),
+		CreatedAt:     uint32(time.Now().Unix()),
+		KeyID:         keyData.ID,
+	}
+
+	sign := false
+	if keyData.ID == 0 {
+		sign = true
+		header.MessageLength += 4
+	}
+
+	header.setFlags(om.ZipIt, sign)
+
+	return header
+}
+
+func (h *Header) makeSubHeader(data []byte) {
+	h.SubHeader = make([]byte, 4)
+	binary.BigEndian.PutUint32(h.SubHeader[0:], uint32(len(data)))
+}
+
+func encryptedMsgLengthToBytes(data []byte) []byte {
+	eml := make([]byte, 4)
+	binary.BigEndian.PutUint32(eml[0:], uint32(len(data)))
+	return eml
+}
+
 // ParseHeader parses bytes into header
 func parseHeader(data []byte) (*Header, error) {
+	keyID := binary.BigEndian.Uint32(data[HeaderOffsets[7]:])
 	header := &Header{
 		MessageLength:    binary.BigEndian.Uint32(data[HeaderOffsets[0]:]),
 		CreatedAt:        binary.BigEndian.Uint32(data[HeaderOffsets[1]:]),
@@ -41,12 +73,12 @@ func parseHeader(data []byte) (*Header, error) {
 		ClientID:         binary.BigEndian.Uint16(data[HeaderOffsets[4]:]),
 		Flags:            NewHeaderFlags(data[HeaderOffsets[5]]),
 		RequestNoHandled: 0x01&data[HeaderOffsets[6]] != 0,
-		KeyID:            binary.BigEndian.Uint32(data[HeaderOffsets[7]:]),
+		KeyID:            keyID,
 	}
-
-	if header.MessageID == 0 {
-		return nil, errors.New("messageID is not set")
-	}
+	//
+	//if header.MessageID == 0 {
+	//	return nil, errors.New("messageID is not set")
+	//}
 
 	if header.MessageLength == 0 {
 		return nil, errors.New(fmt.Sprintf("[%d] empty message", header.MessageID))
@@ -74,17 +106,16 @@ func (h *Header) ToBytes() []byte {
 	return headerBytes
 }
 
-func (h *Header) setFlags(cfg *sirenaXML.Config, sign bool) {
+func (h *Header) setFlags(zipIt bool, sign bool) {
 	h.Flags = &HeaderFlags{}
 
-	// it will be easier to manage zipped status of request and response in one config attribute
-	if cfg.ZippedMessaging {
+	// it will be easier to manage Zipped status of request and response in one config attribute
+	if zipIt {
 		h.Flags.Set(ZippedRequest)
 		h.Flags.Set(ZippedResponse)
 	}
 
 	if sign {
-		h.MessageLength += 4 + 128
 		h.Flags.Set(EncryptPublic)
 	} else {
 		h.Flags.Set(EncryptSymmetric)

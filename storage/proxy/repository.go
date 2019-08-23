@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/go-resty/resty"
 	"github.com/pkg/errors"
@@ -27,18 +28,22 @@ func NewStorage(proxyPath string, l logs.LogWriter, debug bool) *storage {
 	return s
 }
 
-func (s *storage) SendRawRequest(req []byte) ([]byte, error) {
+func (s *storage) SendRawRequest(req []byte) ([]byte, []byte, error) {
 	return s.sendMsg(req)
 }
 
-func (s *storage) sendMsg(req []byte) ([]byte, error) {
+func (s *storage) sendMsg(req []byte) ([]byte, []byte, error) {
 	resp, err := s.r.R().SetBody(req).Post(s.proxyPath)
 	if err != nil || resp.StatusCode() != 200 {
 		if err == nil {
-			return nil, errors.New(fmt.Sprintf("proxy request error: %v", string(resp.Body())))
+			return nil, nil, errors.New(fmt.Sprintf("proxy request error: %v", string(resp.Body())))
 		}
-		return nil, err
+		return nil, nil, err
 	}
 
-	return resp.Body(), nil
+	if strings.Contains("error", string(resp.Body())) {
+		return nil, resp.Body(), nil
+	}
+
+	return resp.Body(), nil, nil
 }

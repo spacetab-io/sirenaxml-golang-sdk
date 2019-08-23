@@ -13,12 +13,12 @@ import (
 func TestService_Availability(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		logger := logs.NewNullLog()
-		sdkClient, err := sdk.NewClient(&sc, logger)
+		sdkClient, err := sdk.Client(&sc, logger)
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}
 
-		service := NewSKD(sdkClient)
+		service := New(sdkClient)
 		checkKeyData(t, sdkClient)
 		availabilityRequest := &structs.AvailabilityRequest{
 			Query: structs.AvailabilityRequestQuery{
@@ -32,7 +32,7 @@ func TestService_Availability(t *testing.T) {
 			},
 		}
 
-		_, err = service.Availability(availabilityRequest)
+		_, _, err = service.Availability(availabilityRequest)
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}

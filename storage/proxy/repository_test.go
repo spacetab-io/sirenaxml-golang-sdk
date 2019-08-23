@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestNewStorage(t *testing.T) {
-	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+	logger := logs.NewNullLog()
+	proxyStorage := NewStorage(proxyPath, logger, false)
 	assert.NotNil(t, proxyStorage.r.GetClient())
 }

@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/message"
 )
 
 func TestRespPool_Add(t *testing.T) {
@@ -26,19 +28,19 @@ func TestRespPool_SavePacket(t *testing.T) {
 	}
 
 	msgID := uint32(rand.Int31n(10))
-	p := &Packet{}
+	rm := &message.ReceivedMessage{MessageID: msgID}
 
-	err := rp.SavePacket(msgID, p)
+	err := rp.SaveMessage(rm)
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
 
-	P, ok := <-rp.p[msgID]
+	m, ok := <-rp.p[msgID]
 	if !assert.True(t, ok) {
 		t.FailNow()
 	}
 
-	assert.Equal(t, p, P)
+	assert.Equal(t, rm, m)
 }
 
 func TestRespPool_GetPacket(t *testing.T) {
@@ -51,16 +53,16 @@ func TestRespPool_GetPacket(t *testing.T) {
 	for k := uint32(0); k < 11; k++ {
 		wg.Add(1)
 		go func() {
-			wg.Done()
-			p := rp.GetPacket(k)
-			assert.Equal(t, k, p.header.MessageID)
+			defer wg.Done()
+			p := rp.GetMessage(k)
+			assert.Equal(t, k, p.MessageID)
 		}()
 	}
 	wg.Wait()
 	for j := uint32(0); j < 11; j++ {
 		go func() {
-			p := &Packet{header: &Header{MessageID: j}}
-			err := rp.SavePacket(j, p)
+			p := &message.ReceivedMessage{MessageID: j}
+			err := rp.SaveMessage(p)
 			if !assert.NoError(t, err) {
 				t.FailNow()
 			}
