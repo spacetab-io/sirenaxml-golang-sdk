@@ -17,15 +17,21 @@ type ModifyPNRQuery struct {
 
 // ModifyPNR is a body of <modify_pnr> request
 type ModifyPNR struct {
-	Regnum    string             `xml:"regnum"`
-	Surname   string             `xml:"surname"`
-	AddParams ModifyPNRAddParams `xml:"add,omitempty"`
+	Version      int                   `xml:"version"`
+	Regnum       string                `xml:"regnum"`
+	Surname      string                `xml:"surname"`
+	AddParams    ModifyPNRAddParams    `xml:"add,omitempty"`
+	RemoveParams ModifyPNRRemoveParams `xml:"remove"`
 }
 
 // ModifyPNRAddParams is a <add> section in <modify_pnr> request
 type ModifyPNRAddParams struct {
 	Contact      []ModifyPNRContact      `xml:"contact,omitempty"`
 	PassDocument []ModifyPNRPassDocument `xml:"pass_document,omitempty"`
+}
+
+type ModifyPNRRemoveParams struct {
+	Ssr []Ssr `xml:"ssr"`
 }
 
 // ModifyPNRContact is <contact> element for <add> section
