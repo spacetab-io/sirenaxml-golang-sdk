@@ -46,7 +46,7 @@ type RefundAnswerPNRPrice struct {
 }
 
 type RefundTaxes struct {
-	Tax []Tax
+	Tax []Tax `xml:"tax"`
 }
 
 type Tax struct {
