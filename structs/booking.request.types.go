@@ -74,6 +74,7 @@ type Ssr struct {
 	Text   string `xml:"text,attr,omitempty"`
 	PassId int    `xml:"pass_id,attr,omitempty"`
 	SegId  int    `xml:"seg_id,attr,omitempty"`
+	Key    string `xml:"key,attr"`
 }
 
 type BookingRequestContacts struct {
