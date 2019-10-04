@@ -45,7 +45,7 @@ type FaresResp struct {
 	Company   string `xml:"company"`
 	Remark    string `xml:"remark"`
 	Category  string `xml:"category"`
-	Upt       Upt    `xml:"upt"`
+	Upt       PriceUpt    `xml:"upt"`
 }
 
 type Rate struct {
