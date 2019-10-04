@@ -19,7 +19,7 @@ func TestStorage_GetAvailability(t *testing.T) {
 				Departure: "MOW",
 				Arrival:   "LED",
 				AnswerParams: structs.AvailabilityAnswerParams{
-					ShowFlighttime: true,
+					ShowFlightTime: true,
 				},
 			},
 		},
@@ -37,5 +37,9 @@ func TestStorage_GetAvailability(t *testing.T) {
 		t.FailNow()
 	}
 
-	assert.NotEmpty(t, resp.Answer.Availability.Flights)
+	if resp.Answer.Availability.Flights == nil && resp.Answer.Availability.Flight == nil {
+		assert.NotEmpty(t, resp.Answer.Availability.Flights)
+		assert.NotEmpty(t, resp.Answer.Availability.Flight)
+	}
+
 }

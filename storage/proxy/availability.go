@@ -2,7 +2,6 @@ package proxy
 
 import (
 	"encoding/xml"
-
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 

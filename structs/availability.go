@@ -8,6 +8,7 @@ type AvailabilityRequest struct {
 }
 
 type AvailabilityRequestQuery struct {
+	Availability  Availability  `xml:"availability"`
 	Departure     string        `xml:"departure,omitempty"`
 	Arrival       string        `xml:"arrival,omitempty"`
 	Subclass      []string      `xml:"subclass"`
@@ -21,15 +22,15 @@ type RequestParams struct {
 }
 
 type AvailabilityAnswerParams struct {
-	ShowFlightTime bool `xml:"show_flighttime"`
+	ShowFlightTime bool `xml:"show_flightTime"`
 }
 
 type Availability struct {
 	Departure    string                   `xml:"departure,omitempty"`
 	Arrival      string                   `xml:"arrival,omitempty"`
 	AnswerParams AvailabilityAnswerParams `xml:"answer_params,omitempty"`
-	Flight       []AvailabilityFlight       `xml:"flight,omitempty"`
-	Flights      []AvailabilityFlights      `xml:"flights,omitempty"`
+	Flight       []AvailabilityFlight     `xml:"flight,omitempty"`
+	Flights      []AvailabilityFlights    `xml:"flights,omitempty"`
 }
 
 type AvailabilityResponse struct {
