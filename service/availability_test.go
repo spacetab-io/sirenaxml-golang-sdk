@@ -26,7 +26,7 @@ func TestService_Availability(t *testing.T) {
 					Departure: "MOW",
 					Arrival:   "LED",
 					AnswerParams: structs.AvailabilityAnswerParams{
-						ShowFlighttime: true,
+						ShowFlightTime: true,
 					},
 				},
 			},
