@@ -36,16 +36,16 @@ type FaresResponse struct {
 }
 
 type FaresResp struct {
+	Upt       Upt    `xml:"upt"`
+	Rate      []Rate `xml:"rate"`
 	Text      string `xml:",chardata"`
 	Name      string `xml:"name,attr"`
 	Subclass  string `xml:"subclass"`
 	Direction string `xml:"direction"`
-	Rate      []Rate `xml:"rate"`
 	Maxstay   string `xml:"maxstay"`
 	Company   string `xml:"company"`
 	Remark    string `xml:"remark"`
 	Category  string `xml:"category"`
-	Upt       PriceUpt    `xml:"upt"`
 }
 
 type Rate struct {
@@ -54,11 +54,11 @@ type Rate struct {
 }
 
 type Upt struct {
-	Text      string    `xml:",chardata"`
-	Including Including `xml:"including,omitempty"`
+	Value string `xml:",chardata"`
 }
 
 type Including struct {
 	Text  string `xml:",chardata"`
 	OrNot string `xml:"or_not"`
 }
+
