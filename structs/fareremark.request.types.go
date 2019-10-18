@@ -25,7 +25,7 @@ type FareRemark struct {
 
 // FareRemarkRequestParams is a <request_params> section in <fareremark> request
 type FareRemarkRequestParams struct {
-	Upt      Upt      `xml:"upt,omitempty"`
+	Upt      Upt      `xml:"-"`
 	PriceUpt PriceUpt `xml:"upt,omitempty"`
 	Cat      int      `xml:"cat,omitempty"`
 }
