@@ -23,10 +23,12 @@ type GetItinReceiptsDataBody struct {
 // GetItinReceiptsDataAnswerReceipts is a <receipts> element in Sirena <get_itin_receipts_data> response
 type GetItinReceiptsDataAnswerReceipts struct {
 	TicketForm []struct {
+		IssueDate       string `xml:"issue_date"`
 		CRTime          string `xml:"cr_time,attr"`
 		PassengerID     string `xml:"pass_id,attr"`
 		NameOfPassenger string `xml:"name_of_passenger"`
 		DocOfPassenger  string `xml:"doc_of_passenger"`
 		Total           string `xml:"total"`
+		SerialNumber    string `xml:"form_and_serial_number"`
 	} `xml:"ticket_form"`
 }
