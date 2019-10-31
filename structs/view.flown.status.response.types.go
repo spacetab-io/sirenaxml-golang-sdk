@@ -12,7 +12,7 @@ type ViewFlownStatusAnswer struct {
 }
 
 type ViewFlownStatusResp struct {
-	Passengers Passenger `xml:"passenger"`
+	Passengers []Passenger `xml:"passenger"`
 }
 
 type Passenger struct {
