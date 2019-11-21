@@ -41,6 +41,261 @@ type PricingAnswerVariant struct {
 	Total        PricingAnswerVariantTotal         `xml:"variant_total"`
 }
 
+// GetPaxBaseCost func return base cost of variant for transferred passenger type
+func (p *PricingAnswerVariant) GetPaxBaseCost(paxType string) *float64 {
+
+	// Passenger total cost will be add from all direction objects
+	var paxBaseCost = new(float64)
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range p.Directions[0].Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			// Check if it is needed passenger type
+			if price.Code == paxType && price.PassengerID == passengerID {
+
+
+				*paxBaseCost += price.Fare.Total
+			}
+		}
+	}
+
+	return paxBaseCost
+}
+
+// GetVariantBaseCost func return base cost of variant for all variant
+func (p *PricingAnswerVariant) GetVariantBaseCost() *float64 {
+
+	// Passenger total cost will be add from all direction objects
+	var variantBaseCost = new(float64)
+
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			*variantBaseCost += price.Fare.Total
+		}
+	}
+
+
+	return variantBaseCost
+}
+
+// GetPaxTotalCost func return total cost of variant for transferred passenger type
+func (p *PricingAnswerVariant) GetPaxTotalCost(paxType string) *float64 {
+
+	// Passenger total cost will be add from all direction objects
+	var paxTotalCost = new(float64)
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range p.Directions[0].Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			// Check if it is needed passenger type
+			if price.Code == paxType && price.PassengerID == passengerID {
+
+				//allocate a new zero-valued paxTotalCost
+
+
+				*paxTotalCost += price.Total
+			}
+		}
+	}
+
+	return paxTotalCost
+}
+
+// GetPaxTaxesCost func return taxes cost of variant for transferred passenger type
+func (p *PricingAnswerVariant) GetPaxTaxesCost(paxType string) *float64 {
+
+	// Passenger total cost will be add from all direction objects
+	var paxTaxesCost = new(float64)
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range p.Directions[0].Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			// Check if it is needed passenger type
+			if price.Code == paxType && price.PassengerID == passengerID {
+
+				//allocate a new zero-valued paxTotalCost
+				//paxTaxesCost = new(float64)
+
+				for _, tax := range price.Taxes {
+					*paxTaxesCost += tax.Total
+				}
+			}
+		}
+	}
+
+	return paxTaxesCost
+}
+
+// GetVariantTaxesCost func return taxes cost of variant for all variant
+func (p *PricingAnswerVariant) GetVariantTaxesCost() *float64 {
+
+	// Passenger total cost will be add from all direction objects
+	var taxesCost = new(float64)
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			for _, tax := range price.Taxes {
+				*taxesCost += tax.Total
+			}
+		}
+	}
+
+	return taxesCost
+}
+
+// GetPaxTaxesRow func return row taxes slice of variant for transferred passenger type
+func (p *PricingAnswerVariant) GetPaxTaxesRow(paxType string) []PricingAnswerPriceTax {
+
+	// Passenger total cost will be add from all direction objects
+	var paxTaxes []PricingAnswerPriceTax
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range p.Directions[0].Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			// Check if it is needed passenger type
+			if price.Code == paxType && price.PassengerID == passengerID {
+
+				TAXES_LOOP:
+				for _, tax := range price.Taxes {
+
+					for _, containsPax := range paxTaxes {
+
+						if tax.Total == containsPax.Total {
+							continue TAXES_LOOP
+						}
+					}
+
+					paxTaxes = append(paxTaxes, tax)
+				}
+			}
+		}
+	}
+
+	return paxTaxes
+}
+
+// GetPaxVatsRow func return row vats slice of variant for transferred passenger type
+func (p *PricingAnswerVariant) GetPaxVatsRow(paxType string) []*Vat {
+
+	// Passenger total cost will be add from all direction objects
+	var paxVats []*Vat
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range p.Directions[0].Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, direction := range p.Directions {
+
+		// Prices object contains cost info related to type of pax
+		// Add passenger price form all direction objects
+		for _, price := range direction.Prices {
+
+			// Check if it is needed passenger type
+			if price.Code == paxType && price.PassengerID == passengerID {
+
+				if price.Vat != nil && price.Vat.Vats != nil {
+
+					paxVats = append(paxVats, price.Vat)
+				}
+			}
+		}
+	}
+
+	return paxVats
+}
+
+func (p *PricingAnswerVariant) GetVariantTotalCost() *PricingAnswerVariantTotal {
+
+	return &p.Total
+}
+
+func (p *PricingAnswerVariant) GetVariantPriceCurrency() string {
+
+	return p.Directions[0].Prices[0].Currency
+}
+
 type PricingAnswerVariantTotal struct {
 	Currency string  `xml:"currency,attr"`
 	Total    float64 `xml:",chardata"`
@@ -81,10 +336,10 @@ type PricingAnswerPrice struct {
 	OrigCode          string                  `xml:"orig_code,attr"`
 	Brand             string                  `xml:"brand,attr"`
 	Total             float64                 `xml:"total"`
-	// PassengerID       int                     `xml:"passenger-id,attr"`
-	// Code              string                  `xml:"code,attr"`
+	Currency          string                  `xml:"currency,attr"`
+	PassengerID       int                     `xml:"passenger-id,attr"`
+	Code              string                  `xml:"code,attr"`
 	// Count             int                     `xml:"count,attr"`
-	// Currency          string                  `xml:"currency,attr"`
 	// Ticket            string                  `xml:"ticket,attr"`
 	// FC                string                  `xml:"fc,attr"`
 	// DocID             string                  `xml:"doc_id,attr"`
