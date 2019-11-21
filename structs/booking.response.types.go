@@ -133,6 +133,199 @@ type BookingAnswerPNRPrices struct {
 	VariantTotal PNRVariantTotal         `xml:"variant_total"`
 }
 
+func (b *BookingAnswerPNRPrices) GetTotalPaxCost(paxType string) *float64{
+	// Passenger total cost will be added
+	var paxTotalCost = new(float64)
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range b.Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+	
+	for _, price := range b.Prices{
+		// Check if it is needed passenger type
+		if price.Code == paxType && price.PassengerID == passengerID {
+			//allocate a new zero-valued paxTotalCost
+
+			*paxTotalCost += price.Total
+		}
+	}
+
+	return paxTotalCost
+}
+
+func (b *BookingAnswerPNRPrices) GetTaxesVariantCost() *float64{
+	// Passenger total cost will be added
+	var variantTaxesCost = new(float64)
+
+	for _, price := range b.Prices{
+
+		for _, tax := range price.Taxes {
+
+			*variantTaxesCost += tax.Value.Value
+		}
+	}
+
+	return variantTaxesCost
+}
+
+func (b *BookingAnswerPNRPrices) GetFareVariantCost() *float64{
+	// Passenger total cost will be added
+	var variantFareCost = new(float64)
+
+	for _, price := range b.Prices{
+
+		*variantFareCost += price.Fare.Value.Value
+	}
+
+	return variantFareCost
+}
+
+func (b *BookingAnswerPNRPrices) GetRawTaxPax(paxType string) []PNRPriceTax{
+	// Passenger total cost will be added
+	var paxRawTaxes []PNRPriceTax
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range b.Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, price := range b.Prices{
+		// Check if it is needed passenger type
+		if price.Code == paxType && price.PassengerID == passengerID {
+			//allocate a new zero-valued paxTotalCost
+
+
+		TAXES_LOOP:
+			for _, tax := range price.Taxes {
+
+				for _, containsPax := range paxRawTaxes {
+
+					if tax.Value == containsPax.Value {
+						continue TAXES_LOOP
+					}
+				}
+
+				paxRawTaxes = append(paxRawTaxes, tax)
+			}
+		}
+	}
+
+	return paxRawTaxes
+}
+
+func (b *BookingAnswerPNRPrices) GetRawVatPax(paxType string) []*Vat{
+	// Passenger total cost will be added
+	var paxRawVats []*Vat
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range b.Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, price := range b.Prices{
+		// Check if it is needed passenger type
+		if price.Code == paxType && price.PassengerID == passengerID {
+			//allocate a new zero-valued paxTotalCost
+
+			paxRawVats= append(paxRawVats, price.Vat)
+
+		}
+	}
+
+	return paxRawVats
+}
+
+func (b *BookingAnswerPNRPrices) GetFarePaxCost(paxType string) *float64{
+	// Passenger total cost will be added
+	var paxFareCost = new(float64)
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range b.Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+	
+	for _, price := range b.Prices{
+		// Check if it is needed passenger type
+		if price.Code == paxType && price.PassengerID == passengerID {
+			//allocate a new zero-valued paxFareCost
+
+			*paxFareCost += price.Fare.Value.Value
+		}
+	}
+
+	return paxFareCost
+}
+
+// GetTaxesPaxCost func return tax amount for passenger of given type
+func (b *BookingAnswerPNRPrices) GetTaxesPaxCost(paxType string) *float64{
+	// Passenger total cost will be added
+	var paxTaxesCost = new(float64)
+
+	// Variant object contains objects of all passengers.
+	// Since it is necessary to add the price for only one passenger of the transferred type, therefore passengerID is determined and the price is added only for a passenger of that passengerID.
+	var passengerID int
+
+	for _, price := range b.Prices {
+		if price.Code == paxType {
+
+			// Attach ID of first passenger of appropriate type to passengerID
+			passengerID = price.PassengerID
+			break
+		}
+	}
+
+	for _, price := range b.Prices{
+		// Check if it is needed passenger type
+		if price.Code == paxType && price.PassengerID == passengerID {
+			//allocate a new zero-valued paxTaxesCost
+			for _, tax := range price.Taxes{
+
+				*paxTaxesCost += tax.Value.Value
+			}
+		}
+	}
+
+	return paxTaxesCost
+}
+
+func (b *BookingAnswerPNRPrices) GetTotalVariantCost() PNRVariantTotal{
+	return b.VariantTotal
+}
+
+
 // BookingAnswerPNRPrice is a <price> entry in Sirena booking response
 type BookingAnswerPNRPrice struct {
 	SegmentID         int            `xml:"segment-id,attr"`
