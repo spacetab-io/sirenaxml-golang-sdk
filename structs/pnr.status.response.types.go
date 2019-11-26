@@ -33,7 +33,7 @@ type PNRStatusAnswerPNRStatus struct {
 	Tickinfo         PNRStatusTickinfo  `xml:"tickinfo,omitempty"`
 	NewTickinfo      []PNRStatusTicket  `xml:"new_tickinfo>ticket"`
 	CommonStatus     string             `xml:"common_status"`
-	Error            *Error     `xml:"error,omitempty"`
+	Error            *Error             `xml:"error,omitempty"`
 }
 
 // PNRStatusSegment is a <segment> subsection of <segments> section in Sirena <pnr_status> response

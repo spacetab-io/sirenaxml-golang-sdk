@@ -16,6 +16,6 @@ type VoidTicketsAnswer struct {
 
 // VoidTicketsAnswerQuery is an <order> section in Sirena order response
 type VoidTicketsAnswerQuery struct {
-	TicketsReturned bool           `xml:"tickets_returned"`
+	TicketsReturned bool   `xml:"tickets_returned"`
 	Error           *Error `xml:"error,omitempty"`
 }

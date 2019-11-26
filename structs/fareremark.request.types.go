@@ -34,4 +34,3 @@ type FareRemarkRequestParams struct {
 type FareRemarkAnswerParams struct {
 	Lang string `xml:"lang,omitempty"`
 }
-

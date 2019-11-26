@@ -61,4 +61,3 @@ type Including struct {
 	Text  string `xml:",chardata"`
 	OrNot string `xml:"or_not"`
 }
-

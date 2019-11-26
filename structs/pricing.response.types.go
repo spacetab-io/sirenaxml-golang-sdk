@@ -41,6 +41,10 @@ type PricingAnswerVariant struct {
 	Total        PricingAnswerVariantTotal         `xml:"variant_total"`
 }
 
+func (p *PricingAnswerVariant) GetVariantDirections() []PricingAnswerVariantDirection {
+	return p.Directions
+}
+
 // GetPaxBaseCost func return base cost of variant for transferred passenger type
 func (p *PricingAnswerVariant) GetPaxBaseCost(paxType string) *float64 {
 
@@ -69,7 +73,6 @@ func (p *PricingAnswerVariant) GetPaxBaseCost(paxType string) *float64 {
 			// Check if it is needed passenger type
 			if price.Code == paxType && price.PassengerID == passengerID {
 
-
 				*paxBaseCost += price.Fare.Total
 			}
 		}
@@ -84,7 +87,6 @@ func (p *PricingAnswerVariant) GetVariantBaseCost() *float64 {
 	// Passenger total cost will be add from all direction objects
 	var variantBaseCost = new(float64)
 
-
 	for _, direction := range p.Directions {
 
 		// Prices object contains cost info related to type of pax
@@ -94,7 +96,6 @@ func (p *PricingAnswerVariant) GetVariantBaseCost() *float64 {
 			*variantBaseCost += price.Fare.Total
 		}
 	}
-
 
 	return variantBaseCost
 }
@@ -128,7 +129,6 @@ func (p *PricingAnswerVariant) GetPaxTotalCost(paxType string) *float64 {
 			if price.Code == paxType && price.PassengerID == passengerID {
 
 				//allocate a new zero-valued paxTotalCost
-
 
 				*paxTotalCost += price.Total
 			}
@@ -228,7 +228,7 @@ func (p *PricingAnswerVariant) GetPaxTaxesRow(paxType string) []PricingAnswerPri
 			// Check if it is needed passenger type
 			if price.Code == paxType && price.PassengerID == passengerID {
 
-				TAXES_LOOP:
+			TAXES_LOOP:
 				for _, tax := range price.Taxes {
 
 					for _, containsPax := range paxTaxes {
@@ -305,6 +305,53 @@ type PricingAnswerVariantFlightGroup struct {
 	Flight []PricingAnswerVariantFlight `xml:"flight"`
 }
 
+func (f *PricingAnswerVariantFlight) GetFlightInfo(flights []*PricingAnswerFlight) *PricingAnswerFlight {
+	for _, flight := range flights {
+		if f.ID == flight.ID {
+			return flight
+		}
+	}
+
+	return nil
+}
+
+func findFlight(flights []PricingAnswerVariantFlight, f *PricingAnswerVariantFlight) bool {
+	// Find variant that contain the current PricingAnswerVariantFlight
+	for _, flight := range flights {
+		if f.ID == flight.ID {
+
+			// Once variant that contained a PricingAnswerVariantFlight had found, starting find PAX data attached to PricingAnswerVariantFlight
+			return true
+
+		}
+	}
+
+	return false
+}
+
+func (f *PricingAnswerVariantFlight) GetPaxInfoFromFlight(variants []PricingAnswerVariant, paxType string) *PricingAnswerPrice {
+	for _, variant := range variants {
+		for _, flights := range variant.FlightGroups {
+
+			// Find variant that contain the current PricingAnswerVariantFlight
+			if findFlight(flights.Flight, f) {
+
+				for _, direction := range variant.Directions {
+					for _, price := range direction.Prices {
+
+						if price.Code == paxType {
+
+							return price
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
 type PricingAnswerVariantFlight struct {
 	ID         int    `xml:"id,attr"`
 	Num        int    `xml:"num,attr"`
@@ -318,6 +365,49 @@ type PricingAnswerVariantFlight struct {
 type PricingAnswerVariantDirection struct {
 	Num    int                   `xml:"num,attr"`
 	Prices []*PricingAnswerPrice `xml:"price"`
+}
+
+func (p *PricingAnswerVariantDirection) GetDirectionsFlights(variant *PricingAnswerVariant) []PricingAnswerVariantFlight {
+
+	var directionFlights []PricingAnswerVariantFlight
+
+	for _, flightGroups := range variant.FlightGroups {
+		for _, flight := range flightGroups.Flight {
+			if p.Num == flight.Num {
+				directionFlights = append(directionFlights, flight)
+			}
+		}
+	}
+
+	return nil
+}
+
+func (p *PricingAnswerVariantDirection) GetDirectionsFlightGroups(variant *PricingAnswerVariant) [][]PricingAnswerVariantFlight {
+
+	// Declare slice for flightGroups of one direction
+	var directionFlightGroups [][]PricingAnswerVariantFlight
+	for _, flightGroups := range variant.FlightGroups {
+
+		for _, flight := range flightGroups.Flight {
+
+			// Declare slice for flights of one direction
+			var directionFlights []PricingAnswerVariantFlight
+
+			if p.Num == flight.Num {
+				directionFlights = append(directionFlights, flight)
+			}
+
+			// check if directionFlights have any items
+			if len(directionFlights) == 0 {
+
+				continue
+			}
+
+			directionFlightGroups = append(directionFlightGroups, directionFlights)
+		}
+	}
+
+	return directionFlightGroups
 }
 
 type PricingAnswerLocation struct {
@@ -346,6 +436,11 @@ type PricingAnswerPrice struct {
 	// ACCode            string                  `xml:"accode,attr"`
 	// FOP               string                  `xml:"fop,attr"`
 	// OrigID            int                     `xml:"orig_id,attr"`
+}
+
+func (p *PricingAnswerPrice) GetFare() *PricingAnswerPriceFare {
+
+	return p.Fare
 }
 
 func (v *Vat) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
