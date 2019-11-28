@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"

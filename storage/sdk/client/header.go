@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
+
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
 type Header struct {

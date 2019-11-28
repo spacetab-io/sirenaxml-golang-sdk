@@ -2,13 +2,13 @@ package client
 
 import (
 	"bufio"
-	"bytes"
 	"compress/zlib"
 	"encoding/binary"
 	"time"
 
 	"github.com/pkg/errors"
 
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
 )
 

@@ -10,6 +10,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 )
 
