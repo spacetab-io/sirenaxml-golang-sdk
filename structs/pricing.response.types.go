@@ -305,6 +305,19 @@ type PricingAnswerVariantFlightGroup struct {
 	Flight []PricingAnswerVariantFlight `xml:"flight"`
 }
 
+func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variants []PricingAnswerVariant, paxType string) bool{
+
+	var flightHaveBrand bool
+
+	for _, flight := range p.Flight{
+		if flight.GetPaxInfoFromFlight(variants, paxType).Brand != "" {
+			flightHaveBrand = true
+		}
+	}
+
+	return flightHaveBrand
+}
+
 func (f *PricingAnswerVariantFlight) GetFlightInfo(flights []*PricingAnswerFlight) *PricingAnswerFlight {
 	for _, flight := range flights {
 		if f.ID == flight.ID {
