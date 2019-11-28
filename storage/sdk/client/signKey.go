@@ -2,6 +2,7 @@ package client
 
 import (
 	"bufio"
+	"bytes"
 	"compress/zlib"
 	"encoding/binary"
 	"time"
