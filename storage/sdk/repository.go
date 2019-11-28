@@ -3,7 +3,7 @@ package sdk
 import (
 	"github.com/pkg/errors"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
 )

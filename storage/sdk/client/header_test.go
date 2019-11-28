@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
 func TestHeaderFlags_Set(t *testing.T) {

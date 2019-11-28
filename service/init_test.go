@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
+	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/strings"
 )
 

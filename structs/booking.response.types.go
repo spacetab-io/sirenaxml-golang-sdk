@@ -133,7 +133,7 @@ type BookingAnswerPNRPrices struct {
 	VariantTotal PNRVariantTotal         `xml:"variant_total"`
 }
 
-func (b *BookingAnswerPNRPrices) GetTotalPaxCost(paxType string) *float64{
+func (b *BookingAnswerPNRPrices) GetTotalPaxCost(paxType string) *float64 {
 	// Passenger total cost will be added
 	var paxTotalCost = new(float64)
 
@@ -149,8 +149,8 @@ func (b *BookingAnswerPNRPrices) GetTotalPaxCost(paxType string) *float64{
 			break
 		}
 	}
-	
-	for _, price := range b.Prices{
+
+	for _, price := range b.Prices {
 		// Check if it is needed passenger type
 		if price.Code == paxType && price.PassengerID == passengerID {
 			//allocate a new zero-valued paxTotalCost
@@ -162,11 +162,11 @@ func (b *BookingAnswerPNRPrices) GetTotalPaxCost(paxType string) *float64{
 	return paxTotalCost
 }
 
-func (b *BookingAnswerPNRPrices) GetTaxesVariantCost() *float64{
+func (b *BookingAnswerPNRPrices) GetTaxesVariantCost() *float64 {
 	// Passenger total cost will be added
 	var variantTaxesCost = new(float64)
 
-	for _, price := range b.Prices{
+	for _, price := range b.Prices {
 
 		for _, tax := range price.Taxes {
 
@@ -177,11 +177,11 @@ func (b *BookingAnswerPNRPrices) GetTaxesVariantCost() *float64{
 	return variantTaxesCost
 }
 
-func (b *BookingAnswerPNRPrices) GetFareVariantCost() *float64{
+func (b *BookingAnswerPNRPrices) GetFareVariantCost() *float64 {
 	// Passenger total cost will be added
 	var variantFareCost = new(float64)
 
-	for _, price := range b.Prices{
+	for _, price := range b.Prices {
 
 		*variantFareCost += price.Fare.Value.Value
 	}
@@ -189,7 +189,7 @@ func (b *BookingAnswerPNRPrices) GetFareVariantCost() *float64{
 	return variantFareCost
 }
 
-func (b *BookingAnswerPNRPrices) GetRawTaxPax(paxType string) []PNRPriceTax{
+func (b *BookingAnswerPNRPrices) GetRawTaxPax(paxType string) []PNRPriceTax {
 	// Passenger total cost will be added
 	var paxRawTaxes []PNRPriceTax
 
@@ -206,11 +206,10 @@ func (b *BookingAnswerPNRPrices) GetRawTaxPax(paxType string) []PNRPriceTax{
 		}
 	}
 
-	for _, price := range b.Prices{
+	for _, price := range b.Prices {
 		// Check if it is needed passenger type
 		if price.Code == paxType && price.PassengerID == passengerID {
 			//allocate a new zero-valued paxTotalCost
-
 
 		TAXES_LOOP:
 			for _, tax := range price.Taxes {
@@ -230,7 +229,7 @@ func (b *BookingAnswerPNRPrices) GetRawTaxPax(paxType string) []PNRPriceTax{
 	return paxRawTaxes
 }
 
-func (b *BookingAnswerPNRPrices) GetRawVatPax(paxType string) []*Vat{
+func (b *BookingAnswerPNRPrices) GetRawVatPax(paxType string) []*Vat {
 	// Passenger total cost will be added
 	var paxRawVats []*Vat
 
@@ -247,12 +246,12 @@ func (b *BookingAnswerPNRPrices) GetRawVatPax(paxType string) []*Vat{
 		}
 	}
 
-	for _, price := range b.Prices{
+	for _, price := range b.Prices {
 		// Check if it is needed passenger type
 		if price.Code == paxType && price.PassengerID == passengerID {
 			//allocate a new zero-valued paxTotalCost
 
-			paxRawVats= append(paxRawVats, price.Vat)
+			paxRawVats = append(paxRawVats, price.Vat)
 
 		}
 	}
@@ -260,7 +259,7 @@ func (b *BookingAnswerPNRPrices) GetRawVatPax(paxType string) []*Vat{
 	return paxRawVats
 }
 
-func (b *BookingAnswerPNRPrices) GetFarePaxCost(paxType string) *float64{
+func (b *BookingAnswerPNRPrices) GetFarePaxCost(paxType string) *float64 {
 	// Passenger total cost will be added
 	var paxFareCost = new(float64)
 
@@ -276,8 +275,8 @@ func (b *BookingAnswerPNRPrices) GetFarePaxCost(paxType string) *float64{
 			break
 		}
 	}
-	
-	for _, price := range b.Prices{
+
+	for _, price := range b.Prices {
 		// Check if it is needed passenger type
 		if price.Code == paxType && price.PassengerID == passengerID {
 			//allocate a new zero-valued paxFareCost
@@ -290,7 +289,7 @@ func (b *BookingAnswerPNRPrices) GetFarePaxCost(paxType string) *float64{
 }
 
 // GetTaxesPaxCost func return tax amount for passenger of given type
-func (b *BookingAnswerPNRPrices) GetTaxesPaxCost(paxType string) *float64{
+func (b *BookingAnswerPNRPrices) GetTaxesPaxCost(paxType string) *float64 {
 	// Passenger total cost will be added
 	var paxTaxesCost = new(float64)
 
@@ -307,11 +306,11 @@ func (b *BookingAnswerPNRPrices) GetTaxesPaxCost(paxType string) *float64{
 		}
 	}
 
-	for _, price := range b.Prices{
+	for _, price := range b.Prices {
 		// Check if it is needed passenger type
 		if price.Code == paxType && price.PassengerID == passengerID {
 			//allocate a new zero-valued paxTaxesCost
-			for _, tax := range price.Taxes{
+			for _, tax := range price.Taxes {
 
 				*paxTaxesCost += tax.Value.Value
 			}
@@ -321,10 +320,9 @@ func (b *BookingAnswerPNRPrices) GetTaxesPaxCost(paxType string) *float64{
 	return paxTaxesCost
 }
 
-func (b *BookingAnswerPNRPrices) GetTotalVariantCost() PNRVariantTotal{
+func (b *BookingAnswerPNRPrices) GetTotalVariantCost() PNRVariantTotal {
 	return b.VariantTotal
 }
-
 
 // BookingAnswerPNRPrice is a <price> entry in Sirena booking response
 type BookingAnswerPNRPrice struct {
