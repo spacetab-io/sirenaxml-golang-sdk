@@ -20,7 +20,7 @@ type PricingAnswerPricing struct {
 }
 
 type PricingAnswerFlight struct {
-	ID               int                   `xml:"id,attr"`
+	ID               string                `xml:"id,attr"`
 	Company          string                `xml:"company"`
 	Num              string                `xml:"num"`
 	OperatingCompany string                `xml:"operating_company"`
@@ -33,6 +33,21 @@ type PricingAnswerFlight struct {
 	ArrvTime         string                `xml:"arrvtime"`
 	Airplane         string                `xml:"airplane"`
 	FlightTime       string                `xml:"flightTime"`
+}
+
+// GetVariantFlightInfo func return flight info from variant flight
+func (p *PricingAnswerFlight) GetVariantFlightInfo(variants []PricingAnswerVariant) *PricingAnswerVariantFlight {
+	for _, variant := range variants {
+		for _, flightGroup := range variant.FlightGroups {
+			for _, flight := range flightGroup.Flight {
+				if p.ID == flight.ID {
+					return &flight
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 type PricingAnswerVariant struct {
@@ -305,11 +320,11 @@ type PricingAnswerVariantFlightGroup struct {
 	Flight []PricingAnswerVariantFlight `xml:"flight"`
 }
 
-func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variants []PricingAnswerVariant, paxType string) bool{
+func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variants []PricingAnswerVariant, paxType string) bool {
 
 	var flightHaveBrand bool
 
-	for _, flight := range p.Flight{
+	for _, flight := range p.Flight {
 		if flight.GetPaxInfoFromFlight(variants, paxType).Brand != "" {
 			flightHaveBrand = true
 		}
@@ -366,7 +381,7 @@ func (f *PricingAnswerVariantFlight) GetPaxInfoFromFlight(variants []PricingAnsw
 }
 
 type PricingAnswerVariantFlight struct {
-	ID         int    `xml:"id,attr"`
+	ID         string `xml:"id,attr"`
 	Num        int    `xml:"num,attr"`
 	SubClass   string `xml:"subclass,attr"`
 	BaseClass  string `xml:"baseclass,attr"`
