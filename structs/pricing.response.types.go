@@ -414,12 +414,58 @@ func (p *PricingAnswerVariantDirection) GetDirectionsFlightGroups(variant *Prici
 
 	// Declare slice for flightGroups of one direction
 	var directionFlightGroups [][]PricingAnswerVariantFlight
+
+FLIGHTGROUPS_LABEL:
 	for _, flightGroups := range variant.FlightGroups {
+
+		var directionFlights []PricingAnswerVariantFlight
+
+
+		for _, flg := range directionFlightGroups {
+			for _, fl := range flg {
+				for _, flight := range flightGroups.Flight {
+					if fl.ID == flight.ID {
+
+						continue FLIGHTGROUPS_LABEL
+					}
+				}
+			}
+		}
 
 		for _, flight := range flightGroups.Flight {
 
 			// Declare slice for flights of one direction
-			var directionFlights []PricingAnswerVariantFlight
+			//var directionFlights []PricingAnswerVariantFlight
+			if p.Num == flight.Num {
+
+				directionFlights = append(directionFlights, flight)
+			}
+
+			// check if directionFlights have any items
+			if len(directionFlights) == 0 {
+
+				continue
+			}
+
+		}
+
+		directionFlightGroups = append(directionFlightGroups, directionFlights)
+	}
+
+	return directionFlightGroups
+}
+
+func (p *PricingAnswerVariantDirection) GetDirectionsVariants(variant *PricingAnswerVariant) [][]PricingAnswerVariantFlight {
+
+	// Declare slice for flightGroups of one direction
+	var directionFlightGroups [][]PricingAnswerVariantFlight
+	for _, flightGroups := range variant.FlightGroups {
+
+		var directionFlights []PricingAnswerVariantFlight
+		for _, flight := range flightGroups.Flight {
+
+			// Declare slice for flights of one direction
+			//var directionFlights []PricingAnswerVariantFlight
 
 			if p.Num == flight.Num {
 				directionFlights = append(directionFlights, flight)
@@ -431,8 +477,8 @@ func (p *PricingAnswerVariantDirection) GetDirectionsFlightGroups(variant *Prici
 				continue
 			}
 
-			directionFlightGroups = append(directionFlightGroups, directionFlights)
 		}
+		directionFlightGroups = append(directionFlightGroups, directionFlights)
 	}
 
 	return directionFlightGroups
