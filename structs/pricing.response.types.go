@@ -28,6 +28,7 @@ type PricingAnswerFlight struct {
 	Origin           PricingAnswerLocation `xml:"origin"`
 	Destination      PricingAnswerLocation `xml:"destination"`
 	DeptDate         string                `xml:"deptdate"`
+	Legs             []FlightLeg           `xml:"legs>leg"`
 	ArrvDate         string                `xml:"arrvdate"`
 	DeptTime         string                `xml:"depttime"`
 	ArrvTime         string                `xml:"arrvtime"`
@@ -390,6 +391,20 @@ type PricingAnswerVariantFlight struct {
 	Cabin      string `xml:"cabin,attr"`
 }
 
+type FlightLeg struct {
+	Airplane string              `xml:"airplane,attr"`
+	Dep      PNRSegmentLegDepArr `xml:"dep"`
+	Arr      PNRSegmentLegDepArr `xml:"arr"`
+}
+
+// PNRSegmentLegDepArr is <sep> and <arr> entries in <leg> section
+type FlightLegDepArr struct {
+	TimeLocal string `xml:"time_local,attr"`
+	TimeUTC   string `xml:"time_utc,attr"`
+	Term      string `xml:"term,attr"`
+	Value     string `xml:",chardata"`
+}
+
 type PricingAnswerVariantDirection struct {
 	Num    int                   `xml:"num,attr"`
 	Prices []*PricingAnswerPrice `xml:"price"`
@@ -419,7 +434,6 @@ FLIGHTGROUPS_LABEL:
 	for _, flightGroups := range variant.FlightGroups {
 
 		var directionFlights []PricingAnswerVariantFlight
-
 
 		for _, flg := range directionFlightGroups {
 			for _, fl := range flg {
