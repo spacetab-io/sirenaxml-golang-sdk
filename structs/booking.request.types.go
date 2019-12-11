@@ -33,7 +33,12 @@ type BookingRequestParams struct {
 	ParcelAgency  string                `xml:"parcel_agency,omitempty"`
 	Formpay       BookingRequestFormpay `xml:"formpay,omitempty"`
 	AllowWaitlist bool                  `xml:"allow_waitlist,omitempty"`
-	Brand         string                `xml:"brand,omitempty"`
+	Brand         []Brand               `xml:"brand,omitempty"`
+}
+
+type Brand struct {
+	Value string `xml:",chardata"`
+	SegId int    `xml:"seg_id,attr"`
 }
 
 // BookingRequestFormpay is a <formpay> entry in <request_params>
@@ -150,6 +155,6 @@ type BookingRequestSegment struct {
 	Arrival   string `xml:"arrival"`
 	Date      string `xml:"date"`
 	Subclass  string `xml:"subclass"`
-	ID        int    `xml:"id,omitempty"`
+	ID        int    `xml:"id,attr"`
 	JointId   int    `xml:"joint_id,omitempty"`
 }

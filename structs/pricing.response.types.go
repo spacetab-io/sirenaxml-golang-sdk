@@ -336,6 +336,9 @@ func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variant PricingAnswerV
 
 func (f *PricingAnswerVariantFlight) GetFlightInfo(flights []*PricingAnswerFlight) *PricingAnswerFlight {
 	for _, flight := range flights {
+
+		//spew.Dump(" \n flight.ID: \n", flight.ID)
+		//spew.Dump(" \n f.ID: \n", f.ID)
 		if f.ID == flight.ID {
 			return flight
 		}

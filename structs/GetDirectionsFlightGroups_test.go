@@ -1,8 +1,9 @@
 package structs
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"testing"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 var MockPricingAnswerVariant = &PricingAnswerVariant{

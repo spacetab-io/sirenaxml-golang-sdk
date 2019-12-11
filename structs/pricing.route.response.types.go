@@ -14,7 +14,34 @@ type PricingRouteAnswerPricingRoute struct {
 	Error    *Error                      `xml:"error,omitempty"`
 }
 
+type Price struct {
+	Brand             string `xml:"brand,attr"`
+	PassengerID       string `xml:"passenger-id,attr"`
+	Code              string `xml:"code,attr"`
+	Count             string `xml:"count,attr"`
+	Currency          string `xml:"currency,attr"`
+	Ticket            string `xml:"ticket,attr"`
+	TicketCpn         string `xml:"ticket_cpn,attr"`
+	Baggage           string `xml:"baggage,attr"`
+	Fc                string `xml:"fc,attr"`
+	DocType           string `xml:"doc_type,attr"`
+	DocID             string `xml:"doc_id,attr"`
+	Accode            string `xml:"accode,attr"`
+	ValidatingCompany string `xml:"validating_company,attr"`
+	Fop               string `xml:"fop,attr"`
+	OrigCode          string `xml:"orig_code,attr"`
+	OrigID            string `xml:"orig_id,attr"`
+	Fare              struct {
+		Remark      string `xml:"remark,attr"`
+		FareExpdate string `xml:"fare_expdate,attr"`
+		Code        string `xml:"code,attr"`
+		BaseCode    string `xml:"base_code,attr"`
+	} `xml:"fare"`
+	Total string `xml:"total"`
+}
+
 type PricingRouteAnswerFlight struct {
+	Price       Price                      `xml:"price"`
 	ID          int                        `xml:"id,attr"`
 	Company     string                     `xml:"company"`
 	Num         int                        `xml:"num"`
@@ -30,9 +57,10 @@ type PricingRouteAnswerFlight struct {
 }
 
 type PricingRouteAnswerVariant struct {
-	FlightGroups []PricingRouteAnswerVariantFlightGroup `xml:"flights"`
-	Directions   []PricingRouteAnswerVariantDirection   `xml:"direction"`
-	Total        PricingRouteAnswerVariantTotal         `xml:"variant_total"`
+	Flight []PricingRouteAnswerVariantFlight `xml:"flight"`
+	Total  PricingRouteAnswerVariantTotal    `xml:"variant_total"`
+
+	//Directions   []PricingRouteAnswerVariantDirection   `xml:"direction"`
 }
 
 type PricingRouteAnswerVariantTotal struct {
@@ -45,6 +73,7 @@ type PricingRouteAnswerVariantFlightGroup struct {
 }
 
 type PricingRouteAnswerVariantFlight struct {
+	Price     Price  `xml:"price"`
 	ID        int    `xml:"id,attr"`
 	Num       int    `xml:"num,attr"`
 	SubClass  string `xml:"subclass,attr"`
@@ -64,21 +93,10 @@ type PricingRouteAnswerLocation struct {
 }
 
 type PricingRouteAnswerPrice struct {
-	// PassengerID       int                     `xml:"passenger-id,attr"`
-	// Code              string                  `xml:"code,attr"`
-	// Count             int                     `xml:"count,attr"`
-	// Currency          string                  `xml:"currency,attr"`
-	// Ticket            string                  `xml:"ticket,attr"`
-	// FC                string                  `xml:"fc,attr"`
-	// DocID             string                  `xml:"doc_id,attr"`
-	// ACCode            string                  `xml:"accode,attr"`
-	// ValidatingCompany string                  `xml:"validating_company,attr"`
-	// FOP               string                  `xml:"fop,attr"`
-	OrigCode string `xml:"orig_code,attr"`
-	// OrigID            int                     `xml:"orig_id,attr"`
-	Fare  *PricingRouteAnswerPriceFare `xml:"fare"`
-	Taxes []PricingRouteAnswerPriceTax `xml:"tax"`
-	// Total             float64                 `xml:"total"`
+	Brand    string                       `xml:"brand"`
+	OrigCode string                       `xml:"orig_code,attr"`
+	Fare     *PricingRouteAnswerPriceFare `xml:"fare"`
+	Taxes    []PricingRouteAnswerPriceTax `xml:"tax"`
 }
 
 type PricingRouteAnswerPriceFare struct {
