@@ -331,7 +331,7 @@ func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variant PricingAnswerV
 	var flightHaveBrand bool
 
 	for _, flight := range p.Flight {
-		if flight.GetVariantPricing(variant, paxType).BrandCode != "" {
+		if flight.GetVariantPricing(variant, paxType).Brand != "" {
 			flightHaveBrand = true
 		}
 	}
@@ -578,22 +578,22 @@ type PricingAnswerLocation struct {
 }
 
 type PricingAnswerPrice struct {
-	Brand             string                  `xml:"brand,attr"`
-	Baggage           string                  `xml:"baggage,attr"`
-	ValidatingAirline string                  `xml:"validating_company,attr"`
-	OriginalPaxType   string                  `xml:"orig_code,attr"`
+	Brand             string `xml:"brand,attr"`
+	Baggage           string `xml:"baggage,attr"`
+	ValidatingAirline string `xml:"validating_company,attr"`
+	OriginalPaxType   string `xml:"orig_code,attr"`
 	//BrandCode         string                  `xml:"brand,attr"`
-	Currency          string                  `xml:"currency,attr"`
-	PassengerID       int                     `xml:"passenger-id,attr"`
-	PaxType           string                  `xml:"code,attr"`
-	IsRoundTrip       bool                    `xml:"rt,attr,omitempty"`
-	FormPay           FormPay                 `xml:"fop,attr,omitempty"`
-	Upt               PriceUpt                `xml:"upt"`
-	Fare              *PricingAnswerPriceFare `xml:"fare"`
-	Taxes             []PricingAnswerPriceTax `xml:"tax"`
-	Vat               *Vat                    `xml:"vat"`
-	Total             float64                 `xml:"total"`
-	UPT18CatText      string                  `xml:"cat18_text,omitempty"`
+	Currency     string                  `xml:"currency,attr"`
+	PassengerID  int                     `xml:"passenger-id,attr"`
+	PaxType      string                  `xml:"code,attr"`
+	IsRoundTrip  bool                    `xml:"rt,attr,omitempty"`
+	FormPay      FormPay                 `xml:"fop,attr,omitempty"`
+	Upt          PriceUpt                `xml:"upt"`
+	Fare         *PricingAnswerPriceFare `xml:"fare"`
+	Taxes        []PricingAnswerPriceTax `xml:"tax"`
+	Vat          *Vat                    `xml:"vat"`
+	Total        float64                 `xml:"total"`
+	UPT18CatText string                  `xml:"cat18_text,omitempty"`
 	// Count             int                     `xml:"count,attr"`
 	// Ticket            string                  `xml:"ticket,attr"`
 	// FC                string                  `xml:"fc,attr"`
