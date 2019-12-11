@@ -90,7 +90,7 @@ type PricingAnswerParams struct {
 	ShowFareExpDate  bool   `xml:"show_fareexpdate,omitempty"`
 	ShowEt           bool   `xml:"show_et,omitempty"`
 	ShowNBlanks      bool   `xml:"show_n_blanks,omitempty"`
-	ShowRefundInfo   bool   `xml:"show_cat18,omitempty"`
+	ShowUPT18Cat     bool   `xml:"show_cat18,omitempty"`
 	ShowTimeLimit    bool   `xml:"show_tml,omitempty"`
 	Regroup          bool   `xml:"regroup,omitempty"`
 	ReturnDate       bool   `xml:"return_date,omitempty"`

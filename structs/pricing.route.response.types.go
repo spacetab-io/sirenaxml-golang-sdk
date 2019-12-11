@@ -65,14 +65,14 @@ type PricingRouteAnswerLocation struct {
 
 type PricingRouteAnswerPrice struct {
 	// PassengerID       int                     `xml:"passenger-id,attr"`
-	// Code              string                  `xml:"code,attr"`
+	// PaxType              string                  `xml:"code,attr"`
 	// Count             int                     `xml:"count,attr"`
 	// Currency          string                  `xml:"currency,attr"`
 	// Ticket            string                  `xml:"ticket,attr"`
 	// FC                string                  `xml:"fc,attr"`
 	// DocID             string                  `xml:"doc_id,attr"`
 	// ACCode            string                  `xml:"accode,attr"`
-	// ValidatingCompany string                  `xml:"validating_company,attr"`
+	// ValidatingAirline string                  `xml:"validating_company,attr"`
 	// FOP               string                  `xml:"fop,attr"`
 	OrigCode string `xml:"orig_code,attr"`
 	// OrigID            int                     `xml:"orig_id,attr"`

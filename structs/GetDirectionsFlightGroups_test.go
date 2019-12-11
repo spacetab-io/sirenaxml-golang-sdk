@@ -1,8 +1,9 @@
 package structs
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"testing"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 var MockPricingAnswerVariant = &PricingAnswerVariant{
@@ -57,13 +58,13 @@ var MockPricingAnswerVariantDirectionOne = PricingAnswerVariantDirection{
 		Taxes:             nil,
 		Vat:               nil,
 		Baggage:           "",
-		ValidatingCompany: "",
-		OrigCode:          "",
-		Brand:             "",
+		ValidatingAirline: "",
+		OriginalPaxType:   "",
+		BrandCode:         "",
 		Total:             0,
 		Currency:          "",
 		PassengerID:       0,
-		Code:              "",
+		PaxType:           "",
 	}},
 }
 
@@ -75,13 +76,13 @@ var MockPricingAnswerVariantDirectionTwo = PricingAnswerVariantDirection{
 		Taxes:             nil,
 		Vat:               nil,
 		Baggage:           "",
-		ValidatingCompany: "",
-		OrigCode:          "",
-		Brand:             "",
+		ValidatingAirline: "",
+		OriginalPaxType:   "",
+		BrandCode:         "",
 		Total:             0,
 		Currency:          "",
 		PassengerID:       0,
-		Code:              "",
+		PaxType:           "",
 	}},
 }
 

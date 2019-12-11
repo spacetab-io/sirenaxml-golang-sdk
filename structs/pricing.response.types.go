@@ -21,9 +21,9 @@ type PricingAnswerPricing struct {
 
 type PricingAnswerFlight struct {
 	ID               string                `xml:"id,attr"`
-	Company          string                `xml:"company"`
-	Num              string                `xml:"num"`
-	OperatingCompany string                `xml:"operating_company"`
+	MarketingAirline string                `xml:"company"`
+	FlightNumber     string                `xml:"num"`
+	OperatingAirline string                `xml:"operating_company"`
 	Flight           string                `xml:"flight"`
 	Origin           PricingAnswerLocation `xml:"origin"`
 	Destination      PricingAnswerLocation `xml:"destination"`
@@ -34,6 +34,7 @@ type PricingAnswerFlight struct {
 	ArrvTime         string                `xml:"arrvtime"`
 	Airplane         string                `xml:"airplane"`
 	FlightTime       string                `xml:"flightTime"`
+	UPT18CatText     string                `xml:"cat_18_text,omitempty"`
 }
 
 // GetVariantFlightInfo func return flight info from variant flight
@@ -72,7 +73,7 @@ func (p *PricingAnswerVariant) GetPaxBaseCost(paxType string) *float64 {
 	var passengerID int
 
 	for _, price := range p.Directions[0].Prices {
-		if price.Code == paxType {
+		if price.PaxType == paxType {
 
 			// Attach ID of first passenger of appropriate type to passengerID
 			passengerID = price.PassengerID
@@ -87,7 +88,7 @@ func (p *PricingAnswerVariant) GetPaxBaseCost(paxType string) *float64 {
 		for _, price := range direction.Prices {
 
 			// Check if it is needed passenger type
-			if price.Code == paxType && price.PassengerID == passengerID {
+			if price.PaxType == paxType && price.PassengerID == passengerID {
 
 				*paxBaseCost += price.Fare.Total
 			}
@@ -127,7 +128,7 @@ func (p *PricingAnswerVariant) GetPaxTotalCost(paxType string) *float64 {
 	var passengerID int
 
 	for _, price := range p.Directions[0].Prices {
-		if price.Code == paxType {
+		if price.PaxType == paxType {
 
 			// Attach ID of first passenger of appropriate type to passengerID
 			passengerID = price.PassengerID
@@ -142,7 +143,7 @@ func (p *PricingAnswerVariant) GetPaxTotalCost(paxType string) *float64 {
 		for _, price := range direction.Prices {
 
 			// Check if it is needed passenger type
-			if price.Code == paxType && price.PassengerID == passengerID {
+			if price.PaxType == paxType && price.PassengerID == passengerID {
 
 				//allocate a new zero-valued paxTotalCost
 
@@ -165,7 +166,7 @@ func (p *PricingAnswerVariant) GetPaxTaxesCost(paxType string) *float64 {
 	var passengerID int
 
 	for _, price := range p.Directions[0].Prices {
-		if price.Code == paxType {
+		if price.PaxType == paxType {
 
 			// Attach ID of first passenger of appropriate type to passengerID
 			passengerID = price.PassengerID
@@ -180,7 +181,7 @@ func (p *PricingAnswerVariant) GetPaxTaxesCost(paxType string) *float64 {
 		for _, price := range direction.Prices {
 
 			// Check if it is needed passenger type
-			if price.Code == paxType && price.PassengerID == passengerID {
+			if price.PaxType == paxType && price.PassengerID == passengerID {
 
 				//allocate a new zero-valued paxTotalCost
 				//paxTaxesCost = new(float64)
@@ -227,7 +228,7 @@ func (p *PricingAnswerVariant) GetPaxTaxesRow(paxType string) []PricingAnswerPri
 	var passengerID int
 
 	for _, price := range p.Directions[0].Prices {
-		if price.Code == paxType {
+		if price.PaxType == paxType {
 
 			// Attach ID of first passenger of appropriate type to passengerID
 			passengerID = price.PassengerID
@@ -242,7 +243,7 @@ func (p *PricingAnswerVariant) GetPaxTaxesRow(paxType string) []PricingAnswerPri
 		for _, price := range direction.Prices {
 
 			// Check if it is needed passenger type
-			if price.Code == paxType && price.PassengerID == passengerID {
+			if price.PaxType == paxType && price.PassengerID == passengerID {
 
 			TAXES_LOOP:
 				for _, tax := range price.Taxes {
@@ -274,7 +275,7 @@ func (p *PricingAnswerVariant) GetPaxVatsRow(paxType string) []*Vat {
 	var passengerID int
 
 	for _, price := range p.Directions[0].Prices {
-		if price.Code == paxType {
+		if price.PaxType == paxType {
 
 			// Attach ID of first passenger of appropriate type to passengerID
 			passengerID = price.PassengerID
@@ -289,7 +290,7 @@ func (p *PricingAnswerVariant) GetPaxVatsRow(paxType string) []*Vat {
 		for _, price := range direction.Prices {
 
 			// Check if it is needed passenger type
-			if price.Code == paxType && price.PassengerID == passengerID {
+			if price.PaxType == paxType && price.PassengerID == passengerID {
 
 				if price.Vat != nil && price.Vat.Vats != nil {
 
@@ -318,7 +319,11 @@ type PricingAnswerVariantTotal struct {
 }
 
 type PricingAnswerVariantFlightGroup struct {
-	Flight []PricingAnswerVariantFlight `xml:"flight"`
+	BookingTimeLimit      string                       `xml:"utc_timelimit,attr,omitempty"`
+	NeedLatinRegistration bool                         `xml:"latin_registration,attr,omitempty"`
+	ETPossible            bool                         `xml:"et_possible,attr,omitempty"`
+	ETBlanks              bool                         `xml:"et_blanks,attr,omitempty"`
+	Flight                []PricingAnswerVariantFlight `xml:"flight"`
 }
 
 func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variant PricingAnswerVariant, paxType string) bool {
@@ -326,7 +331,7 @@ func (p *PricingAnswerVariantFlightGroup) GetBrandChecked(variant PricingAnswerV
 	var flightHaveBrand bool
 
 	for _, flight := range p.Flight {
-		if flight.GetVariantPricing(variant, paxType).Brand != "" {
+		if flight.GetVariantPricing(variant, paxType).BrandCode != "" {
 			flightHaveBrand = true
 		}
 	}
@@ -368,7 +373,7 @@ func (f *PricingAnswerVariantFlight) GetPaxInfoFromFlight(variants []PricingAnsw
 				for _, direction := range variant.Directions {
 					for _, price := range direction.Prices {
 
-						if price.Code == paxType {
+						if price.PaxType == paxType {
 
 							return price
 						}
@@ -389,7 +394,7 @@ func (f *PricingAnswerVariantFlight) GetVariantPricing(variant PricingAnswerVari
 
 			for _, price := range direction.Prices {
 
-				if price.Code == paxType {
+				if price.PaxType == paxType {
 
 					return price
 				}
@@ -426,8 +431,9 @@ type FlightLegDepArr struct {
 }
 
 type PricingAnswerVariantDirection struct {
-	Num    int                   `xml:"num,attr"`
-	Prices []*PricingAnswerPrice `xml:"price"`
+	Num            int                   `xml:"num,attr"`
+	RequestedBrand string                `xml:"requested_brand,attr,omitempty"`
+	Prices         []*PricingAnswerPrice `xml:"price"`
 }
 
 func (p *PricingAnswerVariantDirection) GetDirectionsFlights(variant *PricingAnswerVariant) []PricingAnswerVariantFlight {
@@ -569,18 +575,21 @@ type PricingAnswerLocation struct {
 }
 
 type PricingAnswerPrice struct {
+	Baggage           string                  `xml:"baggage,attr"`
+	ValidatingAirline string                  `xml:"validating_company,attr"`
+	OriginalPaxType   string                  `xml:"orig_code,attr"`
+	BrandCode         string                  `xml:"brand,attr"`
+	Currency          string                  `xml:"currency,attr"`
+	PassengerID       int                     `xml:"passenger-id,attr"`
+	PaxType           string                  `xml:"code,attr"`
+	IsRoundTrip       bool                    `xml:"rt,attr,omitempty"`
+	FormPay           FormPay                 `xml:"fop,attr,omitempty"`
 	Upt               PriceUpt                `xml:"upt"`
 	Fare              *PricingAnswerPriceFare `xml:"fare"`
 	Taxes             []PricingAnswerPriceTax `xml:"tax"`
 	Vat               *Vat                    `xml:"vat"`
-	Baggage           string                  `xml:"baggage,attr"`
-	ValidatingCompany string                  `xml:"validating_company,attr"`
-	OrigCode          string                  `xml:"orig_code,attr"`
-	Brand             string                  `xml:"brand,attr"`
 	Total             float64                 `xml:"total"`
-	Currency          string                  `xml:"currency,attr"`
-	PassengerID       int                     `xml:"passenger-id,attr"`
-	Code              string                  `xml:"code,attr"`
+	UPT18CatText      string                  `xml:"cat18_text,omitempty"`
 	// Count             int                     `xml:"count,attr"`
 	// Ticket            string                  `xml:"ticket,attr"`
 	// FC                string                  `xml:"fc,attr"`
