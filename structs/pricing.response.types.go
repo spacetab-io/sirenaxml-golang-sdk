@@ -578,10 +578,11 @@ type PricingAnswerLocation struct {
 }
 
 type PricingAnswerPrice struct {
+	Brand             string                  `xml:"brand,attr"`
 	Baggage           string                  `xml:"baggage,attr"`
 	ValidatingAirline string                  `xml:"validating_company,attr"`
 	OriginalPaxType   string                  `xml:"orig_code,attr"`
-	BrandCode         string                  `xml:"brand,attr"`
+	//BrandCode         string                  `xml:"brand,attr"`
 	Currency          string                  `xml:"currency,attr"`
 	PassengerID       int                     `xml:"passenger-id,attr"`
 	PaxType           string                  `xml:"code,attr"`

@@ -9,9 +9,19 @@ type PricingRouteAnswer struct {
 }
 
 type PricingRouteAnswerPricingRoute struct {
-	Variants []PricingRouteAnswerVariant `xml:"variant"`
-	Flights  []*PricingRouteAnswerFlight `xml:"flight"`
-	Error    *Error                      `xml:"error,omitempty"`
+	BrandInfo []BrandInfo                 `xml:"brand_info"`
+	Variants  []PricingRouteAnswerVariant `xml:"variant"`
+	Flights   []*PricingRouteAnswerFlight `xml:"flight"`
+	Error     *Error                      `xml:"error,omitempty"`
+}
+
+type BrandInfo struct {
+	ID        string    `xml:"id,attr"`
+	BrandCode BrandCode `xml:"brand_code"`
+}
+
+type BrandCode struct {
+	Value string `xml:",chardata"`
 }
 
 type Price struct {
