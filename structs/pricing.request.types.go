@@ -74,6 +74,7 @@ type PricingRequestParams struct {
 	Timeout           int                    `xml:"timeout,omitempty"`
 	EtIfPossible      bool                   `xml:"et_if_possible,omitempty"`
 	Formpay           *PricingRequestFormpay `xml:"formpay,omitempty"`
+	ShowBaggageInfo   bool                   `xml:"show_tmb,omitempty"`
 	// ShowVariantTotal  bool                   `xml:"show_varianttotal,omitempty"`
 }
 
@@ -89,6 +90,8 @@ type PricingAnswerParams struct {
 	ShowFareExpDate  bool   `xml:"show_fareexpdate,omitempty"`
 	ShowEt           bool   `xml:"show_et,omitempty"`
 	ShowNBlanks      bool   `xml:"show_n_blanks,omitempty"`
+	ShowRefundInfo   bool   `xml:"show_cat18,omitempty"`
+	ShowTimeLimit    bool   `xml:"show_tml,omitempty"`
 	Regroup          bool   `xml:"regroup,omitempty"`
 	ReturnDate       bool   `xml:"return_date,omitempty"`
 	MarkCityPort     bool   `xml:"mark_cityport,omitempty"`
@@ -98,10 +101,17 @@ type PricingAnswerParams struct {
 
 // PricingRequestFormpay is a <formpay> element in <request_params>
 type PricingRequestFormpay struct {
-	Type  string `xml:"type,attr"`
-	Num   string `xml:"num,attr"`
-	Value string `xml:",chardata"`
+	Type  string  `xml:"type,attr"`
+	Num   string  `xml:"num,attr"`
+	Value FormPay `xml:",chardata"`
 }
+
+type FormPay string
+
+const (
+	FormPayCash FormPay = "CA"
+	FormPayCard FormPay = "CC"
+)
 
 // PricingRequestIgnoredAirline is an <acomp> element in <pricing> request
 type PricingRequestIgnoredAirline struct {
