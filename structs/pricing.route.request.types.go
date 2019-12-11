@@ -68,6 +68,8 @@ type PricingRouteRequestParams struct {
 
 // PricingRouteAnswerParams is a <answer_params> section in <pricing_route> request
 type PricingRouteAnswerParams struct {
+	Lang             string `xml:"lang,omitempty"`
+	Curr             string `xml:"curr,omitempty"`
 	ShowAvailable    bool   `xml:"show_available,omitempty"`
 	ShowIOMatching   bool   `xml:"show_io_matching,omitempty"`
 	ShowFlightTime   bool   `xml:"show_flighttime,omitempty"`
@@ -81,8 +83,7 @@ type PricingRouteAnswerParams struct {
 	Regroup          bool   `xml:"regroup,omitempty"`
 	ReturnDate       bool   `xml:"return_date,omitempty"`
 	MarkCityPort     bool   `xml:"mark_cityport,omitempty"`
-	Lang             string `xml:"lang,omitempty"`
-	Curr             string `xml:"curr,omitempty"`
+	ShowBrandInfo    bool   `xml:"show_brand_info"`
 }
 
 // PricingRouteRequestFormpay is a <formpay> element in <request_params>
