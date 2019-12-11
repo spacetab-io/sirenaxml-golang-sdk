@@ -403,6 +403,7 @@ func (f *PricingAnswerVariantFlight) GetVariantPricing(variant PricingAnswerVari
 type PricingAnswerVariantFlight struct {
 	ID         string `xml:"id,attr"`
 	Num        int    `xml:"num,attr"`
+	Class      string `xml:"class,attr"`
 	SubClass   string `xml:"subclass,attr"`
 	BaseClass  string `xml:"baseclass,attr"`
 	Available  int    `xml:"available,attr"`
@@ -442,6 +443,50 @@ func (p *PricingAnswerVariantDirection) GetDirectionsFlights(variant *PricingAns
 	}
 
 	return nil
+}
+
+func (p *PricingAnswerVariant) GetDirectionsFlights(directionNum int) [][]PricingAnswerVariantFlight {
+	// Declare slice for flightGroups of one direction
+	var directionFlightGroups [][]PricingAnswerVariantFlight
+
+FLIGHTGROUPS_LABEL:
+	for _, flightGroups := range p.FlightGroups {
+
+		var directionFlights []PricingAnswerVariantFlight
+
+		for _, flg := range directionFlightGroups {
+			for _, fl := range flg {
+				for _, flight := range flightGroups.Flight {
+					if fl.ID == flight.ID {
+
+						continue FLIGHTGROUPS_LABEL
+					}
+				}
+			}
+		}
+
+		for _, flight := range flightGroups.Flight {
+
+			// Declare slice for flights of one direction
+			//var directionFlights []PricingAnswerVariantFlight
+			if directionNum == flight.Num {
+
+				directionFlights = append(directionFlights, flight)
+			}
+
+			// check if directionFlights have any items
+			if len(directionFlights) == 0 {
+
+				continue
+			}
+
+		}
+
+		directionFlightGroups = append(directionFlightGroups, directionFlights)
+
+	}
+
+	return directionFlightGroups
 }
 
 func (p *PricingAnswerVariantDirection) GetDirectionsFlightGroups(variant *PricingAnswerVariant) [][]PricingAnswerVariantFlight {
