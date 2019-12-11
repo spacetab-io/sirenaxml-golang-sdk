@@ -92,6 +92,7 @@ type PricingAnswerParams struct {
 	ShowNBlanks      bool   `xml:"show_n_blanks,omitempty"`
 	ShowUPT18Cat     bool   `xml:"show_cat18,omitempty"`
 	ShowTimeLimit    bool   `xml:"show_tml,omitempty"`
+	ShowBrandInfo    bool   `xml:"show_brand_info,omitempty"`
 	Regroup          bool   `xml:"regroup,omitempty"`
 	ReturnDate       bool   `xml:"return_date,omitempty"`
 	MarkCityPort     bool   `xml:"mark_cityport,omitempty"`
