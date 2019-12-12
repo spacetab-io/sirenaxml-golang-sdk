@@ -408,6 +408,21 @@ func (f *PricingAnswerVariantFlight) GetVariantPricing(variant PricingAnswerVari
 	return nil
 }
 
+func (f *PricingAnswerVariantFlight) GetDirectionBrand(variant PricingAnswerVariant, paxType string) string {
+
+	var brand string
+
+	for _, direction := range variant.Directions {
+
+		if direction.Num == f.Num {
+
+			brand = direction.RequestedBrand
+		}
+	}
+
+	return brand
+}
+
 type PricingAnswerVariantFlight struct {
 	ID         string `xml:"id,attr"`
 	Num        int    `xml:"num,attr"`
