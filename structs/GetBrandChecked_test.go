@@ -27,7 +27,7 @@ var casesGetBrandChecked = []struct {
 		"passed variant with brand, and bad pax type",
 		"CHD",
 		MockPricingAnswerVariantWithBrand,
-		true,
+		false,
 	},
 }
 
