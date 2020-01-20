@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) GetItinReceipts(logAttributes map[string]string, pnr string, surname string) (*sirena.GetItinReceiptsDataResponse, error) {
+func (r Repository) GetItinReceipts(logAttributes map[string]string, pnr string, surname string) (*sirena.GetItinReceiptsDataResponse, error) {
 
 	sirenaGetItinReceiptsDataRequest := sirena.GetItinReceiptsDataRequest{
 		Query: sirena.GetItinReceiptsDataRequestQuery{
@@ -23,7 +23,7 @@ func (s Repository) GetItinReceipts(logAttributes map[string]string, pnr string,
 		return nil, err
 	}
 
-	responseBytes, err := s.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

@@ -2,10 +2,11 @@ package repository
 
 import (
 	"encoding/xml"
+
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) ViewFlownStatus(surname, pnr string, logAttributes map[string]string) (*sirena.ViewFlownStatusResponse, error) {
+func (r *Repository) ViewFlownStatus(surname, pnr string, logAttributes map[string]string) (*sirena.ViewFlownStatusResponse, error) {
 
 	ViewFlownStatusRequest := sirena.ViewFlownStatusRequest{
 		Query: sirena.ViewFlownStatusQuery{
@@ -22,7 +23,7 @@ func (s *Repository) ViewFlownStatus(surname, pnr string, logAttributes map[stri
 	}
 
 	//@TODO добавить flow_step viewFlownReq
-	viewFlownStatusResponseXML, err := s.Request(viewFlownStatusRequestBytes, logAttributes)
+	viewFlownStatusResponseXML, err := r.Request(viewFlownStatusRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

@@ -3,15 +3,12 @@ package client
 import (
 	"bufio"
 	"context"
+	"github.com/pkg/errors"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"io"
 	"net"
 	"sync"
 	"time"
-
-	"github.com/pkg/errors"
-
-	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 )
 
 // Packet represents application level data.
@@ -22,14 +19,27 @@ type Packet struct {
 	messageSignature []byte
 }
 
+type Config struct {
+	ClientID                 uint16
+	MaxConnections           uint32
+	Ip                       string
+	Environment              string
+	ClientPublicKey          string
+	ClientPrivateKey         string
+	ClientPrivateKeyPassword string
+	ServerPublicKey          string
+	ZippedMessaging          bool
+	MaxConnectTries          int
+}
+
 var (
 	respPool *RespPool
 	msgPool  *MsgPool
 )
 
-// Channel wraps user connection.
+//Channel wraps user connection.
 type Channel struct {
-	cfg    *sirenaXML.Config
+	cfg    Config
 	send   chan *Packet
 	socket *socket
 	Logger logs.LogWriter
@@ -50,29 +60,35 @@ type socket struct {
 	initTime time.Time // time of last connection
 }
 
-func NewChannel(sc *sirenaXML.Config, l logs.LogWriter) (*Channel, error) {
-	if err := sc.PrepareKeys(); err != nil {
-		return nil, err
-	}
-	addr, err := sc.GetAddr()
-	if err != nil {
-		return nil, err
-	}
+func NewChannel(l logs.LogWriter, opts ...Option) (*Channel, error) {
+
+	//if err := sc.PrepareKeys(); err != nil {
+	//	return nil, err
+	//}
+	//addr, err := sc.GetAddr()
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	respPool = NewRespPool()
-	msgPool, err = NewMsgPool(respPool, sc.MaxConnections)
-	if err != nil {
-		return nil, err
-	}
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	c := &Channel{
-		socket: &socket{addr: addr},
-		send:   make(chan *Packet, sc.MaxConnections),
-		cfg:    sc,
+		socket: &socket{},
+		send:   make(chan *Packet, 0),
 	}
+
 	c.SetLogger(l)
 
-	err = tryToConnect(c)
+	for _, opt := range opts {
+		opt(c)
+	}
+
+	err := tryToConnect(c)
+
+	msgPool, err = NewMsgPool(respPool, c.cfg.MaxConnections)
 
 	return c, err
 }

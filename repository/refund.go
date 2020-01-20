@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) Refund(pnr, surname string, logAttributes map[string]string, pretend bool) (*sirena.RefundResponse, error) {
+func (r *Repository) Refund(pnr, surname string, logAttributes map[string]string, pretend bool) (*sirena.RefundResponse, error) {
 	sirenaRefundRequest := sirena.RefundRequest{
 		Query: sirena.RefundRequestQuery{
 			Refund: sirena.RefundRequestBody{
@@ -29,7 +29,7 @@ func (s *Repository) Refund(pnr, surname string, logAttributes map[string]string
 		return nil, err
 	}
 
-	sirenaRefundResponseXML, err := s.Request(sirenaRefundRequestBytes, logAttributes)
+	sirenaRefundResponseXML, err := r.Request(sirenaRefundRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

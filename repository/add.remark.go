@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) AddRemark(logAttributes map[string]string, pnr, surname, remarkType, remark string) (*sirena.AddRemarkResponse, error) {
+func (r Repository) AddRemark(logAttributes map[string]string, pnr, surname, remarkType, remark string) (*sirena.AddRemarkResponse, error) {
 
 	sirenaAddRemarkRequest := sirena.AddRemarkRequest{
 		Query: sirena.AddRemarkRequestQuery{
@@ -24,7 +24,7 @@ func (s Repository) AddRemark(logAttributes map[string]string, pnr, surname, rem
 		return nil, err
 	}
 
-	sirenaAddRemarkResponseXML, err := s.Request(addRemarkRequestBytes, logAttributes)
+	sirenaAddRemarkResponseXML, err := r.Request(addRemarkRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) Cancel(pnr string, surname string, logAttributes map[string]string) (*sirena.OrderCancelResponse, error) {
+func (r *Repository) Cancel(pnr string, surname string, logAttributes map[string]string) (*sirena.OrderCancelResponse, error) {
 	Query := sirena.CancelRequestQuery{
 		Cancel: sirena.CancelRequestBody{
 			Regnum:  pnr,
@@ -25,7 +25,7 @@ func (s *Repository) Cancel(pnr string, surname string, logAttributes map[string
 		return nil, err
 	}
 
-	cancelResponseXML, err := s.Request(requestBytes, logAttributes)
+	cancelResponseXML, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

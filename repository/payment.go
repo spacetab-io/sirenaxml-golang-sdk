@@ -8,7 +8,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) Payment(
+func (r Repository) Payment(
 	logAttributes map[string]string,
 	surname string,
 	pnr string,
@@ -55,7 +55,7 @@ func (s Repository) Payment(
 		return nil, err
 	}
 
-	responseBytes, err := s.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

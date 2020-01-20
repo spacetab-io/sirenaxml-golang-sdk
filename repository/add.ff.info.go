@@ -2,6 +2,7 @@ package repository
 
 import (
 	"encoding/xml"
+
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 	// error2 "gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/errorcode"
 	// "gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/http/structs"
@@ -10,7 +11,7 @@ import (
 	// "gitlab.teamc.io/tm-consulting/tmc24/avia/layer3/sirena-agent-go/publisher"
 )
 
-func (s *Repository) AddFFInfo(pnr, surname string, sirenaRequestPassengers []sirena.AddFFInfoRequestPassenger, logAttributes map[string]string) (*sirena.AddFFInfoResponse, error) {
+func (r *Repository) AddFFInfo(pnr, surname string, sirenaRequestPassengers []sirena.AddFFInfoRequestPassenger, logAttributes map[string]string) (*sirena.AddFFInfoResponse, error) {
 
 	sirenaAddFFInfoRequest := sirena.AddFFInfoRequest{
 		Query: sirena.AddFFInfoRequestQuery{
@@ -28,7 +29,7 @@ func (s *Repository) AddFFInfo(pnr, surname string, sirenaRequestPassengers []si
 		return nil, err
 	}
 
-	sirenaAddFFInfoResponseXML, err := s.Request(AddFFInfoRequest, logAttributes)
+	sirenaAddFFInfoResponseXML, err := r.Request(AddFFInfoRequest, logAttributes)
 	if err != nil {
 		return nil, err
 	}

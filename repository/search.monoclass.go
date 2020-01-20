@@ -2,10 +2,11 @@ package repository
 
 import (
 	"encoding/xml"
+
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) SearchMonoclass(logAttributes map[string]string, pricingSegments []sirena.PricingRequestSegment, pricingPassengers []sirena.PricingRequestPassenger, maxResults, timeout int) (*sirena.PricingResponse, error) {
+func (r Repository) SearchMonoclass(logAttributes map[string]string, pricingSegments []sirena.PricingRequestSegment, pricingPassengers []sirena.PricingRequestPassenger, maxResults, timeout int) (*sirena.PricingResponse, error) {
 
 	pricingRequest := sirena.PricingRequest{
 		Query: sirena.PricingRequestQuery{
@@ -56,15 +57,14 @@ func (s Repository) SearchMonoclass(logAttributes map[string]string, pricingSegm
 		return nil, err
 	}
 
-	//log.Printf("Search request: \n %s", string(requestBytes))
+	//log.Printf("Search request: \n %r", string(requestBytes))
 
-	pricingResponseXML, err := s.Request(requestBytes, logAttributes)
+	pricingResponseXML, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}
 
-	//log.Printf("Search response: \n %s", string(pricingResponseXML))
-
+	//log.Printf("Search response: \n %r", string(pricingResponseXML))
 
 	var pricingResponse sirena.PricingResponse
 	if err := xml.Unmarshal(pricingResponseXML, &pricingResponse); err != nil {

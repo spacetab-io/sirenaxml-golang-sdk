@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) Book(
+func (r *Repository) Book(
 	logAttributes map[string]string,
 	bookingSegments []sirena.BookingRequestSegment,
 	bookingPassengers []sirena.BookingRequestPassenger,
@@ -51,7 +51,7 @@ func (s *Repository) Book(
 		return nil, err
 	}
 
-	responseBytes, err := s.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

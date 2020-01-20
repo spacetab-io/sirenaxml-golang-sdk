@@ -7,7 +7,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) Order(logAttributes map[string]string, pnr string, surname string) (*sirena.OrderResponse, error) {
+func (r Repository) Order(logAttributes map[string]string, pnr string, surname string) (*sirena.OrderResponse, error) {
 
 	sirenaOrderRequest := sirena.OrderRequest{
 		Query: sirena.OrderRequestQuery{
@@ -27,7 +27,7 @@ func (s Repository) Order(logAttributes map[string]string, pnr string, surname s
 		return nil, err
 	}
 
-	sirenaOrderResponseXML, err := s.Request(sirenaOrderRequestBytes, logAttributes)
+	sirenaOrderResponseXML, err := r.Request(sirenaOrderRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

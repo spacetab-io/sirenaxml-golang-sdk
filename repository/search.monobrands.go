@@ -8,14 +8,14 @@ import (
 )
 
 // @TODO возвращать структуру, а не байты. Потом делать анмаршал будет коряво
-func (s Repository) SearchMonobrands(logAttributes map[string]string, request sirena.PricingMonobrandRequest) ([]byte, error) {
+func (r Repository) SearchMonobrands(logAttributes map[string]string, request sirena.PricingMonobrandRequest) ([]byte, error) {
 
 	requestBytes, err := xml.MarshalIndent(request, "  ", "    ")
 	if err != nil {
 		return nil, errors.Wrap(err, "pricingMonobrandRequest marshal error")
 	}
 
-	monobrandsResp, err := s.Request(requestBytes, logAttributes)
+	monobrandsResp, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

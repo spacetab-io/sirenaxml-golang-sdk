@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) CheckAvailability(departure, arrival string, subclasses []string, logAttributes map[string]string,) (*sirena.AvailabilityResponse, error) {
+func (r *Repository) CheckAvailability(departure, arrival string, subclasses []string, logAttributes map[string]string) (*sirena.AvailabilityResponse, error) {
 
 	requestParams := sirena.RequestParams{
 		UseDag: false,
@@ -25,7 +25,7 @@ func (s *Repository) CheckAvailability(departure, arrival string, subclasses []s
 		return nil, err
 	}
 
-	responseBytes, err := s.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

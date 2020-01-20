@@ -7,7 +7,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) RefundConfirm(pnr string, logAttributes map[string]string, totalCost float64, surname string) (*sirena.RefundResponse, error) {
+func (r *Repository) RefundConfirm(pnr string, logAttributes map[string]string, totalCost float64, surname string) (*sirena.RefundResponse, error) {
 	sirenaRefundRequest := sirena.RefundRequest{
 		Query: sirena.RefundRequestQuery{
 			Refund: sirena.RefundRequestBody{
@@ -28,7 +28,7 @@ func (s *Repository) RefundConfirm(pnr string, logAttributes map[string]string, 
 		return nil, err
 	}
 
-	sirenaRefundResponseXML, err := s.Request(sirenaRefundRequestBytes, logAttributes)
+	sirenaRefundResponseXML, err := r.Request(sirenaRefundRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (s *Repository) RefundConfirm(pnr string, logAttributes map[string]string, 
 	// Decode Sirena response
 	var sirenaRefundResponse sirena.RefundResponse
 	err = xml.Unmarshal(sirenaRefundResponseXML, &sirenaRefundResponse)
-	if 	err != nil {
+	if err != nil {
 		return nil, err
 	}
 

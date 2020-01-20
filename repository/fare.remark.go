@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) GetFareRemark(logAttributes map[string]string, company, uptcode string, upt sirena.Upt) (*sirena.FareRemarkResponse, error) {
+func (r Repository) GetFareRemark(logAttributes map[string]string, company, uptcode string, upt sirena.Upt) (*sirena.FareRemarkResponse, error) {
 	params := sirena.FareRemarkRequestParams{
 		Cat: 0,
 		Upt: upt,
@@ -34,7 +34,7 @@ func (s Repository) GetFareRemark(logAttributes map[string]string, company, uptc
 
 	//@TODO добавить flow step fareremark
 
-	sirenaFareRemarkResponseXML, err := s.Request(requestBytes, logAttributes)
+	sirenaFareRemarkResponseXML, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

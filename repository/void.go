@@ -7,7 +7,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) Void(logAttributes map[string]string, pnr string, surname string) (*sirena.VoidTicketsResponse, error) {
+func (r Repository) Void(logAttributes map[string]string, pnr string, surname string) (*sirena.VoidTicketsResponse, error) {
 
 	sirenaVoidTicketsRequest := sirena.VoidTicketsRequest{
 		Query: sirena.VoidTicketsRequestQuery{
@@ -26,7 +26,7 @@ func (s Repository) Void(logAttributes map[string]string, pnr string, surname st
 		return nil, errors.WithStack(err)
 	}
 
-	responseBytes, err := s.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) ModifyPNRAdd(pnr, surname string, logAttributes map[string]string, version int, contacts []sirena.ModifyPNRContact, sirenaPassDocuments []sirena.ModifyPNRPassDocument) (*sirena.ModifyPNRResponse, error) {
+func (r *Repository) ModifyPNRAdd(pnr, surname string, logAttributes map[string]string, version int, contacts []sirena.ModifyPNRContact, sirenaPassDocuments []sirena.ModifyPNRPassDocument) (*sirena.ModifyPNRResponse, error) {
 
 	modifyPNRreq := sirena.ModifyPNRRequest{
 		Query: sirena.ModifyPNRQuery{
@@ -27,7 +27,7 @@ func (s *Repository) ModifyPNRAdd(pnr, surname string, logAttributes map[string]
 		return nil, err
 	}
 
-	responseBytes, err := s.Request(modifyPNRrequest, logAttributes)
+	responseBytes, err := r.Request(modifyPNRrequest, logAttributes)
 	if err != nil {
 		return nil, err
 	}

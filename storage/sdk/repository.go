@@ -13,6 +13,7 @@ type storage struct {
 }
 
 func NewClient(sc *sirenaXML.Config, l logs.LogWriter) (*storage, error) {
+
 	c, err := client.NewChannel(sc, l)
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")

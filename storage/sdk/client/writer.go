@@ -2,7 +2,6 @@ package client
 
 import (
 	"bufio"
-
 	"github.com/pkg/errors"
 )
 

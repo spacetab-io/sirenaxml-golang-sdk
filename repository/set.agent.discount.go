@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) SetAgentDiscount(logAttributes map[string]string, version int, pnr string, units []*sirena.SetAgentDiscountUnit) (*sirena.SetAgentDiscountResponse, error) {
+func (r Repository) SetAgentDiscount(logAttributes map[string]string, version int, pnr string, units []*sirena.SetAgentDiscountUnit) (*sirena.SetAgentDiscountResponse, error) {
 
 	sirenaSetAgentDiscountRequest := &sirena.SetAgentDiscountRequest{
 		Query: sirena.SetAgentDiscountQuery{
@@ -31,7 +31,7 @@ func (s Repository) SetAgentDiscount(logAttributes map[string]string, version in
 		return nil, err
 	}
 
-	setAgentDiscountResponseXML, err := s.Request(setAgentDiscountRequestBytes, logAttributes)
+	setAgentDiscountResponseXML, err := r.Request(setAgentDiscountRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 

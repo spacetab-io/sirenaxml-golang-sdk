@@ -6,7 +6,7 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s *Repository) Fares(departure, arrival, passenger, company string, subclass []string, logAttributes map[string]string) (*sirena.FaresResponse, error) {
+func (r *Repository) Fares(departure, arrival, passenger, company string, subclass []string, logAttributes map[string]string) (*sirena.FaresResponse, error) {
 	query := sirena.FareRequestQuery{
 		Fares: sirena.FaresQuery{
 			Departure: departure,
@@ -27,7 +27,7 @@ func (s *Repository) Fares(departure, arrival, passenger, company string, subcla
 		return nil, err
 	}
 
-	faresResponseXML, err := s.Request(requestBytes, logAttributes)
+	faresResponseXML, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		// logs.Log.Error(err)
 		// respond.With(w, r, http.StatusBadRequest, error.Error(err))

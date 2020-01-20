@@ -6,14 +6,14 @@ import (
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
-func (s Repository) FareRemark(logAttributes map[string]string, fareRemarkRequest *sirena.FareRemarkRequest) (*sirena.FareRemarkResponse, error) {
+func (r Repository) FareRemark(logAttributes map[string]string, fareRemarkRequest *sirena.FareRemarkRequest) (*sirena.FareRemarkResponse, error) {
 
 	requestBytes, err := xml.MarshalIndent(&fareRemarkRequest, "  ", "    ")
 	if err != nil {
 		return nil, err
 	}
 
-	sirenaFareRemarkResponseXML, err := s.Request(requestBytes, logAttributes)
+	sirenaFareRemarkResponseXML, err := r.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}
