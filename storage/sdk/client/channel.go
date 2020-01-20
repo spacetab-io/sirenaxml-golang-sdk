@@ -60,7 +60,7 @@ type socket struct {
 	initTime time.Time // time of last connection
 }
 
-func NewChannel(l logs.LogWriter, opts ...Option) (*Channel, error) {
+func NewChannel(l logs.LogWriter, opts []Option) (*Channel, error) {
 
 	//if err := sc.PrepareKeys(); err != nil {
 	//	return nil, err

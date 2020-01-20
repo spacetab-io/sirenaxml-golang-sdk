@@ -3,7 +3,6 @@ package sdk
 import (
 	"github.com/pkg/errors"
 
-	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
 )
@@ -12,9 +11,9 @@ type storage struct {
 	c *client.Channel
 }
 
-func NewClient(sc *sirenaXML.Config, l logs.LogWriter) (*storage, error) {
+func NewClient(l logs.LogWriter, opts ...client.Option) (*storage, error) {
 
-	c, err := client.NewChannel(sc, l)
+	c, err := client.NewChannel(l, opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")
 	}
