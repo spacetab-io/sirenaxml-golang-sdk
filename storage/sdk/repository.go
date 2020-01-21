@@ -11,9 +11,36 @@ type storage struct {
 	c *client.Channel
 }
 
-func NewClient(l logs.LogWriter, opts ...client.Option) (*storage, error) {
+func NewClient(
+	l logs.LogWriter,
+	clientPrivateKey,
+	clientPrivateKeyPassword,
+	clientPublicKey,
+	ip,
+	environment,
+	serverPublicKey,
+	addr string,
+	buffer int,
+	zippedMessaging bool,
+	maxConnections uint32,
+	clientID uint16,
+) (*storage, error) {
 
-	c, err := client.NewChannel(l, opts)
+	c, err := client.NewChannel(
+		l,
+		client.SetClientID(clientID),
+		client.SetClientPrivateKey(clientPrivateKey),
+		client.SetClientPublicKey(clientPublicKey),
+		client.SetClientPrivateKeyPassword(clientPrivateKeyPassword),
+		client.SetEnvironment(environment),
+		client.SetIp(ip),
+		client.SetMaxConnections(maxConnections),
+		client.SetSendChannel(buffer),
+		client.SetSocket(addr),
+		client.SetServerPublicKey(serverPublicKey),
+		client.SetZippedMessaging(zippedMessaging),
+	)
+
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")
 	}

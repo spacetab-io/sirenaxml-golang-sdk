@@ -11,7 +11,22 @@ import (
 
 func TestService_KeyInfo(t *testing.T) {
 	logger := logs.NewNullLog()
-	sdkClient, err := sdk.NewClient(&sc, logger)
+
+	sdkClient, err := sdk.NewClient(
+		logger,
+		conf.ClientPrivateKey,
+		conf.ClientPrivateKeyPassword,
+		conf.ClientPublicKey,
+		conf.Ip,
+		conf.Environment,
+		conf.ServerPublicKey,
+		conf.Address,
+		conf.Buffer,
+		conf.ZippedMessaging,
+		conf.MaxConnections,
+		conf.ClientID,
+	)
+
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}

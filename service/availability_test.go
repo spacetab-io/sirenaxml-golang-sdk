@@ -11,14 +11,33 @@ import (
 )
 
 func TestService_Availability(t *testing.T) {
+	tearUp()
+
 	t.Run("success", func(t *testing.T) {
 		logger := logs.NewNullLog()
-		sdkClient, err := sdk.NewClient(&sc, logger)
+
+		sdkClient, err := sdk.NewClient(
+			logger,
+			conf.ClientPrivateKey,
+			conf.ClientPrivateKeyPassword,
+			conf.ClientPublicKey,
+			conf.Ip,
+			conf.Environment,
+			conf.ServerPublicKey,
+			conf.Address,
+			conf.Buffer,
+			conf.ZippedMessaging,
+			conf.MaxConnections,
+			conf.ClientID,
+		)
+
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}
 
 		service := NewSKD(sdkClient)
+
+
 		checkKeyData(t, sdkClient)
 		availabilityRequest := &structs.AvailabilityRequest{
 			Query: structs.AvailabilityRequestQuery{

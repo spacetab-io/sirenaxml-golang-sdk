@@ -20,16 +20,18 @@ type Packet struct {
 }
 
 type Config struct {
-	ClientID                 uint16
-	MaxConnections           uint32
 	Ip                       string
 	Environment              string
 	ClientPublicKey          string
 	ClientPrivateKey         string
 	ClientPrivateKeyPassword string
 	ServerPublicKey          string
+	Address                  string
+	ClientID                 uint16
+	MaxConnections           uint32
 	ZippedMessaging          bool
 	MaxConnectTries          int
+	Buffer                   int
 }
 
 var (
@@ -60,13 +62,28 @@ type socket struct {
 	initTime time.Time // time of last connection
 }
 
-func NewChannel(l logs.LogWriter, opts []Option) (*Channel, error) {
+const (
+	EnvLearning   = "GRU"
+	EnvTesting    = "GRT"
+	EnvProduction = "GRS"
+)
+
+var (
+	portsMap = map[string]string{
+		EnvLearning:   "34323",
+		EnvTesting:    "34322",
+		EnvProduction: "34321",
+	}
+)
+
+// GetAddr return sirena address to connect client to
+func (config *Config) GetAddr() (string, error) {
+	return config.Ip + ":" + portsMap[config.Environment], nil
+}
+
+func NewChannel(l logs.LogWriter, opts ...Option) (*Channel, error) {
 
 	//if err := sc.PrepareKeys(); err != nil {
-	//	return nil, err
-	//}
-	//addr, err := sc.GetAddr()
-	//if err != nil {
 	//	return nil, err
 	//}
 
@@ -76,7 +93,6 @@ func NewChannel(l logs.LogWriter, opts []Option) (*Channel, error) {
 	//}
 
 	c := &Channel{
-		socket: &socket{},
 		send:   make(chan *Packet, 0),
 	}
 
@@ -86,7 +102,14 @@ func NewChannel(l logs.LogWriter, opts []Option) (*Channel, error) {
 		opt(c)
 	}
 
-	err := tryToConnect(c)
+	addr, err := c.cfg.GetAddr()
+	if err != nil {
+		return nil, err
+	}
+
+	c.socket = &socket{addr: addr}
+
+	err = tryToConnect(c)
 
 	msgPool, err = NewMsgPool(respPool, c.cfg.MaxConnections)
 

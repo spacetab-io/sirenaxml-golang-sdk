@@ -9,7 +9,6 @@ import (
 
 	"github.com/pkg/errors"
 
-	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/crypt"
 )
 
@@ -58,14 +57,14 @@ func (c *Channel) newSignRequestPacket(key []byte) (*Packet, error) {
 	initCfg := c.cfg
 	initCfg.ZippedMessaging = false
 
-	return NewPacket(initCfg, encryptedKey, c.socket.KeyData.ID)
+	return NewPacket(c, encryptedKey, c.socket.KeyData.ID)
 }
 
-func NewPacket(cfg *sirenaXML.Config, key []byte, keyID uint32) (*Packet, error) {
+func NewPacket(c *Channel, key []byte, keyID uint32) (*Packet, error) {
 	var err error
 	p := &Packet{}
-	p.makeHeader(cfg, key, keyID)
-	p.messageSignature, err = crypt.GeneratePrivateKeySignature(key, []byte(cfg.ClientPrivateKey), cfg.ClientPrivateKeyPassword)
+	p.makeHeader(c, key, keyID)
+	p.messageSignature, err = crypt.GeneratePrivateKeySignature(key, []byte(c.cfg.ClientPrivateKey), c.cfg.ClientPrivateKeyPassword)
 	if err != nil {
 		return nil, err
 	}
@@ -97,17 +96,17 @@ func (c *Channel) NewRequest(msg []byte) (*Packet, error) {
 	}
 
 	p := &Packet{}
-	p.makeHeader(c.cfg, msg, c.socket.KeyData.ID)
+	p.makeHeader(c, msg, c.socket.KeyData.ID)
 	p.message = msg
 	return p, err
 }
 
-func (p *Packet) makeHeader(cfg *sirenaXML.Config, key []byte, keyID uint32) {
+func (p *Packet) makeHeader(c *Channel, key []byte, keyID uint32) {
 	msgID := msgPool.GetMsgID()
 	sign := false
 	p.header = &Header{
 		MessageID:     msgID,
-		ClientID:      cfg.ClientID,
+		ClientID:      c.cfg.ClientID,
 		MessageLength: uint32(len(key)),
 		CreatedAt:     uint32(time.Now().Unix()),
 	}
@@ -118,7 +117,7 @@ func (p *Packet) makeHeader(cfg *sirenaXML.Config, key []byte, keyID uint32) {
 		p.header.KeyID = keyID
 	}
 
-	p.header.setFlags(cfg, sign)
+	p.header.setFlags(c, sign)
 }
 
 func (p *Packet) makeSubHeader(data []byte) {

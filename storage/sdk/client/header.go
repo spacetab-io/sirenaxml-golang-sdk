@@ -5,8 +5,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-
-	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
 )
 
 type Header struct {
@@ -74,11 +72,11 @@ func (h *Header) ToBytes() []byte {
 	return headerBytes
 }
 
-func (h *Header) setFlags(cfg *sirenaXML.Config, sign bool) {
+func (h *Header) setFlags(c *Channel, sign bool) {
 	h.Flags = &HeaderFlags{}
 
 	// it will be easier to manage zipped status of request and response in one config attribute
-	if cfg.ZippedMessaging {
+	if c.cfg.ZippedMessaging {
 		h.Flags.Set(ZippedRequest)
 		h.Flags.Set(ZippedResponse)
 	}

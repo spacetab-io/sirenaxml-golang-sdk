@@ -23,6 +23,7 @@ func (s *storage) GetCurrentKeyInfo(req []byte) (*structs.KeyInfoResponse, error
 }
 
 func (s *storage) GetKeyData() (*client.KeyData, error) {
+
 	kd := s.c.GetKeyData()
 	return &kd, nil
 }
