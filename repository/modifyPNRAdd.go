@@ -27,7 +27,7 @@ func (r *Repository) ModifyPNRAdd(pnr, surname string, logAttributes map[string]
 		return nil, err
 	}
 
-	responseBytes, err := r.Request(modifyPNRrequest, logAttributes)
+	responseBytes, err := r.Transport.Request(modifyPNRrequest, logAttributes)
 	if err != nil {
 		return nil, err
 	}

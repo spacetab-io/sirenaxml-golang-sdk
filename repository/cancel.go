@@ -25,7 +25,7 @@ func (r *Repository) Cancel(pnr string, surname string, logAttributes map[string
 		return nil, err
 	}
 
-	cancelResponseXML, err := r.Request(requestBytes, logAttributes)
+	cancelResponseXML, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

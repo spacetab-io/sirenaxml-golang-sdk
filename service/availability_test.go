@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
@@ -16,7 +16,7 @@ func TestService_Availability(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		logger := logs.NewNullLog()
 
-		sdkClient, err := sdk.NewClient(
+		sdkClient, err := socket.NewClient(
 			logger,
 			conf.ClientPrivateKey,
 			conf.ClientPrivateKeyPassword,

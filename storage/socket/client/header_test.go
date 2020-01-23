@@ -5,7 +5,7 @@ package client
 //
 //	"github.com/stretchr/testify/assert"
 //
-//	sirenaXML "github.com/tmconsulting/sirenaxml-golang-sdk/configuration"
+//	sirenaXML "github.com/tmconsulting/sirenaxml-golang-socket/configuration"
 //)
 //
 //func TestHeaderFlags_Set(t *testing.T) {

@@ -1,4 +1,4 @@
-package sdk
+package socket
 
 import (
 	"encoding/xml"

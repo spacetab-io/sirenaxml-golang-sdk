@@ -27,7 +27,7 @@ func (r *Repository) Fares(departure, arrival, passenger, company string, subcla
 		return nil, err
 	}
 
-	faresResponseXML, err := r.Request(requestBytes, logAttributes)
+	faresResponseXML, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		// logs.Log.Error(err)
 		// respond.With(w, r, http.StatusBadRequest, error.Error(err))

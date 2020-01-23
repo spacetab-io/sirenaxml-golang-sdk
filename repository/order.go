@@ -27,7 +27,7 @@ func (r Repository) Order(logAttributes map[string]string, pnr string, surname s
 		return nil, err
 	}
 
-	sirenaOrderResponseXML, err := r.Request(sirenaOrderRequestBytes, logAttributes)
+	sirenaOrderResponseXML, err := r.Transport.Request(sirenaOrderRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

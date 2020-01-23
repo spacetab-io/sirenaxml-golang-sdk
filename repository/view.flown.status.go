@@ -22,8 +22,7 @@ func (r *Repository) ViewFlownStatus(surname, pnr string, logAttributes map[stri
 		return nil, err
 	}
 
-	//@TODO добавить flow_step viewFlownReq
-	viewFlownStatusResponseXML, err := r.Request(viewFlownStatusRequestBytes, logAttributes)
+	viewFlownStatusResponseXML, err := r.Transport.Request(viewFlownStatusRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

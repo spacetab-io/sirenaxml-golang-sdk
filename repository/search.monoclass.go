@@ -2,7 +2,6 @@ package repository
 
 import (
 	"encoding/xml"
-
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
@@ -52,19 +51,15 @@ func (r Repository) SearchMonoclass(logAttributes map[string]string, pricingSegm
 		},
 	}
 
-	requestBytes, err := xml.MarshalIndent(&pricingRequest, "  ", "    ")
+	requestBytes, err := xml.Marshal(&pricingRequest)
 	if err != nil {
 		return nil, err
 	}
 
-	//log.Printf("Search request: \n %r", string(requestBytes))
-
-	pricingResponseXML, err := r.Request(requestBytes, logAttributes)
+	pricingResponseXML, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}
-
-	//log.Printf("Search response: \n %r", string(pricingResponseXML))
 
 	var pricingResponse sirena.PricingResponse
 	if err := xml.Unmarshal(pricingResponseXML, &pricingResponse); err != nil {

@@ -26,7 +26,7 @@ func (r Repository) Void(logAttributes map[string]string, pnr string, surname st
 		return nil, errors.WithStack(err)
 	}
 
-	responseBytes, err := r.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

@@ -15,7 +15,7 @@ func (r Repository) SearchMonobrands(logAttributes map[string]string, request si
 		return nil, errors.Wrap(err, "pricingMonobrandRequest marshal error")
 	}
 
-	monobrandsResp, err := r.Request(requestBytes, logAttributes)
+	monobrandsResp, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

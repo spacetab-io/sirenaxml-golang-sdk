@@ -13,7 +13,7 @@ func (r Repository) FareRemark(logAttributes map[string]string, fareRemarkReques
 		return nil, err
 	}
 
-	sirenaFareRemarkResponseXML, err := r.Request(requestBytes, logAttributes)
+	sirenaFareRemarkResponseXML, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

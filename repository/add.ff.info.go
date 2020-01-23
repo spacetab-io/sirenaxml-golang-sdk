@@ -29,7 +29,7 @@ func (r *Repository) AddFFInfo(pnr, surname string, sirenaRequestPassengers []si
 		return nil, err
 	}
 
-	sirenaAddFFInfoResponseXML, err := r.Request(AddFFInfoRequest, logAttributes)
+	sirenaAddFFInfoResponseXML, err := r.Transport.Request(AddFFInfoRequest, logAttributes)
 	if err != nil {
 		return nil, err
 	}

@@ -6,13 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket"
 )
 
 func TestService_KeyInfo(t *testing.T) {
 	logger := logs.NewNullLog()
 
-	sdkClient, err := sdk.NewClient(
+	sdkClient, err := socket.NewClient(
 		logger,
 		conf.ClientPrivateKey,
 		conf.ClientPrivateKeyPassword,

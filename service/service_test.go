@@ -2,13 +2,13 @@ package service
 
 import (
 	"encoding/xml"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket/client"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
@@ -28,7 +28,7 @@ func TestService(t *testing.T) {
 		customSirenConfig := conf
 		customSirenConfig.ClientID = 1111
 
-		_, err := sdk.NewClient(
+		_, err := socket.NewClient(
 			logger,
 			customSirenConfig.ClientPrivateKey,
 			customSirenConfig.ClientPrivateKeyPassword,
@@ -50,7 +50,7 @@ func TestService(t *testing.T) {
 
 func TestService_RawRequest(t *testing.T) {
 	logger := logs.NewNullLog()
-	sdkClient, err := sdk.NewClient(
+	sdkClient, err := socket.NewClient(
 		logger,
 		conf.ClientPrivateKey,
 		conf.ClientPrivateKeyPassword,
@@ -91,7 +91,7 @@ func TestService_RawRequest(t *testing.T) {
 
 func testRequest(t *testing.T, sc client.Config) {
 	logger := logs.NewNullLog()
-	sdkClient, err := sdk.NewClient(
+	sdkClient, err := socket.NewClient(
 		logger,
 		sc.ClientPrivateKey,
 		sc.ClientPrivateKeyPassword,

@@ -51,7 +51,7 @@ func (r *Repository) Book(
 		return nil, err
 	}
 
-	responseBytes, err := r.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

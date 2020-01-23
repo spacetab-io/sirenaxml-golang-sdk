@@ -23,7 +23,7 @@ func (r Repository) GetItinReceipts(logAttributes map[string]string, pnr string,
 		return nil, err
 	}
 
-	responseBytes, err := r.Request(requestBytes, logAttributes)
+	responseBytes, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

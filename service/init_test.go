@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket/client"
 	"os"
 	"testing"
 

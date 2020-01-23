@@ -32,9 +32,7 @@ func (r Repository) GetFareRemark(logAttributes map[string]string, company, uptc
 		return nil, err
 	}
 
-	//@TODO добавить flow step fareremark
-
-	sirenaFareRemarkResponseXML, err := r.Request(requestBytes, logAttributes)
+	sirenaFareRemarkResponseXML, err := r.Transport.Request(requestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

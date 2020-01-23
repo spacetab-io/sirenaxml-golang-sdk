@@ -24,7 +24,7 @@ func (r Repository) AddRemark(logAttributes map[string]string, pnr, surname, rem
 		return nil, err
 	}
 
-	sirenaAddRemarkResponseXML, err := r.Request(addRemarkRequestBytes, logAttributes)
+	sirenaAddRemarkResponseXML, err := r.Transport.Request(addRemarkRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

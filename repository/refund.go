@@ -29,7 +29,7 @@ func (r *Repository) Refund(pnr, surname string, logAttributes map[string]string
 		return nil, err
 	}
 
-	sirenaRefundResponseXML, err := r.Request(sirenaRefundRequestBytes, logAttributes)
+	sirenaRefundResponseXML, err := r.Transport.Request(sirenaRefundRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 	}

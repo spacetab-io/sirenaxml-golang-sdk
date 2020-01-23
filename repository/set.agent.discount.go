@@ -31,7 +31,7 @@ func (r Repository) SetAgentDiscount(logAttributes map[string]string, version in
 		return nil, err
 	}
 
-	setAgentDiscountResponseXML, err := r.Request(setAgentDiscountRequestBytes, logAttributes)
+	setAgentDiscountResponseXML, err := r.Transport.Request(setAgentDiscountRequestBytes, logAttributes)
 	if err != nil {
 		return nil, err
 
