@@ -5,14 +5,23 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
+type MockPublisher struct {
+}
+
+func (m MockPublisher) PublishLogs(logAttributes map[string]string, request, response []byte) error {
+	return nil
+}
+
 func TestStorage_GetAvailability(t *testing.T) {
 	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+
+	sirenaPublisher := MockPublisher{}
+
+	proxyStorage := NewStorage(sirenaPublisher, "", nl, false)
 	req := &structs.AvailabilityRequest{
 		Query: structs.AvailabilityRequestQuery{
 			Availability: structs.Availability{

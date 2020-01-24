@@ -14,19 +14,19 @@ var (
 
 func tearUp() {
 	clientID, _ := strings.String2Uint16(os.Getenv("CLIENT_ID"))
-	requestHandlersNum, _ := strings.String2Int32(os.Getenv("MAX_CONNECTIONS"))
+	//requestHandlersNum, _ := strings.String2Int32(os.Getenv("MAX_CONNECTIONS"))
 
 	conf = client.Config{
 		ClientID:                 clientID,
 		Environment:              os.Getenv("ENV"),
 		Ip:                       os.Getenv("IP"),
-		MaxConnections:           requestHandlersNum,
+		MaxConnections:           15,
 		ClientPublicKey:          os.Getenv("CLIENT_PUBLIC_KEY"),
 		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
 		ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
 		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
 		ZippedMessaging:          false,
-		MaxConnectTries:          3,
+		MaxConnectTries:          15,
 	}
 }
 

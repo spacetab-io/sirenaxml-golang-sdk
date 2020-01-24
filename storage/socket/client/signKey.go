@@ -49,6 +49,7 @@ func (c *Channel) signKey() error {
 
 func (c *Channel) newSignRequestPacket(key []byte) (*Packet, error) {
 	// DesEncrypt symmetric key with server public key
+
 	encryptedKey, err := crypt.EncryptDataWithServerPubKey(key, []byte(c.cfg.ServerPublicKey))
 	if err != nil {
 		return nil, errors.Wrap(err, "encrypting data with server pubKey error")

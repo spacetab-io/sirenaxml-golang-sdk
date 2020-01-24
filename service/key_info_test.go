@@ -1,30 +1,61 @@
 package service
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/strings"
+	"os"
+	s "strings"
+	"testing"
 
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket"
 )
 
+var (
+	configKey client.Config
+)
+
+func tearUpKeyInfo() {
+	clientID, _ := strings.String2Uint16(os.Getenv("CLIENT_ID"))
+	//requestHandlersNum, _ := strings.String2Int32(os.Getenv("MAX_CONNECTIONS"))
+
+	configKey = client.Config{
+		ClientID:                 clientID,
+		Environment:              os.Getenv("ENV"),
+		Ip:                       os.Getenv("IP"),
+		MaxConnections:           3,
+		ClientPublicKey:          os.Getenv("CLIENT_PUBLIC_KEY"),
+		ClientPrivateKey:         os.Getenv("CLIENT_PRIVATE_KEY"),
+		ServerPublicKey:          os.Getenv("SERVER_PUBLIC_KEY"),
+		ClientPrivateKeyPassword: os.Getenv("CLIENT_PRIVATE_KEY_PASSWORD"),
+		ZippedMessaging:          false,
+		MaxConnectTries:          3,
+	}
+}
+
 func TestService_KeyInfo(t *testing.T) {
 	logger := logs.NewNullLog()
+	tearUpKeyInfo()
+
+	configKey.ServerPublicKey = s.ReplaceAll(conf.ServerPublicKey, "\\n", "\n")
+	configKey.ClientPublicKey = s.ReplaceAll(conf.ClientPublicKey, "\\n", "\n")
+	configKey.ClientPrivateKey = s.ReplaceAll(conf.ClientPrivateKey, "\\n", "\n")
 
 	sdkClient, err := socket.NewClient(
 		logger,
-		conf.ClientPrivateKey,
-		conf.ClientPrivateKeyPassword,
-		conf.ClientPublicKey,
-		conf.Ip,
-		conf.Environment,
-		conf.ServerPublicKey,
-		conf.Address,
-		conf.Buffer,
-		conf.ZippedMessaging,
-		conf.MaxConnections,
-		conf.ClientID,
+		configKey.ClientPrivateKey,
+		configKey.ClientPrivateKeyPassword,
+		configKey.ClientPublicKey,
+		configKey.Ip,
+		configKey.Environment,
+		configKey.ServerPublicKey,
+		configKey.Address,
+		configKey.Buffer,
+		configKey.ZippedMessaging,
+		configKey.MaxConnections,
+		configKey.ClientID,
+		configKey.MaxConnectTries,
 	)
 
 	if !assert.NoError(t, err) {

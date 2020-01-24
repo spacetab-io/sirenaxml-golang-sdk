@@ -2,7 +2,9 @@ package service
 
 import (
 	"encoding/xml"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket/client"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -40,6 +42,7 @@ func TestService(t *testing.T) {
 			customSirenConfig.ZippedMessaging,
 			customSirenConfig.MaxConnections,
 			customSirenConfig.ClientID,
+			customSirenConfig.MaxConnectTries,
 		)
 
 		if !assert.Error(t, err) {
@@ -50,6 +53,13 @@ func TestService(t *testing.T) {
 
 func TestService_RawRequest(t *testing.T) {
 	logger := logs.NewNullLog()
+
+	conf.ServerPublicKey = strings.ReplaceAll(conf.ServerPublicKey, "\\n", "\n")
+	conf.ClientPublicKey = strings.ReplaceAll(conf.ClientPublicKey, "\\n", "\n")
+	conf.ClientPrivateKey = strings.ReplaceAll(conf.ClientPrivateKey, "\\n", "\n")
+
+	spew.Dump(conf.ServerPublicKey)
+
 	sdkClient, err := socket.NewClient(
 		logger,
 		conf.ClientPrivateKey,
@@ -63,19 +73,25 @@ func TestService_RawRequest(t *testing.T) {
 		conf.ZippedMessaging,
 		conf.MaxConnections,
 		conf.ClientID,
+		conf.MaxConnectTries,
 	)
+
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
 
 	service := NewSKD(sdkClient)
+
 	checkKeyData(t, sdkClient)
 	t.Run("success", func(t *testing.T) {
 		xmlReq := []byte(`<?xml version="1.0" encoding="UTF-8"?><sirena><query><key_info/></query></sirena>`)
 		response, err := service.RawRequest(xmlReq)
+		spew.Dump(string(response))
+
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}
+
 		// Decode XML and make sure Sirena Public Key is returned
 		var keyInfoResponse structs.KeyInfoResponse
 		err = xml.Unmarshal(response, &keyInfoResponse)
@@ -104,6 +120,7 @@ func testRequest(t *testing.T, sc client.Config) {
 		sc.ZippedMessaging,
 		sc.MaxConnections,
 		sc.ClientID,
+		sc.MaxConnectTries,
 	)
 	if !assert.NoError(t, err) {
 		t.FailNow()

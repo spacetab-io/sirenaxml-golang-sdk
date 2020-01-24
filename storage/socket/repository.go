@@ -28,6 +28,7 @@ func NewClient(
 	zippedMessaging bool,
 	maxConnections uint32,
 	clientID uint16,
+	maxConnectTries int,
 ) (*storage, error) {
 
 	c, err := client.NewChannel(
@@ -43,12 +44,15 @@ func NewClient(
 		client.SetSocket(addr),
 		client.SetServerPublicKey(serverPublicKey),
 		client.SetZippedMessaging(zippedMessaging),
+		client.SetMaxConnectionTries(maxConnectTries),
 	)
+
+	st := &storage{c: c}
 
 	if err != nil {
 		return nil, errors.Wrap(err, "sirena client init error")
 	}
-	return &storage{c: c}, nil
+	return st, nil
 }
 
 func (s *storage) SendRawRequest(req []byte) ([]byte, error) {

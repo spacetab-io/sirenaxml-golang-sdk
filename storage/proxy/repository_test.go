@@ -23,6 +23,10 @@ func TestMain(m *testing.M) {
 
 func TestNewStorage(t *testing.T) {
 	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+
+	sirenaPublisher := MockPublisher{}
+
+	proxyStorage := NewStorage(sirenaPublisher, "", nl, false)
+
 	assert.NotNil(t, proxyStorage.r.GetClient())
 }

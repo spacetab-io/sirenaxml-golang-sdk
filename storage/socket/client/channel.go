@@ -3,6 +3,7 @@ package client
 import (
 	"bufio"
 	"context"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/pkg/errors"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/logs"
 	"io"
@@ -83,17 +84,10 @@ func (config *Config) GetAddr() (string, error) {
 
 func NewChannel(l logs.LogWriter, opts ...Option) (*Channel, error) {
 
-	//if err := sc.PrepareKeys(); err != nil {
-	//	return nil, err
-	//}
-
 	respPool = NewRespPool()
-	//if err != nil {
-	//	return nil, err
-	//}
 
 	c := &Channel{
-		send:   make(chan *Packet, 0),
+		send: make(chan *Packet, 0),
 	}
 
 	c.SetLogger(l)
@@ -103,24 +97,30 @@ func NewChannel(l logs.LogWriter, opts ...Option) (*Channel, error) {
 	}
 
 	addr, err := c.cfg.GetAddr()
+
+	spew.Dump(addr, "========-----------============")
+
 	if err != nil {
 		return nil, err
 	}
 
 	c.socket = &socket{addr: addr}
-
-	err = tryToConnect(c)
-
 	msgPool, err = NewMsgPool(respPool, c.cfg.MaxConnections)
+	err = tryToConnect(c)
 
 	return c, err
 }
 
 func tryToConnect(c *Channel) (err error) {
+
+	//spew.Dump("===================", c.cfg.MaxConnectTries)
 	for i := 0; i <= c.cfg.MaxConnectTries; i++ {
 		c.Logger.Debugf("connection try %d start", i)
+
 		err = c.connect()
+		spew.Dump("connection error: ", err)
 		if err == nil {
+
 			c.Logger.Debugf("connection try %d succeed", i)
 			break
 		}
@@ -133,6 +133,7 @@ func (c *Channel) connect() error {
 	if err != nil {
 		return errors.Wrap(err, "dial sirena addr error")
 	}
+
 	c.socket.conn = conn
 	err = c.signKey()
 	if err != nil {
@@ -142,7 +143,9 @@ func (c *Channel) connect() error {
 	c.socket.sessNum++
 	c.socket.initTime = time.Now()
 	c.Logger.Infof("started connection session number %d", c.socket.sessNum)
+
 	var ctx context.Context
+
 	ctx, c.socket.cancel = context.WithCancel(context.Background())
 
 	// start listener

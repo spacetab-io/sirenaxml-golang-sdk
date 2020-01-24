@@ -1,6 +1,8 @@
 package service
 
 import (
+	"github.com/davecgh/go-spew/spew"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,6 +18,10 @@ func TestService_Availability(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		logger := logs.NewNullLog()
 
+		conf.ServerPublicKey = strings.ReplaceAll(conf.ServerPublicKey, "\\n", "\n")
+		conf.ClientPublicKey = strings.ReplaceAll(conf.ClientPublicKey, "\\n", "\n")
+		conf.ClientPrivateKey = strings.ReplaceAll(conf.ClientPrivateKey, "\\n", "\n")
+
 		sdkClient, err := socket.NewClient(
 			logger,
 			conf.ClientPrivateKey,
@@ -29,14 +35,16 @@ func TestService_Availability(t *testing.T) {
 			conf.ZippedMessaging,
 			conf.MaxConnections,
 			conf.ClientID,
+			conf.MaxConnectTries,
 		)
+
+		spew.Dump(sdkClient)
 
 		if !assert.NoError(t, err) {
 			t.FailNow()
 		}
 
 		service := NewSKD(sdkClient)
-
 
 		checkKeyData(t, sdkClient)
 		availabilityRequest := &structs.AvailabilityRequest{

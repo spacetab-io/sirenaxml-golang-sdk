@@ -56,6 +56,11 @@ func SetMaxConnections(maxConnections uint32) Option {
 		c.cfg.MaxConnections = maxConnections
 	}
 }
+func SetMaxConnectionTries(maxConnectionTries int) Option {
+	return func(c *Channel) {
+		c.cfg.MaxConnectTries = maxConnectionTries
+	}
+}
 
 func SetSendChannel(buffer int) Option {
 	return func(c *Channel) {
