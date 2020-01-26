@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket/client"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
