@@ -18,7 +18,8 @@ func (p MockPublisher) PublishLogs(logAttributes map[string]string, request, res
 var proxyPath string
 
 func tearUp() {
-	proxyPath = os.Getenv("PROXY_PATH")
+	//"https://user:SUrPr5vj@sirena-proxy.dev.tmc24.io/"
+	proxyPath = "https://" + os.Getenv("PROXY_CREDS") + "@" + os.Getenv("PROXY_PATH")
 }
 
 func TestMain(m *testing.M) {
