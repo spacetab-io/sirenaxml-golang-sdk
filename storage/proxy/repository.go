@@ -22,10 +22,10 @@ type storage struct {
 	proxyURL      string
 }
 
-func NewStorage(proxyPath string, l logs.LogWriter, debug bool) *storage {
+func NewStorage(p publisher.Publisher, proxyURL string, l logs.LogWriter, debug bool) *storage {
 	s := new(storage)
-
-	s.proxyPath = proxyPath
+	s.LogsPublisher = p
+	s.proxyURL = proxyURL
 	s.r = resty.New()
 	s.r.SetDebug(debug)
 	s.r.SetLogger(l)
