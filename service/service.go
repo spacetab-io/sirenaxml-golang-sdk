@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/sdk/client"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/storage/socket/client"
 	"github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 
@@ -10,6 +10,7 @@ type Storage interface {
 	GetAvailability(req []byte) (*structs.AvailabilityResponse, error)
 	GetCurrentKeyInfo(req []byte) (*structs.KeyInfoResponse, error)
 	GetKeyData() (*client.KeyData, error)
+	Request(requestBytes []byte, logAttributes map[string]string) ([]byte, error)
 }
 
 type Service interface {

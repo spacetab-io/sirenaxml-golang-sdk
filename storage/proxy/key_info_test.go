@@ -12,7 +12,8 @@ import (
 
 func TestStorage_GetCurrentKeyInfo(t *testing.T) {
 	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+	p := MockPublisher{}
+	proxyStorage := NewStorage(p, proxyPath, nl, false)
 	reqXML, err := xml.Marshal(&structs.KeyInfoRequest{})
 	if !assert.NoError(t, err) {
 		t.FailNow()
@@ -29,7 +30,8 @@ func TestStorage_GetCurrentKeyInfo(t *testing.T) {
 
 func _TestStorage_GetKeyData(t *testing.T) {
 	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+	p := MockPublisher{}
+	proxyStorage := NewStorage(p, proxyPath, nl, false)
 
 	kd, err := proxyStorage.GetKeyData()
 	if !assert.NoError(t, err) {

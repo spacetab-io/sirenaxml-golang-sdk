@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"compress/zlib"
 	"encoding/binary"
+	"github.com/davecgh/go-spew/spew"
 	"time"
 
 	"github.com/pkg/errors"
@@ -32,7 +33,7 @@ func (c *Channel) signKey() error {
 	}
 
 	response := getResponseFromMsgPool(request.header.MessageID)
-
+	spew.Dump(string(response.message))
 	// DesDecrypt response
 	c.socket.KeyData.Key, err = crypt.DecryptDataWithClientPrivateKey(response.message[4:132], []byte(c.cfg.ClientPrivateKey), c.cfg.ClientPrivateKeyPassword)
 	if err != nil {
