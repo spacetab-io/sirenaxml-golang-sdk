@@ -9,7 +9,7 @@ import (
 )
 
 func (s *storage) GetKeyData() (*client.KeyData, error) {
-	resp, err := s.r.R().Get(s.proxyPath + "/key_info")
+	resp, err := s.r.R().Get(s.proxyURL + "/key_info")
 	if err != nil || resp.StatusCode() != 200 {
 		if err == nil {
 			return nil, nil

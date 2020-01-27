@@ -15,7 +15,6 @@ import (
 
 // Memory storage keeps data in memory
 type storage struct {
-	proxyPath     string
 	r             *resty.Client
 	p             http.Client
 	LogsPublisher publisher.Publisher
@@ -39,7 +38,7 @@ func (s *storage) SendRawRequest(req []byte) ([]byte, error) {
 }
 
 func (s *storage) sendMsg(req []byte) ([]byte, error) {
-	resp, err := s.r.R().SetBody(req).Post(s.proxyPath)
+	resp, err := s.r.R().SetBody(req).Post(s.proxyURL)
 	if err != nil || resp.StatusCode() != 200 {
 		if err == nil {
 			return nil, errors.New(fmt.Sprintf("proxy request error: %v", string(resp.Body())))
