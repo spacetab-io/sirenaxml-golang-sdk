@@ -12,7 +12,8 @@ import (
 
 func TestStorage_GetAvailability(t *testing.T) {
 	nl := logs.NewNullLog()
-	proxyStorage := NewStorage(proxyPath, nl, false)
+	p := MockPublisher{}
+	proxyStorage := NewStorage(p, proxyPath, nl, false)
 	req := &structs.AvailabilityRequest{
 		Query: structs.AvailabilityRequestQuery{
 			Availability: structs.Availability{
