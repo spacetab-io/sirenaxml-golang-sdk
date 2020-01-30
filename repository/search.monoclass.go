@@ -2,6 +2,7 @@ package repository
 
 import (
 	"encoding/xml"
+
 	sirena "github.com/tmconsulting/sirenaxml-golang-sdk/structs"
 )
 

@@ -517,6 +517,50 @@ FLIGHTGROUPS_LABEL:
 	return directionFlightGroups
 }
 
+func (p *PricingAnswerVariant) GeAllFlights() [][]PricingAnswerVariantFlight {
+	// Declare slice for flightGroups of one direction
+	var directionFlightGroups [][]PricingAnswerVariantFlight
+
+FLIGHTGROUPS_LABEL:
+	for _, flightGroups := range p.FlightGroups {
+
+		var directionFlights []PricingAnswerVariantFlight
+
+		for _, flg := range directionFlightGroups {
+			for _, fl := range flg {
+				for _, flight := range flightGroups.Flight {
+					if fl.ID == flight.ID {
+
+						continue FLIGHTGROUPS_LABEL
+					}
+				}
+			}
+		}
+
+		for _, flight := range flightGroups.Flight {
+
+			// Declare slice for flights of one direction
+			//var directionFlights []PricingAnswerVariantFlight
+			//if directionNum == flight.Num {
+
+			directionFlights = append(directionFlights, flight)
+			//}
+
+			// check if directionFlights have any items
+			if len(directionFlights) == 0 {
+
+				continue
+			}
+
+		}
+
+		directionFlightGroups = append(directionFlightGroups, directionFlights)
+
+	}
+
+	return directionFlightGroups
+}
+
 func (p *PricingAnswerVariantDirection) GetDirectionsFlightGroups(variant *PricingAnswerVariant) [][]PricingAnswerVariantFlight {
 
 	// Declare slice for flightGroups of one direction

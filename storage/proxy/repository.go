@@ -3,9 +3,10 @@ package proxy
 import (
 	"bytes"
 	"fmt"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/publisher"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/tmconsulting/sirenaxml-golang-sdk/publisher"
 
 	"github.com/go-resty/resty"
 	"github.com/pkg/errors"

@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"github.com/pkg/errors"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/publisher"
-	"github.com/tmconsulting/sirenaxml-golang-sdk/service"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/publisher"
+	"github.com/tmconsulting/sirenaxml-golang-sdk/service"
 )
 
 type Config struct {
