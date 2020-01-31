@@ -1,8 +1,9 @@
 package client
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"testing"
+
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/stretchr/testify/assert"
 
