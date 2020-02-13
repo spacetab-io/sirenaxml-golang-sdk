@@ -58,6 +58,10 @@ type PricingAnswerVariant struct {
 	Total        PricingAnswerVariantTotal         `xml:"variant_total"`
 }
 
+func (p *PricingAnswerPricing) UpdateFlightID(variantIndex, flightIndex, flightGroupsIndex int, postfix string) {
+	p.Variants[variantIndex].FlightGroups[flightGroupsIndex].Flight[flightIndex].ID = p.Variants[variantIndex].FlightGroups[flightGroupsIndex].Flight[flightIndex].ID + postfix
+}
+
 func (p *PricingAnswerVariant) GetVariantDirections() []PricingAnswerVariantDirection {
 	return p.Directions
 }
