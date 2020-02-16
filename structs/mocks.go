@@ -157,6 +157,13 @@ var MockDirectionTwoFlightGroups = [][]PricingAnswerVariantFlight{
 	},
 }
 
+var MockPricingResponse = PricingResponse{
+	Answer: PricingAnswer{
+		Pricing:          &MockPricingAnswerPricing,
+		PricingMonobrand: nil,
+	},
+}
+
 var MockPricingAnswerPricing = PricingAnswerPricing{
 	Variants: []PricingAnswerVariant{
 		{
@@ -292,11 +299,11 @@ var MockPricingAnswerPricing = PricingAnswerPricing{
 			Flight:           "",
 			Origin:           PricingAnswerLocation{},
 			Destination:      PricingAnswerLocation{},
-			DeptDate:         "",
 			Legs:             nil,
-			ArrvDate:         "",
-			DeptTime:         "",
-			ArrvTime:         "",
+			DeptDate:         "10.03.20",
+			ArrvDate:         "10.03.20",
+			DeptTime:         "10:00",
+			ArrvTime:         "10:00",
 			Airplane:         "",
 			FlightTime:       "",
 			UPT18CatText:     "",
@@ -309,11 +316,11 @@ var MockPricingAnswerPricing = PricingAnswerPricing{
 			Flight:           "",
 			Origin:           PricingAnswerLocation{},
 			Destination:      PricingAnswerLocation{},
-			DeptDate:         "",
 			Legs:             nil,
-			ArrvDate:         "",
-			DeptTime:         "",
-			ArrvTime:         "",
+			DeptDate:         "13.03.20",
+			ArrvDate:         "13.03.20",
+			DeptTime:         "11:00",
+			ArrvTime:         "11:00",
 			Airplane:         "",
 			FlightTime:       "",
 			UPT18CatText:     "",

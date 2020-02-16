@@ -42,6 +42,7 @@ func (p *PricingAnswerFlight) GetVariantFlightInfo(variants []PricingAnswerVaria
 	for _, variant := range variants {
 		for _, flightGroup := range variant.FlightGroups {
 			for _, flight := range flightGroup.Flight {
+
 				if p.ID == flight.ID {
 					return &flight
 				}
