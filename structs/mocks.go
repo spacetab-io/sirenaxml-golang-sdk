@@ -1,5 +1,9 @@
 package structs
 
+import (
+	"encoding/xml"
+)
+
 var MockPricingAnswerVariant = &PricingAnswerVariant{
 	FlightGroups: []PricingAnswerVariantFlightGroup{{
 		Flight: []PricingAnswerVariantFlight{
@@ -334,4 +338,45 @@ var MockIgnoredAirlines = []PricingRequestIgnoredAirline{
 		Name:   "v",
 		Flight: "",
 	},
+}
+
+var MockGetItinReceiptsDataResponse = GetItinReceiptsDataResponse{
+	Answer: GetItinReceiptsDataAnswer{
+		Answer: "",
+		GetItinReceiptsData: GetItinReceiptsDataBody{
+			Receipts: &GetItinReceiptsDataAnswerReceipts{
+				TicketForm: []TicketForm{
+					{
+						IssueDate:       "",
+						CRTime:          "",
+						PassengerID:     "441",
+						NameOfPassenger: "One",
+						DocOfPassenger:  "",
+						Total:           "",
+						SerialNumber:    "",
+					},
+					{
+						IssueDate:       "",
+						CRTime:          "",
+						PassengerID:     "222",
+						NameOfPassenger: "Two",
+						DocOfPassenger:  "",
+						Total:           "",
+						SerialNumber:    "",
+					},
+					{
+						IssueDate:       "",
+						CRTime:          "",
+						PassengerID:     "333",
+						NameOfPassenger: "Two",
+						DocOfPassenger:  "",
+						Total:           "",
+						SerialNumber:    "",
+					},
+				},
+			},
+			Error: nil,
+		},
+	},
+	XMLName: xml.Name{},
 }
